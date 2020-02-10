@@ -1,0 +1,3 @@
+requests
+azure-iothub-device-client~=1.4.3
+iotccsdk

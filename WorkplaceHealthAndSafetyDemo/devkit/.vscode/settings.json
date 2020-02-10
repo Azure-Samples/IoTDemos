@@ -1,0 +1,9 @@
+{
+    "python.linting.flake8Enabled": false,
+    "python.linting.pylintEnabled": false,
+    "python.linting.enabled": true,
+    "azure-iot-edge.defaultPlatform": {
+        "platform": "arm32v7",
+        "alias": null
+    }
+}

@@ -1,0 +1,15 @@
+{
+  "put": [
+    {
+      "id": "acc7dc28-1cf3-4764-b22b-431fb338fbd6",
+      "name": "Workplace Safety",
+      "source": {
+        "instanceFieldNames": [
+          "Country",
+          "Factory",
+          "Section"
+        ]
+      }
+    }
+  ]
+}

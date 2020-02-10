@@ -1,0 +1,50 @@
+{
+  "put": [
+    {
+      "id": "1be09af9-f089-4d6b-9f0b-48018b5f7393",
+      "name": "DefaultType",
+      "description": "Default type",
+      "variables": {
+        "EventCount": {
+          "kind": "aggregate",
+          "aggregation": {
+            "tsx": "count()"
+          }
+        }
+      }
+    },
+    {
+      "id": "f4f9a3b6-dd9f-4367-a6b8-26bfd4622515",
+      "name": "Camera",
+      "variables": {
+        "PersonSafetyVest": {
+          "kind": "numeric",
+          "value": {
+            "tsx": "$event.[PersonSafetyVest].Double"
+          },
+          "aggregation": {
+            "tsx": "avg($value)"
+          }
+        },
+        "PersonNoPPE": {
+          "kind": "numeric",
+          "value": {
+            "tsx": "$event.[PersonNoPPE].Double"
+          },
+          "aggregation": {
+            "tsx": "avg($value)"
+          }
+        },
+        "PersonHardHat": {
+          "kind": "numeric",
+          "value": {
+            "tsx": "$event.[PersonHardHat].Double"
+          },
+          "aggregation": {
+            "tsx": "avg($value)"
+          }
+        }
+      }
+    }
+  ]
+}
