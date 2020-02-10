@@ -1,0 +1,144 @@
+{
+  "put": [
+    {
+      "typeId": "f4f9a3b6-dd9f-4367-a6b8-26bfd4622515",
+      "timeSeriesId": [
+        "TSI-001"
+      ],
+      "hierarchyIds": [
+        "acc7dc28-1cf3-4764-b22b-431fb338fbd6"
+      ],
+      "instanceFields": {
+        "Country": "United States",
+        "Factory": "Seattle",
+        "Section": "IT"
+      }
+    },
+    {
+      "typeId": "f4f9a3b6-dd9f-4367-a6b8-26bfd4622515",
+      "timeSeriesId": [
+        "TSI-002"
+      ],
+      "hierarchyIds": [
+        "acc7dc28-1cf3-4764-b22b-431fb338fbd6"
+      ],
+      "instanceFields": {
+        "Country": "United States",
+        "Factory": "Seattle",
+        "Section": "IT"
+      }
+    },
+    {
+      "typeId": "f4f9a3b6-dd9f-4367-a6b8-26bfd4622515",
+      "timeSeriesId": [
+        "TSI-003"
+      ],
+      "hierarchyIds": [
+        "acc7dc28-1cf3-4764-b22b-431fb338fbd6"
+      ],
+      "instanceFields": {
+        "Country": "United States",
+        "Factory": "Seattle",
+        "Section": "IT"
+      }
+    },
+    {
+      "typeId": "f4f9a3b6-dd9f-4367-a6b8-26bfd4622515",
+      "timeSeriesId": [
+        "TSI-004"
+      ],
+      "hierarchyIds": [
+        "acc7dc28-1cf3-4764-b22b-431fb338fbd6"
+      ],
+      "instanceFields": {
+        "Country": "United States",
+        "Factory": "Seattle",
+        "Section": "IT"
+      }
+    },
+    {
+      "typeId": "f4f9a3b6-dd9f-4367-a6b8-26bfd4622515",
+      "timeSeriesId": [
+        "TSI-005"
+      ],
+      "hierarchyIds": [
+        "acc7dc28-1cf3-4764-b22b-431fb338fbd6"
+      ],
+      "instanceFields": {
+        "Country": "United States",
+        "Factory": "Seattle",
+        "Section": "IT"
+      }
+    },
+    {
+      "typeId": "f4f9a3b6-dd9f-4367-a6b8-26bfd4622515",
+      "timeSeriesId": [
+        "TSI-006"
+      ],
+      "hierarchyIds": [
+        "acc7dc28-1cf3-4764-b22b-431fb338fbd6"
+      ],
+      "instanceFields": {
+        "Country": "United States",
+        "Factory": "Seattle",
+        "Section": "IT"
+      }
+    },
+    {
+      "typeId": "f4f9a3b6-dd9f-4367-a6b8-26bfd4622515",
+      "timeSeriesId": [
+        "TSI-007"
+      ],
+      "hierarchyIds": [
+        "acc7dc28-1cf3-4764-b22b-431fb338fbd6"
+      ],
+      "instanceFields": {
+        "Country": "United States",
+        "Factory": "Seattle",
+        "Section": "IT"
+      }
+    },
+    {
+      "typeId": "f4f9a3b6-dd9f-4367-a6b8-26bfd4622515",
+      "timeSeriesId": [
+        "TSI-008"
+      ],
+      "hierarchyIds": [
+        "acc7dc28-1cf3-4764-b22b-431fb338fbd6"
+      ],
+      "instanceFields": {
+        "Country": "United States",
+        "Factory": "Seattle",
+        "Section": "IT"
+      }
+    },
+    {
+      "typeId": "f4f9a3b6-dd9f-4367-a6b8-26bfd4622515",
+      "timeSeriesId": [
+        "TSI-009"
+      ],
+      "hierarchyIds": [
+        "acc7dc28-1cf3-4764-b22b-431fb338fbd6"
+      ],
+      "instanceFields": {
+        "Country": "United States",
+        "Factory": "Seattle",
+        "Section": "IT"
+      }
+    },
+    {
+      "typeId": "f4f9a3b6-dd9f-4367-a6b8-26bfd4622515",
+      "timeSeriesId": [
+        "TSI-010"
+      ],
+      "hierarchyIds": [
+        "acc7dc28-1cf3-4764-b22b-431fb338fbd6"
+      ],
+      "instanceFields": {
+        "Country": "United States",
+        "Factory": "Seattle",
+        "Section": "IT"
+      }
+    }
+  ]
+}

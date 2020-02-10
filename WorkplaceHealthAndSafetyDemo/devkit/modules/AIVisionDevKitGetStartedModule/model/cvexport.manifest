@@ -1,0 +1,12 @@
+{
+  "DomainType": "ObjectDetection",
+  "Platform": "VAIDK",
+  "Flavor": null,
+  "ExporterVersion": "2.0",
+  "ExportedDate": "2020-02-06T04:44:22.5036744Z",
+  "IterationId": "98814da7-e2a3-43c2-b7e4-9975a8f73b0a",
+  "ModelFileName": "model.dlc",
+  "LabelFileName": "labels.txt",
+  "ModelFileSHA1": "50798de6b3f0e3c2d346a5cdedb9d1dcc40085c0",
+  "SchemaVersion": "1.0"
+}

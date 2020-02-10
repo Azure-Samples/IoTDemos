@@ -1,0 +1,19 @@
+{
+  "FrameworkType":0,
+  "Engine":3,
+  "NetworkIO":0,
+  "ScaleWidth":300,
+  "ScaleHeight":300,
+  "PixelNorm":0,
+  "BlueMean":0,
+  "GreenMean":0,
+  "RedMean":0,
+  "TargetFPS":30,
+  "ConfThreshold":0.7,
+  "DLC_NAME":"model.dlc",
+  "LABELS_NAME":"labels.txt",
+  "InputLayers":"data",
+  "OutputLayers":["model_output"],
+  "ResultLayers":["model_output"],
+  "Runtime":1
+}

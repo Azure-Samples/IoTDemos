@@ -1,0 +1,18 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"azure-iot-edge.defaultPlatform": {
+			"platform": "arm32v7",
+			"alias": null
+		},
+		"python.linting.enabled": true,
+		"python.linting.flake8Enabled": true,
+		"python.linting.flake8Args": [
+			"--max-line-length=99"
+		]
+	}
+}

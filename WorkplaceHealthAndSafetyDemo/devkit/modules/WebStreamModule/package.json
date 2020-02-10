@@ -1,0 +1,18 @@
+{
+    "name": "webstreammodule",
+    "version": "0.0.1",
+    "scripts": {
+        "start": "node ./bin/www"
+    },
+    "dependencies": {
+        "adaro": "^1.0.4",
+        "azure-iot-device": "^1.9.9",
+        "azure-iot-device-amqp": "^1.9.9",
+        "express": "^4.16.0",
+        "http-errors": "^1.6.2",
+        "ws": "^7.0.0"
+    },
+    "devDependencies": {
+        "eslint": "^5.16.0"
+    }
+}
