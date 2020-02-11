@@ -31,7 +31,7 @@ Follow the steps to deploy the required Azure resources:
 1. Enter the text `Template deployment` in the search input field and select the display option.
 1. Click the `Create` button.
 1. Click the `Build your own template in the editor` link.
-1. Click the `Load file` button, search and select the `arm-template.json` file inside the `deployment\arm` folder and click `Open`.
+1. Click the `Load file` button, search and select the `arm-template.json` file inside the `deployment\azyre` folder and click `Open`.
 1. Click the `Save` button at the left-bottom corner.
 1. Select the `Location` where to run the deployment.
 1. Review and update if required all the `SETTINGS`:
