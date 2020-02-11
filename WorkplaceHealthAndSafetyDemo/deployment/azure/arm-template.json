@@ -1,0 +1,1327 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "prefix": {
+      "type": "string",
+      "defaultValue": "aiedge",
+      "metadata": {
+        "description": "Base text to be use in the resources names."
+      }
+    },
+    "administratorLogin": {
+      "type": "string",
+      "defaultValue": "theadmin",
+      "metadata": {
+        "description": "The administrator username of the SQL logical server."
+      }
+    },
+    "administratorLoginPassword": {
+      "type": "securestring",
+      "defaultValue": "M1cro$oft2020",
+      "metadata": {
+        "description": "The administrator password of the SQL logical server."
+      }
+    },
+    "notificationsEmail": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Email used by the Logic Apps where to send the notification emails."
+      }
+    }
+  },
+  "variables": {
+    "uniquePrefix": "[substring(uniqueString(resourceGroup().id), 0, 6)]",
+    "cogservices": {
+      "name": "[concat(variables('uniquePrefix'), parameters('prefix'), 'cogservices')]",
+      "id": "[concat(resourceGroup().id,'/providers/','Microsoft.CognitiveServices/accounts/', concat(variables('uniquePrefix'), parameters('prefix'), 'cogservices'))]"
+    },
+    "maps": {
+      "name": "[concat(variables('uniquePrefix'), parameters('prefix'), 'maps')]",
+      "id": "[concat(resourceGroup().id,'/providers/','Microsoft.Maps/accounts/', concat(variables('uniquePrefix'), parameters('prefix'), 'maps'))]"
+    },
+    "connections": {
+      "office365": {
+        "name": "office365"
+      },
+      "sql": {
+        "name": "sql"
+      }
+    },
+    "sql": {
+      "name": "[concat(variables('uniquePrefix'), parameters('prefix'), 'sql')]",
+      "db": {
+        "name": "ai-on-the-edge",
+        "edition": "Basic",
+        "collation": "SQL_Latin1_General_CP1_CI_AS",
+        "serviceObjectiveName": "Basic"
+      },
+      "connections": {
+        "name": "sql"
+      }
+    },
+    "storage": {
+      "name": "[concat(variables('uniquePrefix'), parameters('prefix'), 'storage')]",
+      "id": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', concat(variables('uniquePrefix'), parameters('prefix'), 'storage'))]"
+    },
+    "timeseries": {
+      "name": "[concat(variables('uniquePrefix'), parameters('prefix'), 'tsi')]"
+    },
+    "streamingJobs": {
+      "edgestreamanalytics": {
+        "name": "[concat(variables('uniquePrefix'), parameters('prefix'), 'edgestreamanalytics')]"
+      },
+      "metricscloud": {
+        "name": "[concat(variables('uniquePrefix'), parameters('prefix'), 'metricscloud')]"
+      }
+    },
+    "iothub": {
+      "name": "[concat(variables('uniquePrefix'), parameters('prefix'), 'iothub')]",
+      "consumerGroupName": "[concat(variables('uniquePrefix'), parameters('prefix'), 'iothubgn', '/events/cg1')]",
+      "id": "[concat(resourceGroup().id,'/providers/','Microsoft.Devices/IotHubs/', concat(variables('uniquePrefix'), parameters('prefix'), 'iothub'))]"
+    },
+    "logicapps": {
+      "geofence": {
+        "name": "[concat(variables('uniquePrefix'), parameters('prefix'), 'geofenceapp')]"
+      },
+      "alerts": {
+        "name": "[concat(variables('uniquePrefix'), parameters('prefix'), 'alertapp')]"
+      }
+    },
+    "website": {
+      "name": "[concat(variables('uniquePrefix'), parameters('prefix'), 'mapsapp')]",
+      "serverfarms": {
+        "name": "[concat(variables('uniquePrefix'), parameters('prefix'), 'serverfarms')]"
+      }
+    },
+    "acr": {
+      "name": "[concat(variables('uniquePrefix'), parameters('prefix'), 'acr')]"
+    }
+  },
+  "resources": [{
+      "type": "Microsoft.ContainerRegistry/registries",
+      "apiVersion": "2019-05-01",
+      "name": "[variables('acr').name]",
+      "location": "westus2",
+      "sku": {
+        "name": "Basic",
+        "tier": "Basic"
+      },
+      "properties": {
+        "adminUserEnabled": true,
+        "policies": {
+          "quarantinePolicy": {
+            "status": "disabled"
+          },
+          "trustPolicy": {
+            "type": "Notary",
+            "status": "disabled"
+          },
+          "retentionPolicy": {
+            "days": 7,
+            "status": "disabled"
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.CognitiveServices/accounts",
+      "apiVersion": "2017-04-18",
+      "name": "[variables('cogservices').name]",
+      "location": "westus2",
+      "sku": {
+        "name": "S0"
+      },
+      "kind": "CognitiveServices",
+      "properties": {
+        "apiProperties": {
+          "statisticsEnabled": false
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Maps/accounts",
+      "apiVersion": "2018-05-01",
+      "name": "[variables('maps').name]",
+      "location": "global",
+      "sku": {
+        "name": "S1",
+        "tier": "Standard"
+      }
+    },
+    {
+      "type": "Microsoft.Sql/servers",
+      "apiVersion": "2015-05-01-preview",
+      "name": "[variables('sql').name]",
+      "location": "westus2",
+      "kind": "v12.0",
+      "properties": {
+        "administratorLogin": "[parameters('administratorLogin')]",
+        "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
+        "version": "12.0"
+      }
+    },
+    {
+      "type": "Microsoft.Sql/servers/databases",
+      "apiVersion": "2017-10-01-preview",
+      "name": "[concat(variables('sql').name, '/', variables('sql').db.name)]",
+      "location": "westus2",
+      "dependsOn": [
+        "[resourceId('Microsoft.Sql/servers', variables('sql').name)]"
+      ],
+      "sku": {
+        "name": "Basic",
+        "tier": "Basic",
+        "capacity": 5
+      },
+      "kind": "v12.0,user",
+      "properties": {
+        "collation": "SQL_Latin1_General_CP1_CI_AS",
+        "maxSizeBytes": 2147483648,
+        "catalogCollation": "SQL_Latin1_General_CP1_CI_AS",
+        "zoneRedundant": false,
+        "readScale": "Disabled",
+        "readReplicaCount": 0
+      }
+    },
+    {
+      "type": "Microsoft.Sql/servers/advisors",
+      "apiVersion": "2014-04-01",
+      "name": "[concat(variables('sql').name, '/CreateIndex')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.SQL/servers/databases', variables('sql').name, variables('sql').db.name)]"
+      ],
+      "properties": {
+        "autoExecuteValue": "Disabled"
+      }
+    },
+    {
+      "type": "Microsoft.Sql/servers/advisors",
+      "apiVersion": "2014-04-01",
+      "name": "[concat(variables('sql').name, '/DropIndex')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.SQL/servers/databases', variables('sql').name, variables('sql').db.name)]"
+      ],
+      "properties": {
+        "autoExecuteValue": "Disabled"
+      }
+    },
+    {
+      "type": "Microsoft.Sql/servers/auditingPolicies",
+      "apiVersion": "2014-04-01",
+      "name": "[concat(variables('sql').name, '/Default')]",
+      "location": "West US 2",
+      "dependsOn": [
+        "[resourceId('Microsoft.SQL/servers/databases', variables('sql').name, variables('sql').db.name)]"
+      ],
+      "properties": {
+        "auditingState": "Disabled"
+      }
+    },
+    {
+      "type": "Microsoft.Sql/servers/auditingSettings",
+      "apiVersion": "2017-03-01-preview",
+      "name": "[concat(variables('sql').name, '/Default')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.SQL/servers/databases', variables('sql').name, variables('sql').db.name)]"
+      ],
+      "properties": {
+        "state": "Disabled",
+        "retentionDays": 0,
+        "auditActionsAndGroups": [],
+        "storageAccountSubscriptionId": "00000000-0000-0000-0000-000000000000",
+        "isStorageSecondaryKeyInUse": false,
+        "isAzureMonitorTargetEnabled": false
+      }
+    },
+    {
+      "type": "Microsoft.Sql/servers/encryptionProtector",
+      "apiVersion": "2015-05-01-preview",
+      "name": "[concat(variables('sql').name, '/current')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.SQL/servers/databases', variables('sql').name, variables('sql').db.name)]"
+      ],
+      "kind": "servicemanaged",
+      "properties": {
+        "serverKeyName": "ServiceManaged",
+        "serverKeyType": "ServiceManaged"
+      }
+    },
+    {
+      "type": "Microsoft.Sql/servers/extendedAuditingSettings",
+      "apiVersion": "2017-03-01-preview",
+      "name": "[concat(variables('sql').name, '/Default')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.SQL/servers/databases', variables('sql').name, variables('sql').db.name)]"
+      ],
+      "properties": {
+        "state": "Disabled",
+        "retentionDays": 0,
+        "auditActionsAndGroups": [],
+        "storageAccountSubscriptionId": "00000000-0000-0000-0000-000000000000",
+        "isStorageSecondaryKeyInUse": false,
+        "isAzureMonitorTargetEnabled": false
+      }
+    },
+    {
+      "type": "Microsoft.Sql/servers/firewallRules",
+      "apiVersion": "2015-05-01-preview",
+      "name": "[concat(variables('sql').name, '/AllowAllWindowsAzureIps')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.SQL/servers/databases', variables('sql').name, variables('sql').db.name)]"
+      ],
+      "properties": {
+        "startIpAddress": "0.0.0.0",
+        "endIpAddress": "0.0.0.0"
+      }
+    },
+    {
+      "type": "Microsoft.Sql/servers/firewallRules",
+      "apiVersion": "2015-05-01-preview",
+      "name": "[concat(variables('sql').name, '/AllowAllIps')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.SQL/servers/databases', variables('sql').name, variables('sql').db.name)]"
+      ],
+      "properties": {
+        "startIpAddress": "0.0.0.0",
+        "endIpAddress": "255.255.255.255"
+      }
+    },
+    {
+      "type": "Microsoft.Sql/servers/securityAlertPolicies",
+      "apiVersion": "2017-03-01-preview",
+      "name": "[concat(variables('sql').name, '/Default')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.SQL/servers/databases', variables('sql').name, variables('sql').db.name)]"
+      ],
+      "properties": {
+        "state": "Disabled",
+        "disabledAlerts": [
+          ""
+        ],
+        "emailAddresses": [
+          ""
+        ],
+        "emailAccountAdmins": false,
+        "retentionDays": 0
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2019-04-01",
+      "name": "[variables('storage').name]",
+      "location": "westus2",
+      "sku": {
+        "name": "Standard_LRS",
+        "tier": "Standard"
+      },
+      "kind": "StorageV2",
+      "properties": {
+        "networkAcls": {
+          "bypass": "AzureServices",
+          "virtualNetworkRules": [],
+          "ipRules": [],
+          "defaultAction": "Allow"
+        },
+        "supportsHttpsTrafficOnly": true,
+        "encryption": {
+          "services": {
+            "file": {
+              "enabled": true
+            },
+            "blob": {
+              "enabled": true
+            }
+          },
+          "keySource": "Microsoft.Storage"
+        },
+        "accessTier": "Hot"
+      }
+    },
+    {
+      "type": "Microsoft.StreamAnalytics/streamingjobs",
+      "apiVersion": "2017-04-01-preview",
+      "name": "[variables('streamingJobs').edgestreamanalytics.name]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Devices/IotHubs', variables('iothub').name)]"
+      ],
+      "location": "West US 2",
+      "properties": {
+        "jobType": "edge",
+        "sku": {
+          "name": "Standard"
+        },
+        "eventsOutOfOrderPolicy": "Adjust",
+        "outputErrorPolicy": "Stop",
+        "eventsOutOfOrderMaxDelayInSeconds": 0,
+        "eventsLateArrivalMaxDelayInSeconds": 5,
+        "dataLocale": "en-US",
+        "compatibilityLevel": "1.1",
+        "transformation": {
+          "name": "Transformation",
+          "properties": {
+            "streamingUnits": 1,
+            "query": "WITH startbuffer AS (\n      SELECT System.Timestamp() AS timestamp, MAX(PersonNoPPE) AS PersonNoPPE, COUNT(*) AS count\n      FROM devkitinput \n      WHERE message_type = 'summary' AND PersonNoPPE > 0\n      GROUP BY TUMBLINGWINDOW(s, 10)\n),\nstartbase AS (\n      SELECT timestamp, PersonNoPPE\n      FROM startbuffer\n      WHERE ISFIRST(s, 30) OVER (WHEN count > 5) = 1\n ),\n endbuffer AS (\n      SELECT System.Timestamp() AS timestamp, MAX(PersonNoPPE) AS PersonNoPPE, COUNT(*) AS count\n      FROM devkitinput \n      WHERE message_type = 'summary'\n      GROUP BY TUMBLINGWINDOW(s, 10)\n ),\n endbase AS (\n      SELECT timestamp, PersonNoPPE, count\n      FROM endbuffer\n      WHERE PersonNoPPE = 0 AND LAG(PersonNoPPE) OVER (LIMIT DURATION(second, 60)) > 0\n )\nSELECT 'alert' AS message_type, 'start' AS event_type, timestamp, PersonNoPPE AS count\n INTO alertstart\n FROM startbase\nSELECT 'alert' AS message_type, 'end' AS event_type, timestamp, PersonNoPPE AS count\n INTO alertend\n FROM endbase\nSELECT 'metrics' AS message_type, System.Timestamp() AS timestamp, MAX(PersonNoPPE) AS PersonNoPPE, MAX(PersonSafetyVest) AS PersonSafetyVest, MAX(PersonHardHat) AS PersonHardHat\n INTO metricsoutput\n FROM devkitinput \n WHERE message_type = 'summary' \n GROUP BY TUMBLINGWINDOW(s, 30)"
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.StreamAnalytics/streamingjobs",
+      "apiVersion": "2016-03-01",
+      "name": "[variables('streamingJobs').metricscloud.name]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Devices/IotHubs', variables('iothub').name)]"
+      ],
+      "location": "West US 2",
+      "properties": {
+        "sku": {
+          "name": "Standard"
+        },
+        "eventsOutOfOrderPolicy": "Adjust",
+        "outputErrorPolicy": "Stop",
+        "eventsOutOfOrderMaxDelayInSeconds": 0,
+        "eventsLateArrivalMaxDelayInSeconds": 5,
+        "dataLocale": "en-US",
+        "compatibilityLevel": "1.1",
+        "transformation": {
+          "name": "Transformation",
+          "properties": {
+            "streamingUnits": 1,
+            "query": "WITH Data AS (\n   SELECT\n      IoTHub.ConnectionDeviceId AS DeviceId,\n      PersonNoPPE, PersonSafetyVest, PersonHardHat, timestamp\n   FROM edgemetricsinput\n   WHERE message_type = 'metrics'\n)\nSELECT\n   DeviceId, System.TimeStamp() AS CurrentTime, Count(*) NumberOfMessages,\n   SUM(PersonSafetyVest) as PersonSafetyVestSum, MIN(PersonSafetyVest) as PersonSafetyVestMin, MAX(PersonSafetyVest) as PersonSafetyVestMax, AVG(PersonSafetyVest) as PersonSafetyVestAvg,\n   SUM(PersonNoPPE) as PersonNoPPESum, MIN(PersonNoPPE) as PersonNoPPEMin, MAX(PersonNoPPE) as PersonNoPPEMax, AVG(PersonNoPPE) as PersonNoPPEAvg, SUM(PersonHardHat) as PersonHardHatSum, MIN(PersonHardHat) as PersonHardHatMin, MAX(PersonHardHat) as PersonHardHatMax, AVG(PersonHardHat) as PersonHardHatAvg\n INTO SQLMetricsTable\n FROM Data\n GROUP BY TUMBLINGWINDOW(second, 300), DeviceId\n"
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.StreamAnalytics/streamingjobs/inputs",
+      "apiVersion": "2017-04-01-preview",
+      "name": "[concat(variables('streamingJobs').edgestreamanalytics.name, '/devkitinput')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.StreamAnalytics/streamingjobs', variables('streamingJobs').edgestreamanalytics.name)]"
+      ],
+      "properties": {
+        "type": "Stream",
+        "compression": {
+          "type": "None"
+        },
+        "datasource": {
+          "type": "Microsoft.Devices/IotHubs",
+          "properties": {
+            "iotHubNamespace": "[variables('iothub').name]",
+            "endpoint": "messages/events",
+            "consumerGroupName": "$Default",
+            "sharedAccessPolicyKey": "[listkeys(variables('iothub').id, '2019-11-04').value[0].primaryKey]",
+            "sharedAccessPolicyName": "iothubowner"
+          }
+        },
+        "serialization": {
+          "type": "Json",
+          "properties": {
+            "encoding": "UTF8"
+          }
+        },
+        "etag": "11fc6dee-c0cc-47de-9f8d-29b4e5c6367a"
+      }
+    },
+    {
+      "type": "Microsoft.StreamAnalytics/streamingjobs/inputs",
+      "apiVersion": "2017-04-01-preview",
+      "name": "[concat(variables('streamingJobs').metricscloud.name, '/edgemetricsinput')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.StreamAnalytics/streamingjobs', variables('streamingJobs').metricscloud.name)]"
+      ],
+      "properties": {
+        "type": "Stream",
+        "datasource": {
+          "type": "Microsoft.Devices/IotHubs",
+          "properties": {
+            "iotHubNamespace": "[variables('iothub').name]",
+            "endpoint": "messages/events",
+            "consumerGroupName": "$Default",
+            "sharedAccessPolicyKey": "[listkeys(variables('iothub').id, '2019-11-04').value[0].primaryKey]",
+            "sharedAccessPolicyName": "iothubowner"
+          }
+        },
+        "compression": {
+          "type": "None"
+        },
+        "partitionKey": "",
+        "serialization": {
+          "type": "Json",
+          "properties": {
+            "encoding": "UTF8"
+          }
+        },
+        "etag": "1863340c-67ca-4ee8-a3a5-aeb08a0b4652"
+      }
+    },
+    {
+      "type": "Microsoft.StreamAnalytics/streamingjobs/outputs",
+      "apiVersion": "2019-06-01",
+      "name": "[concat(variables('streamingJobs').metricscloud.name, '/SQLMetricsTable')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.StreamAnalytics/streamingjobs', variables('streamingJobs').metricscloud.name)]"
+      ],
+      "properties": {
+        "datasource": {
+          "type": "Microsoft.Sql/Server/Database",
+          "properties": {
+            "maxWriterCount": 1,
+            "maxBatchCount": 10000,
+            "table": "Metrics",
+            "server": "[concat(variables('sql').name, '.database.windows.net')]",
+            "database": "[variables('sql').db.name]",
+            "user": "[parameters('administratorLogin')]",
+            "password": "[parameters('administratorLoginPassword')]"
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.StreamAnalytics/streamingjobs/outputs",
+      "apiVersion": "2017-04-01-preview",
+      "name": "[concat(variables('streamingJobs').edgestreamanalytics.name, '/alertend')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.StreamAnalytics/streamingjobs', variables('streamingJobs').edgestreamanalytics.name)]"
+      ],
+      "properties": {
+        "datasource": {
+          "type": "GatewayMessageBus",
+          "properties": {}
+        },
+        "serialization": {
+          "type": "Json",
+          "properties": {
+            "encoding": "UTF8",
+            "format": "LineSeparated"
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.StreamAnalytics/streamingjobs/outputs",
+      "apiVersion": "2017-04-01-preview",
+      "name": "[concat(variables('streamingJobs').edgestreamanalytics.name, '/alertstart')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.StreamAnalytics/streamingjobs', variables('streamingJobs').edgestreamanalytics.name)]"
+      ],
+      "properties": {
+        "datasource": {
+          "type": "GatewayMessageBus",
+          "properties": {}
+        },
+        "serialization": {
+          "type": "Json",
+          "properties": {
+            "encoding": "UTF8",
+            "format": "LineSeparated"
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.StreamAnalytics/streamingjobs/outputs",
+      "apiVersion": "2017-04-01-preview",
+      "name": "[concat(variables('streamingJobs').edgestreamanalytics.name, '/metricsoutput')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.StreamAnalytics/streamingjobs', variables('streamingJobs').edgestreamanalytics.name)]"
+      ],
+      "properties": {
+        "datasource": {
+          "type": "GatewayMessageBus",
+          "properties": {}
+        },
+        "serialization": {
+          "type": "Json",
+          "properties": {
+            "encoding": "UTF8",
+            "format": "LineSeparated"
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/blobServices",
+      "apiVersion": "2019-04-01",
+      "name": "[concat(variables('storage').name, '/default')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storage').name)]"
+      ],
+      "properties": {
+        "cors": {
+          "corsRules": []
+        },
+        "deleteRetentionPolicy": {
+          "enabled": false
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Devices/IotHubs",
+      "apiVersion": "2019-11-04",
+      "name": "[variables('iothub').name]",
+      "location": "westus2",
+      "sku": {
+        "name": "S1",
+        "tier": "Standard",
+        "capacity": 1
+      },
+      "properties": {
+        "eventHubEndpoints": {
+          "events": {
+            "retentionTimeInDays": 1,
+            "partitionCount": 2
+          }
+        },
+        "routing": {
+          "endpoints": {
+            "serviceBusQueues": [],
+            "serviceBusTopics": [],
+            "eventHubs": [],
+            "storageContainers": []
+          },
+          "routes": [],
+          "fallbackRoute": {
+            "name": "$fallback",
+            "source": "DeviceMessages",
+            "condition": "true",
+            "endpointNames": [
+              "events"
+            ],
+            "isEnabled": true
+          }
+        },
+        "storageEndpoints": {},
+        "messagingEndpoints": {
+          "fileNotifications": {
+            "lockDurationAsIso8601": "PT1M",
+            "ttlAsIso8601": "PT1H",
+            "maxDeliveryCount": 10
+          }
+        },
+        "enableFileUploadNotifications": false,
+        "cloudToDevice": {
+          "maxDeliveryCount": 10,
+          "defaultTtlAsIso8601": "PT1H",
+          "feedback": {
+            "lockDurationAsIso8601": "PT5S",
+            "ttlAsIso8601": "PT1H",
+            "maxDeliveryCount": 10
+          }
+        },
+        "features": "None"
+      }
+    },
+    {
+      "type": "Microsoft.Web/connections",
+      "apiVersion": "2016-06-01",
+      "name": "[variables('connections').office365.name]",
+      "location": "westus2",
+      "properties": {
+        "displayName": "[parameters('notificationsEmail')]",
+        "customParameterValues": {},
+        "api": {
+          "id": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/westus2/managedApis/', variables('connections').office365.name)]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Web/connections",
+      "apiVersion": "2016-06-01",
+      "name": "[variables('connections').sql.name]",
+      "location": "westus2",
+      "properties": {
+        "displayName": "[concat(variables('sql').db.name, ' ', variables('sql').name, '.database.windows.net')]",
+        "parameterValues": {
+          "server": "[concat(variables('sql').name, '.database.windows.net')]",
+          "database": "[variables('sql').db.name]",
+          "authType": "windows",
+          "username": "[parameters('administratorLogin')]",
+          "password": "[parameters('administratorLoginPassword')]"
+        },
+        "api": {
+          "id": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/westus2/managedApis/sql')]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Logic/workflows",
+      "apiVersion": "2017-07-01",
+      "name": "[variables('logicapps').geofence.name]",
+      "location": "westus2",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/connections', variables('connections').office365.name)]",
+        "[resourceId('Microsoft.Web/connections', variables('connections').sql.name)]"
+      ],
+      "properties": {
+        "state": "Enabled",
+        "definition": {
+          "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {
+            "$connections": {
+              "defaultValue": {},
+              "type": "Object"
+            }
+          },
+          "triggers": {
+            "manual": {
+              "type": "Request",
+              "kind": "Http",
+              "inputs": {
+                "schema": {
+                  "items": {
+                    "properties": {
+                      "data": {
+                        "properties": {
+                          "geometries": {
+                            "properties": {
+                              "deviceId": {
+                                "type": "string"
+                              },
+                              "geometryId": {
+                                "type": "string"
+                              },
+                              "udId": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "dataVersion": {
+                        "type": "string"
+                      },
+                      "eventTime": {
+                        "type": "string"
+                      },
+                      "eventType": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "metadataVersion": {
+                        "type": "string"
+                      },
+                      "subject": {
+                        "type": "string"
+                      },
+                      "topic": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "topic",
+                      "subject",
+                      "eventType",
+                      "eventTime",
+                      "data",
+                      "dataVersion",
+                      "metadataVersion"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              }
+            }
+          },
+          "actions": {
+            "For_each": {
+              "foreach": "@triggerBody()",
+              "actions": {
+                "For_each_2": {
+                  "foreach": "@items('For_each')?['data']?['geometries']",
+                  "actions": {
+                    "Execute_a_SQL_query_(V2)": {
+                      "runAfter": {
+                        "Send_an_email_(V2)_2": [
+                          "Succeeded"
+                        ]
+                      },
+                      "type": "ApiConnection",
+                      "inputs": {
+                        "body": {
+                          "query": "INSERT INTO geofencealerts (DeviceId, AlertType, AlertTime, NearestLat, NearestLon) VALUES ('@{items('For_each_2')['deviceId']}', '@{items('For_each')['eventType']}', CURRENT_TIMESTAMP, @{items('For_each_2')['nearestLat']}, @{items('For_each_2')['nearestLon']});"
+                        },
+                        "host": {
+                          "connection": {
+                            "name": "@parameters('$connections')['sql']['connectionId']"
+                          }
+                        },
+                        "method": "post",
+                        "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('default'))},@{encodeURIComponent(encodeURIComponent('default'))}/query/sql"
+                      }
+                    },
+                    "Send_an_email_(V2)_2": {
+                      "runAfter": {},
+                      "type": "ApiConnection",
+                      "inputs": {
+                        "body": {
+                          "Body": "<p>A non-authorised employee has entered/exited the construction area.<br>\n<br>\nEvent Type: @{items('For_each')['eventType']}<br>\nEvent Time: @{items('For_each')['eventTime']}<br>\nDevice Id:@{items('For_each_2')}</p>",
+                          "Subject": "Geofence Event",
+                          "To": "[parameters('notificationsEmail')]"
+                        },
+                        "host": {
+                          "connection": {
+                            "name": "@parameters('$connections')['office365']['connectionId']"
+                          }
+                        },
+                        "method": "post",
+                        "path": "/v2/Mail"
+                      }
+                    }
+                  },
+                  "runAfter": {},
+                  "type": "Foreach"
+                }
+              },
+              "runAfter": {},
+              "type": "Foreach"
+            }
+          },
+          "outputs": {}
+        },
+        "parameters": {
+          "$connections": {
+            "value": {
+              "office365": {
+                "connectionId": "[resourceId('Microsoft.Web/connections', variables('connections').office365.name)]",
+                "connectionName": "[variables('connections').office365.name]",
+                "id": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/westus2/managedApis/', variables('connections').office365.name)]"
+              },
+              "sql": {
+                "connectionId": "[resourceId('Microsoft.Web/connections', variables('connections').sql.name)]",
+                "connectionName": "sql",
+                "id": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/westus2/managedApis/', variables('connections').sql.name)]"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Logic/workflows",
+      "apiVersion": "2017-07-01",
+      "name": "[variables('logicapps').alerts.name]",
+      "location": "westus2",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/connections', variables('connections').office365.name)]",
+        "[resourceId('Microsoft.Web/connections', variables('connections').sql.name)]"
+      ],
+      "properties": {
+        "state": "Enabled",
+        "definition": {
+          "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {
+            "$connections": {
+              "defaultValue": {},
+              "type": "Object"
+            }
+          },
+          "triggers": {
+            "manual": {
+              "type": "Request",
+              "kind": "Http",
+              "inputs": {
+                "schema": {
+                  "items": {
+                    "properties": {
+                      "data": {
+                        "properties": {
+                          "body": {
+                            "properties": {
+                              "event_type": {
+                                "type": "string"
+                              },
+                              "message_type": {
+                                "type": "string"
+                              },
+                              "timestamp": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "properties": {
+                            "type": "object"
+                          },
+                          "systemProperties": {
+                            "properties": {
+                              "iothub-connection-auth-generation-id": {
+                                "type": "string"
+                              },
+                              "iothub-connection-auth-method": {
+                                "type": "string"
+                              },
+                              "iothub-connection-device-id": {
+                                "type": "string"
+                              },
+                              "iothub-enqueuedtime": {
+                                "type": "string"
+                              },
+                              "iothub-message-source": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "dataVersion": {
+                        "type": "string"
+                      },
+                      "eventTime": {
+                        "type": "string"
+                      },
+                      "eventType": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "metadataVersion": {
+                        "type": "string"
+                      },
+                      "subject": {
+                        "type": "string"
+                      },
+                      "topic": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "topic",
+                      "subject",
+                      "eventType",
+                      "eventTime",
+                      "data",
+                      "dataVersion",
+                      "metadataVersion"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              }
+            }
+          },
+          "actions": {
+            "For_each": {
+              "foreach": "@triggerBody()",
+              "actions": {
+                "IsAlertMessage": {
+                  "actions": {
+                    "IsStartEvent": {
+                      "actions": {
+                        "ThereIsNotAnOpenCaseWhenStart": {
+                          "actions": {
+                            "InsertNewCase": {
+                              "runAfter": {},
+                              "type": "ApiConnection",
+                              "inputs": {
+                                "body": {
+                                  "query": "INSERT INTO alerts (DeviceId, IncidentType, Status, ReportedTime, LastUpdated) VALUES ('@{items('For_each')?['data']?['systemProperties']?['iothub-connection-device-id']}', 'PersonNoPPE', 'Unresolved', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);"
+                                },
+                                "host": {
+                                  "connection": {
+                                    "name": "@parameters('$connections')['sql']['connectionId']"
+                                  }
+                                },
+                                "method": "post",
+                                "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('default'))},@{encodeURIComponent(encodeURIComponent('default'))}/query/sql"
+                              }
+                            },
+                            "SendEmailWithNewCase": {
+                              "runAfter": {
+                                "InsertNewCase": [
+                                  "Succeeded"
+                                ]
+                              },
+                              "type": "ApiConnection",
+                              "inputs": {
+                                "body": {
+                                  "Body": "<p>A person has been identified with No PPE on device @{items('For_each')?['data']?['systemProperties']?['iothub-connection-device-id']} at @{items('For_each')?['data']?['body']?['timestamp']}.</p>",
+                                  "Subject": "[[[ALERT] No PPE detected",
+                                  "To": "[parameters('notificationsEmail')]"
+                                },
+                                "host": {
+                                  "connection": {
+                                    "name": "@parameters('$connections')['office365']['connectionId']"
+                                  }
+                                },
+                                "method": "post",
+                                "path": "/v2/Mail"
+                              }
+                            }
+                          },
+                          "runAfter": {},
+                          "else": {
+                            "actions": {
+                              "UpdateOpenCaseLastUpdate": {
+                                "runAfter": {},
+                                "type": "ApiConnection",
+                                "inputs": {
+                                  "body": {
+                                    "query": "UPDATE alerts SET  LastUpdated = CURRENT_TIMESTAMP WHERE DeviceId = '@{items('For_each')?['data']?['systemProperties']?['iothub-connection-device-id']}' AND Status = 'Unresolved';"
+                                  },
+                                  "host": {
+                                    "connection": {
+                                      "name": "@parameters('$connections')['sql']['connectionId']"
+                                    }
+                                  },
+                                  "method": "post",
+                                  "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('default'))},@{encodeURIComponent(encodeURIComponent('default'))}/query/sql"
+                                }
+                              }
+                            }
+                          },
+                          "expression": {
+                            "and": [{
+                              "equals": [
+                                "@empty(body('SQL_Query_Open_Case')?['resultsets'])",
+                                true
+                              ]
+                            }]
+                          },
+                          "type": "If"
+                        }
+                      },
+                      "runAfter": {
+                        "SQL_Query_Open_Case": [
+                          "Succeeded"
+                        ]
+                      },
+                      "else": {
+                        "actions": {
+                          "ThereIsNotAnOpenCaseWhenEnd": {
+                            "actions": {},
+                            "runAfter": {},
+                            "else": {
+                              "actions": {
+                                "SendEmailWithResolvedInformation": {
+                                  "runAfter": {
+                                    "UpdateCaseWithResolveStatus": [
+                                      "Succeeded"
+                                    ]
+                                  },
+                                  "type": "ApiConnection",
+                                  "inputs": {
+                                    "body": {
+                                      "Body": "<p>Incident regarding No PPE detection on @{items('For_each')?['data']?['systemProperties']?['iothub-connection-device-id']} has been resolved at @{items('For_each')?['data']?['body']?['timestamp']}.</p>",
+                                      "Subject": "[[[ALERT RESOLVED] No PPE detected",
+                                      "To": "[parameters('notificationsEmail')]"
+                                    },
+                                    "host": {
+                                      "connection": {
+                                        "name": "@parameters('$connections')['office365']['connectionId']"
+                                      }
+                                    },
+                                    "method": "post",
+                                    "path": "/v2/Mail"
+                                  }
+                                },
+                                "UpdateCaseWithResolveStatus": {
+                                  "runAfter": {},
+                                  "type": "ApiConnection",
+                                  "inputs": {
+                                    "body": {
+                                      "query": "UPDATE alerts SET  LastUpdated = CURRENT_TIMESTAMP,  Status = 'Resolved' WHERE DeviceId = '@{items('For_each')?['data']?['systemProperties']?['iothub-connection-device-id']}' AND Status = 'Unresolved';"
+                                    },
+                                    "host": {
+                                      "connection": {
+                                        "name": "@parameters('$connections')['sql']['connectionId']"
+                                      }
+                                    },
+                                    "method": "post",
+                                    "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('default'))},@{encodeURIComponent(encodeURIComponent('default'))}/query/sql"
+                                  }
+                                }
+                              }
+                            },
+                            "expression": {
+                              "and": [{
+                                "equals": [
+                                  "@empty(body('SQL_Query_Open_Case')?['resultsets'])",
+                                  true
+                                ]
+                              }]
+                            },
+                            "type": "If"
+                          }
+                        }
+                      },
+                      "expression": {
+                        "and": [{
+                          "equals": [
+                            "@items('For_each')?['data']?['body']?['event_type']",
+                            "start"
+                          ]
+                        }]
+                      },
+                      "type": "If"
+                    },
+                    "SQL_Query_Open_Case": {
+                      "runAfter": {
+                        "Timeout_Alerts": [
+                          "Succeeded"
+                        ]
+                      },
+                      "type": "ApiConnection",
+                      "inputs": {
+                        "body": {
+                          "query": "SELECT IncidentID, LastUpdated FROM alerts WHERE DeviceId = '@{items('For_each')?['data']?['systemProperties']?['iothub-connection-device-id']}' AND Status = 'Unresolved';"
+                        },
+                        "host": {
+                          "connection": {
+                            "name": "@parameters('$connections')['sql']['connectionId']"
+                          }
+                        },
+                        "method": "post",
+                        "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('default'))},@{encodeURIComponent(encodeURIComponent('default'))}/query/sql"
+                      }
+                    },
+                    "Timeout_Alerts": {
+                      "runAfter": {},
+                      "type": "ApiConnection",
+                      "inputs": {
+                        "body": {
+                          "query": "UPDATE alerts SET  LastUpdated = CURRENT_TIMESTAMP,  \n    Status = 'Timeout' WHERE DeviceId = '@{items('For_each')?['data']?['systemProperties']?['iothub-connection-device-id']}' AND Status = 'Unresolved' AND DATEADD(minute, 10, LastUpdated) < CURRENT_TIMESTAMP;"
+                        },
+                        "host": {
+                          "connection": {
+                            "name": "@parameters('$connections')['sql']['connectionId']"
+                          }
+                        },
+                        "method": "post",
+                        "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('default'))},@{encodeURIComponent(encodeURIComponent('default'))}/query/sql"
+                      }
+                    }
+                  },
+                  "runAfter": {},
+                  "expression": {
+                    "and": [{
+                      "equals": [
+                        "@items('For_each')?['data']?['body']?['message_type']",
+                        "alert"
+                      ]
+                    }]
+                  },
+                  "type": "If"
+                }
+              },
+              "runAfter": {},
+              "type": "Foreach"
+            }
+          },
+          "outputs": {}
+        },
+        "parameters": {
+          "$connections": {
+            "value": {
+              "office365": {
+                "connectionId": "[resourceId('Microsoft.Web/connections', variables('connections').office365.name)]",
+                "connectionName": "office365",
+                "id": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/westus2/managedApis/', variables('connections').office365.name)]"
+              },
+              "sql": {
+                "connectionId": "[resourceId('Microsoft.Web/connections', variables('connections').sql.name)]",
+                "connectionName": "sql",
+                "id": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/westus2/managedApis/', variables('connections').sql.name)]"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.TimeSeriesInsights/environments",
+      "apiVersion": "2018-08-15-preview",
+      "name": "[variables('timeseries').name]",
+      "location": "westus2",
+      "sku": {
+        "name": "L1",
+        "capacity": 1
+      },
+      "kind": "LongTerm",
+      "properties": {
+        "storageConfiguration": {
+          "accountName": "[variables('storage').name]",
+          "managementKey": "[listKeys(variables('storage').id,'2019-04-01').keys[0].value]"
+        },
+        "timeSeriesIdProperties": [{
+          "name": "iothub-connection-device-id",
+          "type": "string"
+        }],
+        "warmStoreConfiguration": {
+          "dataRetention": "P7D"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Web/serverfarms",
+      "apiVersion": "2018-02-01",
+      "name": "[variables('website').serverfarms.name]",
+      "location": "westus2",
+      "dependsOn": [
+        "[resourceId('Microsoft.Maps/accounts', variables('maps').name)]"
+      ],
+      "sku": {
+        "name": "D1",
+        "tier": "Shared",
+        "size": "D1",
+        "family": "D",
+        "capacity": 0
+      },
+      "kind": "app",
+      "properties": {
+        "perSiteScaling": false,
+        "maximumElasticWorkerCount": 1,
+        "isSpot": false,
+        "reserved": false,
+        "isXenon": false,
+        "hyperV": false,
+        "targetWorkerCount": 0,
+        "targetWorkerSizeId": 0
+      }
+    },
+    {
+      "apiVersion": "2018-02-01",
+      "name": "[variables('website').name]",
+      "type": "Microsoft.Web/sites",
+      "location": "westus2",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', variables('website').serverfarms.name)]"
+      ],
+      "tags": null,
+      "properties": {
+        "name": "[variables('website').name]",
+        "enabled": true,
+        "hostNameSslStates": [{
+            "name": "[concat(variables('website').name, '.azurewebsites.net')]",
+            "sslState": "Disabled",
+            "hostType": "Standard"
+          },
+          {
+            "name": "[concat(variables('website').name, '.scm.azurewebsites.net')]",
+            "sslState": "Disabled",
+            "hostType": "Repository"
+          }
+        ],
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('website').serverfarms.name)]",
+        "siteConfig": {
+          "appSettings": [{
+              "name": "ApplicationInsightsAgent_EXTENSION_VERSION",
+              "value": "~2"
+            },
+            {
+              "name": "XDT_MicrosoftApplicationInsights_Mode",
+              "value": "default"
+            },
+            {
+              "name": "DiagnosticServices_EXTENSION_VERSION",
+              "value": "disabled"
+            },
+            {
+              "name": "APPINSIGHTS_PROFILERFEATURE_VERSION",
+              "value": "disabled"
+            },
+            {
+              "name": "APPINSIGHTS_SNAPSHOTFEATURE_VERSION",
+              "value": "disabled"
+            },
+            {
+              "name": "InstrumentationEngine_EXTENSION_VERSION",
+              "value": "disabled"
+            },
+            {
+              "name": "SnapshotDebugger_EXTENSION_VERSION",
+              "value": "disabled"
+            },
+            {
+              "name": "XDT_MicrosoftApplicationInsights_BaseExtensions",
+              "value": "disabled"
+            },
+            {
+              "name": "Maps:Key",
+              "value": "[listKeys(variables('maps').id,'2018-05-01').primaryKey]"
+            }
+          ],
+          "metadata": [{
+            "name": "CURRENT_STACK",
+            "value": "dotnetcore"
+          }]
+        },
+        "clientAffinityEnabled": true
+      },
+      "resources": [{
+        "name": "MSDeploy",
+        "type": "extensions",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2015-08-01",
+        "dependsOn": [
+          "[concat('Microsoft.Web/sites/', variables('website').name)]"
+        ],
+        "tags": {
+          "displayName": "webDeploy"
+        },
+        "properties": {
+          "packageUri": "https://zarmada.blob.core.windows.net/aiontheedge-shared/AzureMapsDemo.zip?sp=r&st=2020-01-10T01:12:41Z&se=2050-01-10T09:12:41Z&spr=https&sv=2019-02-02&sr=b&sig=Fv%2B2mytoWQmlBD0cXNpgo6PzBtMjlWLuoa2ZtvMhIAM%3D",
+          "dbType": "None",
+          "connectionString": ""
+        }
+      }]
+    }
+  ],
+  "outputs": {
+    "Cognitive Services Account Key": {
+      "type": "string",
+      "value": "[listKeys(variables('cogservices').id,'2017-04-18').key1]"
+    },
+    "Cognitive Services Account Endpoint": {
+      "type": "string",
+      "value": "[reference(variables('cogservices').id,'2017-04-18').endpoint]"
+    },
+    "Cognitive Services Account Resource Id": {
+      "type": "string",
+      "value": "[variables('cogservices').id]"
+    },
+    "Maps Account Key": {
+      "type": "string",
+      "value": "[listKeys(variables('maps').id,'2018-05-01').primaryKey]"
+    },
+    "Database Name": {
+      "type": "string",
+      "value": "[variables('sql').db.name]"
+    },
+    "SQL Server Username": {
+      "type": "string",
+      "value": "[parameters('administratorLogin')]"
+    },
+    "SQL Server Password": {
+      "type": "string",
+      "value": "[parameters('administratorLoginPassword')]"
+    },
+    "Geofence Alerts Logic App Endpoint": {
+      "type": "string",
+      "value": "[listCallbackUrl(resourceId(resourceGroup().name,'Microsoft.Logic/workflows/triggers', variables('logicapps').geofence.name, 'manual'), '2016-06-01').value]"
+    },
+    "Device Alerts Logic App Endpoint": {
+      "type": "string",
+      "value": "[listCallbackUrl(resourceId(resourceGroup().name,'Microsoft.Logic/workflows/triggers', variables('logicapps').alerts.name, 'manual'), '2016-06-01').value]"
+    },
+    "IoTHub Connection String": {
+      "type": "string",
+      "value": "[concat('HostName=', reference(resourceId('Microsoft.Devices/IoTHubs', variables('iothub').name), providers('Microsoft.Devices', 'IoTHubs').apiVersions[0]).hostName, ';SharedAccessKeyName=iothubowner;SharedAccessKey=', listkeys(variables('iothub').id, '2019-11-04').value[0].primaryKey)]"
+    }
+  }
+}
