@@ -263,8 +263,8 @@ In this section, we will set up your Vision AI Dev Kit to be connected to the de
 1. Enter **[Azure: Sign In]** command in the command palette box to sign in Azure account and select your subscription.
 1. Install [Docker Community Edition (CE)](https://docs.docker.com/install/#supported-platforms). Don't sign in to Docker Desktop after Docker CE is installed.
 
-1. Install [Docker Extension](https://marketplace.visualstudio.com/items?itemName=PeterJausovec.vscode-docker) to Visual Studio Code.
-    - `code --install-extension peterjausovec.vscode-docker`
+1. Install [Docker Extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker) to Visual Studio Code.
+    - `code --install-extension ms-azuretools.vscode-docker`
 
 #### Build and deploy container image to device
 1. Launch Visual Studio Code, and select File > Open Workspace... command to open the `devkit\VisionModules.code-workspace`.
@@ -272,14 +272,16 @@ In this section, we will set up your Vision AI Dev Kit to be connected to the de
     - In the [Azure portal](https://portal.azure.com/) select the `Resource Group` you created earlier.
     - Select the `Container Registry` resource.
     - Select `Access Keys` from the left navigation.
-    - Update the following: 
-      ```bash
-        REGISTRY_NAME=<Login Server> (NOTE: this is the login server and not the username)
-        REGISTRY_USER_NAME=<Username>
-        REGISTRY_PASSWORD=<Password>
-      ```
+    - Update the following in `devkit/.env` with the following values from  `Access Keys` within the Container Registry: 
+      
+        REGISTRY_NAME=`<Login Server>` (Ensure this is the login server and NOT the Registry Name)
+
+        REGISTRY_USER_NAME=`<Username>`
+
+        REGISTRY_PASSWORD=`<Password>`
+      
     - Save the file.
-1. Sign in to your Azure Container Registry by entering the following command in the Visual Studio Code integrated terminal (replace <REGISTRY_USER_NAME>, <REGISTRY_PASSWORD>, and <REGISTRY_NAME> to your container registry values set in the .env file).
+1. Sign in to your Azure Container Registry by entering the following command in the Visual Studio Code integrated terminal (replace <REGISTRY_USER_NAME>, <REGISTRY_PASSWORD>, and <REGISTRY_NAME> with your container registry values set in the .env file).
   
     `docker login -u <REGISTRY_USER_NAME> -p <REGISTRY_PASSWORD> <REGISTRY_NAME>`
 
