@@ -288,13 +288,15 @@ In this section, we will set up your Vision AI Dev Kit to be connected to the de
     > IMPORTANT: If you would llke to deploy your own model please refer to the `Custom Vision project setup` section in the `Optional Steps` section later in this document. You will need to increment the version number in tag property of `AIVisionDevKitGetStartedModule\module.json`if you wish to push another model after the initial one. 
 1. **IMPORTANT**: Ensure you have `arm32v7` selected as the architecture in the bottom navigation bar of VS Code. 
 1. Open `deployment.template.json` and replace `<Azure Blob URL>` with the value you got earlier in the `Edge Stream Analytics Job` section and save the file.
-1. Right-click on `deployment.template.json` and select the `Build and Push IoT Edge Solution` command to generate a new deployment.json file in the config folder, build a module image, and push the image to the specified ACR repository
-    > Note: Some red warnings "/usr/bin/find: '/proc/XXX': No such file or directory" and "debconf: delaying package configuration, since apt-utils is not installed" displayed during the building process can be ignored.
+1. Right-click on `deployment.template.json` and select the `Build and Push IoT Edge Solution` command to generate a new `deployment.json` file in the config folder, build a module image, and push the image to the specified ACR repository
+    > IMPORTANT: If you have amended code in your module, you will need to increment the version number in `module.json` so the new version will get deployed to the device in the next steps.
+    
+    > NOTE: Some red warnings "/usr/bin/find: '/proc/XXX': No such file or directory" and "debconf: delaying package configuration, since apt-utils is not installed" displayed during the building process can be ignored.
 1. Ensure you have the correct Iot Hub selected in VS Code.
     - In the Azure IoT Hub extenstion, click `Select IoT Hub` from the hamburger menu.
     - Select your `Subscription`.
     - Select the `IoT Hub` you created earlier in the setup. 
-1. Right-click `config\deployment.azrm32v7.json` and select `Create Deployment for a Single Device`.
+1. Right-click `config\deployment.arm32v7.json` and select `Create Deployment for a Single Device`.
 1. Select the device you created earlier. 
 1. Wait for deployment to be completed.
 
