@@ -294,7 +294,7 @@ In this section, we will set up your Vision AI Dev Kit to be connected to the de
     - In the Azure IoT Hub extenstion, click `Select IoT Hub` from the hamburger menu.
     - Select your `Subscription`.
     - Select the `IoT Hub` you created earlier in the setup. 
-1. Right-click `config\deployment.azrm32v7.json` and select `Create Deployment for a Single Device`.
+1. Right-click `config\deployment.arm32v7.json` and select `Create Deployment for a Single Device`.
 1. Select the device you created earlier. 
 1. Wait for deployment to be completed.
 
