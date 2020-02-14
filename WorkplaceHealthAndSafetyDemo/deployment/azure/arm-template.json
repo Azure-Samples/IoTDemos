@@ -407,13 +407,8 @@
           "type": "None"
         },
         "datasource": {
-          "type": "Microsoft.Devices/IotHubs",
+          "type": "GatewayMessageBus",
           "properties": {
-            "iotHubNamespace": "[variables('iothub').name]",
-            "endpoint": "messages/events",
-            "consumerGroupName": "$Default",
-            "sharedAccessPolicyKey": "[listkeys(variables('iothub').id, '2019-11-04').value[0].primaryKey]",
-            "sharedAccessPolicyName": "iothubowner"
           }
         },
         "serialization": {
