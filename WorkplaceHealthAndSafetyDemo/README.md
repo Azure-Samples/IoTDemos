@@ -17,7 +17,7 @@ For a quicker setup, you can use an ARM file to deploy all the required resource
 
       - Select the `Subscription`.
       - Enter the `Resource group` name.
-      - Select the `Region` where to setup the Resource Group.
+      - Select the `Region` where to setup the Resource Group. *Keep in mind that all resources will be deployed to this region so make sure it supports all of the required services. The template has been confirmed to work in West US 2.*
 
     - Click the `Review + Create` button at the bottom of the page.
     - Click `Create` to finish the creation of the Resource Group.
@@ -279,7 +279,11 @@ In this section, we will set up your Vision AI Dev Kit to be connected to the de
         REGISTRY_USER_NAME=`<Username>`
 
         REGISTRY_PASSWORD=`<Password>`
+
+    - Update the following in `devkit/.env` with the following value you got earlier in the `Edge Stream Analytics Job` section
       
+        ASA_BLOB_URL=`<ASA Blob URL>`
+
     - Save the file.
 1. Sign in to your Azure Container Registry by entering the following command in the Visual Studio Code integrated terminal (replace <REGISTRY_USER_NAME>, <REGISTRY_PASSWORD>, and <REGISTRY_NAME> with your container registry values set in the .env file).
   
@@ -287,7 +291,6 @@ In this section, we will set up your Vision AI Dev Kit to be connected to the de
 
     > IMPORTANT: If you would llke to deploy your own model please refer to the `Custom Vision project setup` section in the `Optional Steps` section later in this document. You will need to increment the version number in tag property of `AIVisionDevKitGetStartedModule\module.json`if you wish to push another model after the initial one. 
 1. **IMPORTANT**: Ensure you have `arm32v7` selected as the architecture in the bottom navigation bar of VS Code. 
-1. Open `deployment.template.json` and replace `<Azure Blob URL>` with the value you got earlier in the `Edge Stream Analytics Job` section and save the file.
 1. Right-click on `deployment.template.json` and select the `Build and Push IoT Edge Solution` command to generate a new `deployment.json` file in the config folder, build a module image, and push the image to the specified ACR repository
     > IMPORTANT: If you have amended code in your module, you will need to increment the version number in `module.json` so the new version will get deployed to the device in the next steps.
     

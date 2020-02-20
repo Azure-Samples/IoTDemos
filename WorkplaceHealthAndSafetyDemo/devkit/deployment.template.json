@@ -59,7 +59,7 @@
         "modules": {
           "EdgeStreamAnalyticsJob": {
             "settings": {
-                "image": "mcr.microsoft.com/azure-stream-analytics/azureiotedge:1.0.5",
+                "image": "mcr.microsoft.com/azure-stream-analytics/azureiotedge:1.0.6",
                 "createOptions": ""
             },
             "type": "docker",
@@ -174,7 +174,7 @@
     },
     "EdgeStreamAnalyticsJob": {
       "properties.desired": {
-          "ASAJobInfo": "<ASA Blob URL>",
+          "ASAJobInfo": "$ASA_BLOB_URL",
           "ASAJobResourceId": "/subscriptions/a98dfc86-277a-4bed-93fa-b07419a9ddae/resourceGroups/ai-on-the-edge/providers/Microsoft.StreamAnalytics/streamingjobs/EdgeStreamAnalyticsJob",
           "ASAJobEtag": "42244656-f3db-4d16-83cd-8233477918aa",
           "PublishTimestamp": "2/3/2020 11:12:38 PM"

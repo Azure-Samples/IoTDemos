@@ -103,7 +103,7 @@
       "type": "Microsoft.ContainerRegistry/registries",
       "apiVersion": "2019-05-01",
       "name": "[variables('acr').name]",
-      "location": "westus2",
+      "location": "[resourceGroup().location]",
       "sku": {
         "name": "Basic",
         "tier": "Basic"
@@ -129,7 +129,7 @@
       "type": "Microsoft.CognitiveServices/accounts",
       "apiVersion": "2017-04-18",
       "name": "[variables('cogservices').name]",
-      "location": "westus2",
+      "location": "[resourceGroup().location]",
       "sku": {
         "name": "S0"
       },
@@ -154,7 +154,7 @@
       "type": "Microsoft.Sql/servers",
       "apiVersion": "2015-05-01-preview",
       "name": "[variables('sql').name]",
-      "location": "westus2",
+      "location": "[resourceGroup().location]",
       "kind": "v12.0",
       "properties": {
         "administratorLogin": "[parameters('administratorLogin')]",
@@ -166,7 +166,7 @@
       "type": "Microsoft.Sql/servers/databases",
       "apiVersion": "2017-10-01-preview",
       "name": "[concat(variables('sql').name, '/', variables('sql').db.name)]",
-      "location": "westus2",
+      "location": "[resourceGroup().location]",
       "dependsOn": [
         "[resourceId('Microsoft.Sql/servers', variables('sql').name)]"
       ],
@@ -311,7 +311,7 @@
       "type": "Microsoft.Storage/storageAccounts",
       "apiVersion": "2019-04-01",
       "name": "[variables('storage').name]",
-      "location": "westus2",
+      "location": "[resourceGroup().location]",
       "sku": {
         "name": "Standard_LRS",
         "tier": "Standard"
@@ -557,7 +557,7 @@
       "type": "Microsoft.Devices/IotHubs",
       "apiVersion": "2019-11-04",
       "name": "[variables('iothub').name]",
-      "location": "westus2",
+      "location": "[resourceGroup().location]",
       "sku": {
         "name": "S1",
         "tier": "Standard",
@@ -613,12 +613,12 @@
       "type": "Microsoft.Web/connections",
       "apiVersion": "2016-06-01",
       "name": "[variables('connections').office365.name]",
-      "location": "westus2",
+      "location": "[resourceGroup().location]",
       "properties": {
         "displayName": "[parameters('notificationsEmail')]",
         "customParameterValues": {},
         "api": {
-          "id": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/westus2/managedApis/', variables('connections').office365.name)]"
+          "id": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', variables('connections').office365.name)]"
         }
       }
     },
@@ -626,7 +626,7 @@
       "type": "Microsoft.Web/connections",
       "apiVersion": "2016-06-01",
       "name": "[variables('connections').sql.name]",
-      "location": "westus2",
+      "location": "[resourceGroup().location]",
       "properties": {
         "displayName": "[concat(variables('sql').db.name, ' ', variables('sql').name, '.database.windows.net')]",
         "parameterValues": {
@@ -637,7 +637,7 @@
           "password": "[parameters('administratorLoginPassword')]"
         },
         "api": {
-          "id": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/westus2/managedApis/sql')]"
+          "id": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/sql')]"
         }
       }
     },
@@ -645,7 +645,7 @@
       "type": "Microsoft.Logic/workflows",
       "apiVersion": "2017-07-01",
       "name": "[variables('logicapps').geofence.name]",
-      "location": "westus2",
+      "location": "[resourceGroup().location]",
       "dependsOn": [
         "[resourceId('Microsoft.Web/connections', variables('connections').office365.name)]",
         "[resourceId('Microsoft.Web/connections', variables('connections').sql.name)]"
@@ -789,12 +789,12 @@
               "office365": {
                 "connectionId": "[resourceId('Microsoft.Web/connections', variables('connections').office365.name)]",
                 "connectionName": "[variables('connections').office365.name]",
-                "id": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/westus2/managedApis/', variables('connections').office365.name)]"
+                "id": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', variables('connections').office365.name)]"
               },
               "sql": {
                 "connectionId": "[resourceId('Microsoft.Web/connections', variables('connections').sql.name)]",
                 "connectionName": "sql",
-                "id": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/westus2/managedApis/', variables('connections').sql.name)]"
+                "id": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', variables('connections').sql.name)]"
               }
             }
           }
@@ -805,7 +805,7 @@
       "type": "Microsoft.Logic/workflows",
       "apiVersion": "2017-07-01",
       "name": "[variables('logicapps').alerts.name]",
-      "location": "westus2",
+      "location": "[resourceGroup().location]",
       "dependsOn": [
         "[resourceId('Microsoft.Web/connections', variables('connections').office365.name)]",
         "[resourceId('Microsoft.Web/connections', variables('connections').sql.name)]"
@@ -946,7 +946,7 @@
                               "inputs": {
                                 "body": {
                                   "Body": "<p>A person has been identified with No PPE on device @{items('For_each')?['data']?['systemProperties']?['iothub-connection-device-id']} at @{items('For_each')?['data']?['body']?['timestamp']}.</p>",
-                                  "Subject": "[[[ALERT] No PPE detected",
+                                  "Subject": "[ALERT] No PPE detected",
                                   "To": "[parameters('notificationsEmail')]"
                                 },
                                 "host": {
@@ -1013,7 +1013,7 @@
                                   "inputs": {
                                     "body": {
                                       "Body": "<p>Incident regarding No PPE detection on @{items('For_each')?['data']?['systemProperties']?['iothub-connection-device-id']} has been resolved at @{items('For_each')?['data']?['body']?['timestamp']}.</p>",
-                                      "Subject": "[[[ALERT RESOLVED] No PPE detected",
+                                      "Subject": "[ALERT RESOLVED] No PPE detected",
                                       "To": "[parameters('notificationsEmail')]"
                                     },
                                     "host": {
@@ -1126,12 +1126,12 @@
               "office365": {
                 "connectionId": "[resourceId('Microsoft.Web/connections', variables('connections').office365.name)]",
                 "connectionName": "office365",
-                "id": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/westus2/managedApis/', variables('connections').office365.name)]"
+                "id": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', variables('connections').office365.name)]"
               },
               "sql": {
                 "connectionId": "[resourceId('Microsoft.Web/connections', variables('connections').sql.name)]",
                 "connectionName": "sql",
-                "id": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/westus2/managedApis/', variables('connections').sql.name)]"
+                "id": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', variables('connections').sql.name)]"
               }
             }
           }
@@ -1142,7 +1142,7 @@
       "type": "Microsoft.TimeSeriesInsights/environments",
       "apiVersion": "2018-08-15-preview",
       "name": "[variables('timeseries').name]",
-      "location": "westus2",
+      "location": "[resourceGroup().location]",
       "sku": {
         "name": "L1",
         "capacity": 1
@@ -1166,7 +1166,7 @@
       "type": "Microsoft.Web/serverfarms",
       "apiVersion": "2018-02-01",
       "name": "[variables('website').serverfarms.name]",
-      "location": "westus2",
+      "location": "[resourceGroup().location]",
       "dependsOn": [
         "[resourceId('Microsoft.Maps/accounts', variables('maps').name)]"
       ],
@@ -1193,7 +1193,7 @@
       "apiVersion": "2018-02-01",
       "name": "[variables('website').name]",
       "type": "Microsoft.Web/sites",
-      "location": "westus2",
+      "location": "[resourceGroup().location]",
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', variables('website').serverfarms.name)]"
       ],
