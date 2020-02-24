@@ -462,5 +462,20 @@ To run the app we will need the valid connection string to the IoTHub.
    - Make sure to check the `Update only` box.
    - Click the `Upload` button and wait for the instances list to be loaded.
 
+### Azure Maps Solution
 
+If you would like to customize the Azure Maps solution, the source code is available under `azuremaps\src`.
+
+To deploy your updated solution to the existing resource via Visual Studio, complete the following steps:
+
+1. In the [Azure portal](https://portal.azure.com/) select the `Resource Group` you created earlier.
+1. Select the `App Service` resource.
+1. Select `Get Publish Profile` from the top navigation.
+1. Open Visual Studio.
+1. From the top menu click the `File | Open | Project/Solution`.
+1. Open `azuremaps\src\AzureMapsDemo.sln`.
+1. From the left navigation, right click on `AzureMapsDemo.Web` and click `Publish`.
+1. Click `Import Profile` from the bottom left.
+1. Select the publish profile you downloaded in the earlier step.
+1. Wait for the deployment to be completed. 
 
