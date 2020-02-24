@@ -1,0 +1,48 @@
+.Toast {
+  display: flex;
+  position: absolute;
+  top: 40px;
+  right: 20px;
+  height: 80px;
+  -webkit-box-shadow: 2px 2px 12px -4px rgba(0,0,0,0.71);
+  -moz-box-shadow: 2px 2px 12px -4px rgba(0,0,0,0.71);
+  box-shadow: 2px 2px 12px -4px rgba(0,0,0,0.71);
+  cursor: pointer;
+  &.warning {
+    background: #f25022;
+  }
+  &.reminder {
+    background: #ffb802;
+  }
+  .icon {
+    width: 80px;
+    height: 80px;
+    flex: 0;
+    .icon-wrap {
+      height: 33px;
+      width: 33px;
+      margin: 24px;
+      img {
+        height: 33px;
+      }
+    }
+  }
+  .warning {
+    flex: 1;
+    background: white;
+    h3 {
+      color: #323237;
+      margin-bottom: 3px;
+      margin-left: 20px;
+      font-size: 1.2vw;
+      margin-top: 17px;
+      font-weight: 600;
+    }
+    span {
+      color: #323237;
+      margin-left: 20px;
+      margin-right: 20px;
+      font-weight: 300;
+    }
+  }
+}
