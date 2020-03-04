@@ -1,5 +1,8 @@
 # Workplace Health and Safety Demo
 
+##Troubleshooting
+Troubleshooting information at the end of this section.
+
 ## Azure Resource Deployment
 
 For a quicker setup, you can use an ARM file to deploy all the required resources in the solution.
@@ -479,3 +482,11 @@ To deploy your updated solution to the existing resource via Visual Studio, comp
 1. Select the publish profile you downloaded in the earlier step.
 1. Wait for the deployment to be completed. 
 
+#Troubleshooting
+### Error when deploying ARM Template
+We've seen issues with different subscription types: MSDN, AIRS, etc... not being able to deploy certain resources to certain regions.  We've found that deploying to East US works consistently.  If you have a deployment error, try deploying to East US.  The resources inherit they're deployment region from the Resource Group location.
+
+###No data appears from the Camera / AI DevKit
+1. Reboot the camera. Instructions here: https://azure.github.io/Vision-AI-DevKit-Pages/docs/Reboot/
+2. Reset the camera by deploying the latest firmware.  Instructions are located here: https://azure.github.io/Vision-AI-DevKit-Pages/docs/Recover_device/
+3. Look at the IoT Edge Logs for errors and submit an issue to this (IoT Demos) repo: https://azure.github.io/Vision-AI-DevKit-Pages/docs/Review_logs/
