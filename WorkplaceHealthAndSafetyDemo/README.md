@@ -484,7 +484,7 @@ To deploy your updated solution to the existing resource via Visual Studio, comp
 
 # Troubleshooting
 ### Error when deploying ARM Template
-We've seen issues with different subscription types: MSDN, AIRS, etc... not being able to deploy certain resources to certain regions.  We've found that deploying to East US works consistently.  If you have a deployment error, try deploying to East US.  The resources inherit they're deployment region from the Resource Group location.
+We've seen issues with different subscription types: MSDN, AIRS, etc... not being able to deploy certain resources to certain regions.  We've found that deploying to East US works consistently.  If you have a deployment error, try deploying to East US.  The resources inherit their deployment region from the Resource Group location.
 
 ### No data appears from the Camera / AI DevKit
 1. Reboot the camera. Instructions [Here](https://azure.github.io/Vision-AI-DevKit-Pages/docs/Reboot/)
