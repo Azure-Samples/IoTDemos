@@ -1,7 +1,7 @@
 # Workplace Health and Safety Demo
 
 ## Troubleshooting
-Troubleshooting information at the end of this section.
+Troubleshooting information at the .[end].(https://github.com/Azure-Samples/IoTDemos/blob/master/WorkplaceHealthAndSafetyDemo/README.md#troubleshooting-1) of this document.
 
 ## Azure Resource Deployment
 
