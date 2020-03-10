@@ -1,4 +1,8 @@
 # Workplace Health and Safety Demo
+## Overview
+
+## Architecture
+![Architecture](https://github.com/Azure-Samples/IoTDemos/blob/master/WorkplaceHealthAndSafetyDemo/images/Workplace%20Safety%20Architecture.png)
 
 ## Troubleshooting
 Troubleshooting information at the [end](https://github.com/Azure-Samples/IoTDemos/blob/master/WorkplaceHealthAndSafetyDemo/README.md#troubleshooting-1) of this document.
