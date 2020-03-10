@@ -1,5 +1,13 @@
 # Workplace Health and Safety Demo
 ## Overview
+The Workplace Health and Safety Demo provides the ability to identify unsafe work conditions using AI on Edge and Location Analytics IoT architecture patterns.
+
+The AI on Edge pattern utilizes the Vision AI DevKit which utilizes the Azure IoT Edge Runtime with a custom IoT Edge python module that runs the Vision AI model and an Azure Stream Analytics (ASA) edge module.  The Vision AI model has been trained to identify a hard hat and a safety vests.  The ASA edge module logic sends only those events where a worker is identified not wearing a hard hat or a vest.  The ASA module aggregates / buffers the data so not every frame generates an alert.
+
+The Location Analytics pattern is implemented through Azure Maps geofencing capability. An Azure Web App has been developed to behave like a client that submits GPS information to Azure Maps. The Azure Web App is used to create the geofence and register a client that submits coordinates of the device that is used to register (via the web app).  Controls on the Web App can be used to simulate the client moving in and out of the Geofence.
+
+## Demo Script
+After deploying the demo, a sample demonstraction script can be found here (TBD).
 
 ## Architecture
 ![Architecture](https://github.com/Azure-Samples/IoTDemos/blob/master/WorkplaceHealthAndSafetyDemo/images/Workplace%20Safety%20Architecture.png)
