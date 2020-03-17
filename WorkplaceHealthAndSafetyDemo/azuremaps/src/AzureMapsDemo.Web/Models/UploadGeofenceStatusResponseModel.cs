@@ -7,6 +7,10 @@ namespace AzureMapsDemo.Web.Models
 {
   public class UploadGeofenceStatusResponseModel
   {
-    public string Udid { get; set; }
+    public string OperationId { get; set; }
+
+    public string Status { get; set; }
+
+    public string ResourceLocation { get; set; }
   }
 }
