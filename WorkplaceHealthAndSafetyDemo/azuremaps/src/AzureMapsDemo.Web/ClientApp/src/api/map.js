@@ -61,7 +61,7 @@ export const createGeofence = async (coordinates) => {
 
 export const getGeofence = async () => {
   const res = await fetch('/api/geofence');
-  if (res.ok) {
+  if (res.ok && res.status === 200) {
     return await res.json();
   } else {
     return false;

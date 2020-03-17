@@ -12,4 +12,10 @@ namespace AzureMapsDemo.Web
     East = 3,
     West = 4,
   }
+
+  public class Constants
+  {
+    //Geofence
+    public const string SucceededStatus = "Succeeded";
+  }
 }

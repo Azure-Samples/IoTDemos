@@ -131,7 +131,7 @@ namespace AzureMapsDemo.Web.Services
       }
     }
 
-    private async Task<UploadGeofenceStatusResponseModel> UploadGeofence(UploadGeofenceGeometryModel geometry)
+    private async Task<GeofenceResourceLocationResponseModel> UploadGeofence(UploadGeofenceGeometryModel geometry)
     {
       await RemoveCurrentGeofence(); //Remove first if exists previous
 
@@ -173,10 +173,11 @@ namespace AzureMapsDemo.Web.Services
       while (tries < 100)
       {
         var uploadStatus = await GetUploadGeofenceStatus(locationHeader.Value.FirstOrDefault());
-        if (uploadStatus != null && !string.IsNullOrEmpty(uploadStatus.Udid))
+        if (uploadStatus != null && string.Equals(uploadStatus.Status, Constants.SucceededStatus))
         {
-          _currentGeofenceUdId = uploadStatus.Udid;
-          return uploadStatus;
+          var resourceLocationResponse = await GetResourceLocation(uploadStatus.ResourceLocation);
+          _currentGeofenceUdId = resourceLocationResponse.Udid;
+          return resourceLocationResponse;
         }
         else
         {
@@ -196,6 +197,22 @@ namespace AzureMapsDemo.Web.Services
       {
         var responseString = await responseMessage.Content.ReadAsStringAsync();
         return JsonConvert.DeserializeObject<UploadGeofenceStatusResponseModel>(responseString);
+      }
+      else
+      {
+        return null;
+      }
+    }
+
+    private async Task<GeofenceResourceLocationResponseModel> GetResourceLocation(string resourceLocationUri)
+    {
+      var requestUri = $"{resourceLocationUri}&subscription-key={_azureMapsOptions.Key}";
+      var responseMessage = await Client.GetAsync(requestUri);
+      responseMessage.EnsureSuccessStatusCode();
+      if (responseMessage.StatusCode == System.Net.HttpStatusCode.OK)
+      {
+        var responseString = await responseMessage.Content.ReadAsStringAsync();
+        return JsonConvert.DeserializeObject<GeofenceResourceLocationResponseModel>(responseString);
       }
       else
       {

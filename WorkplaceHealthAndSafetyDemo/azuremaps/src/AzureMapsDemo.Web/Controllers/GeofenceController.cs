@@ -24,7 +24,7 @@ namespace AzureMapsDemo.Web.Controllers
       }
       catch (GeofenceNotFoundException)
       {
-        return NotFound();
+        return Accepted();
       }
     }
 
