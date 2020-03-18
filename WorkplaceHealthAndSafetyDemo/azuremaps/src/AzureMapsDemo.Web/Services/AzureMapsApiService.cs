@@ -185,7 +185,7 @@ namespace AzureMapsDemo.Web.Services
         }
         tries++;
       }
-      throw new Exception("Can't upload geofence.");
+      throw new Exception("Can't upload geofence, unable to get the udid from service.");
     }
 
     private async Task<UploadGeofenceStatusResponseModel> GetUploadGeofenceStatus(string uploadStatusUri)

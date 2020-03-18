@@ -18,14 +18,7 @@ namespace AzureMapsDemo.Web.Controllers
     [HttpGet]
     public async Task<ActionResult<UploadGeofenceModel>> GetGeofence()
     {
-      try
-      {
-        return Ok(await _azureMapsApiService.GetGeofence());
-      }
-      catch (GeofenceNotFoundException)
-      {
-        return Accepted();
-      }
+      return Ok(await _azureMapsApiService.GetGeofence());
     }
 
     [HttpPost]
