@@ -17,38 +17,18 @@ Troubleshooting information at the [end](https://github.com/Azure-Samples/IoTDem
 
 ## Azure Resource Deployment
 
-For a quicker setup, you can use an ARM file to deploy all the required resources in the solution.
-
-### Create Resource Group
-
-1. Setup your Azure subscription if you don't have one already. You can setup an account [HERE](https://azure.microsoft.com/en-us/free/search/).
-1. Create a new `Resource Group` in the Azure Portal:
-
-    - Login to the [Azure portal](https://portal.azure.com/).
-    - Click the `Create a resource` button in the portal.
-    - Enter the text `Resource group` in the search input field and select the displayed option.
-    - Click the `Create` button in the new page.
-    - Enter the required information:
-
-      - Select the `Subscription`.
-      - Enter the `Resource group` name.
-      - Select the `Region` where to setup the Resource Group. *Keep in mind that all resources will be deployed to this region so make sure it supports all of the required services. The template has been confirmed to work in West US 2.*
-
-    - Click the `Review + Create` button at the bottom of the page.
-    - Click `Create` to finish the creation of the Resource Group.
+An Azure Resource Manager (ARM) template will be used to deploy all the required resources in the solution.  Click on the link below to start the deployment.
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https://raw.githubusercontent.com/Azure-Samples/IoTDemos/master/WorkplaceHealthAndSafetyDemo/deployment/azure/arm-template.json?token=ABJCYLJLUSXXASM7WCS2H2K6PYG54" target="_blank">
+<img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.png"/>
+</a>
 
 ### Deployment of resources
 
 Follow the steps to deploy the required Azure resources:
 
-1. In the [Azure portal](https://portal.azure.com/) select the `Resource Group` you created in the previous step.
-1. Click the `+ Add` button or `Create resources`.
-1. Enter the text `Template deployment` in the search input field and select the display option.
-1. Click the `Create` button.
-1. Click the `Build your own template in the editor` link.
-1. Click the `Load file` button, search and select the `arm-template.json` file inside the `deployment\azure` folder and click `Open`.
-1. Click the `Save` button at the left-bottom corner.
-1. Select the `Location` where to run the deployment.
+Select the Subscription.
+Enter the Resource group name.
+Select the Region where to setup the Resource Group. Keep in mind that all resources will be deployed to this region so make sure it supports all of the required services. The template has been confirmed to work in West US 2.
 1. Review and update if required all the `SETTINGS`:
 
     - **Prefix**: This value will be added to the resource names.
