@@ -25,13 +25,13 @@ An Azure Resource Manager (ARM) template will be used to deploy all the required
 ### Deployment of resources
 
 Follow the steps to deploy the required Azure resources:<br>
-BASICS:
+<b>BASICS</b>  
 
-    - **Subscription**: Select the Subscription.
-    - **Resource group**:  Click on 'Create new' and provide a unique name for the Resource Group
-    - **Location**: Select the Region where to deploy the resources. Keep in mind that all resources will be deployed to this region so make sure it supports all of the required services. The template has been confirmed to work in West US 2.
+   *Subscription: Select the Subscription.
+   *Resource group:  Click on 'Create new' and provide a unique name for the Resource Group
+   *Location: Select the Region where to deploy the resources. Keep in mind that all resources will be deployed to this region so make sure it supports all of the required services. The template has been confirmed to work in West US 2.
 
-<b>SETTINGS</b><br>
+<b>SETTINGS</b>  
 
     - **Prefix**: This value will be added to the resource names.
     - **Administrator Login**: Username account for the SQL Server (default: theadmin).
