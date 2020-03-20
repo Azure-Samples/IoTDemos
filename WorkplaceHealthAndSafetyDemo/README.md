@@ -17,20 +17,20 @@ Troubleshooting information at the [end](https://github.com/Azure-Samples/IoTDem
 
 ## Azure Resource Deployment
 
-An Azure Resource Manager (ARM) template will be used to deploy all the required resources in the solution.  Click on the link below to start the deployment.
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https://raw.githubusercontent.com/Azure-Samples/IoTDemos/master/WorkplaceHealthAndSafetyDemo/deployment/azure/arm-template.json?token=ABJCYLJLUSXXASM7WCS2H2K6PYG54" target="_blank">
+An Azure Resource Manager (ARM) template will be used to deploy all the required resources in the solution.  Click on the link below to start the deployment.<br>
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure-Samples%2FIoTDemos%2Fmaster%2FWorkplaceHealthAndSafetyDemo%2Fdeployment%2Fazure%2Farm-template.json" target="_blank">
 <img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.png"/>
 </a>
 
 ### Deployment of resources
 
 Follow the steps to deploy the required Azure resources:
+<b>BASICS</b>
+- **Subscription**: Select the Subscription.
+- **Resource group**:  Click on 'Create new' and provide a unique name for the Resource Group
+- **Location**: Select the Region where to deploy the resources. Keep in mind that all resources will be deployed to this region so make sure it supports all of the required services. The template has been confirmed to work in West US 2.
 
-Select the Subscription.
-Enter the Resource group name.
-Select the Region where to setup the Resource Group. Keep in mind that all resources will be deployed to this region so make sure it supports all of the required services. The template has been confirmed to work in West US 2.
-1. Review and update if required all the `SETTINGS`:
-
+<b>SETTINGS</b>
     - **Prefix**: This value will be added to the resource names.
     - **Administrator Login**: Username account for the SQL Server (default: theadmin).
     - **Administrator Login Password**: Password for the administrator account of the SQL Server (default: M1cro$oft2020).
