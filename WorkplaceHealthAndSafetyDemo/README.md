@@ -7,7 +7,7 @@ The AI on Edge pattern utilizes the Vision AI DevKit which utilizes the Azure Io
 The Location Analytics pattern is implemented through Azure Maps geofencing capability. An Azure Web App has been developed to behave like a client that submits GPS information to Azure Maps. The Azure Web App is used to create the geofence and register a client that submits coordinates of the device that is used to register (via the web app).  Controls on the Web App can be used to simulate the client moving in and out of the Geofence.
 
 ## Demo Script
-After deploying the demo, a sample demonstration script can be found [here](WorkplaceHealthAndSafetyDemo/Workplace Safety - Demo Script.pdf)
+After deploying the demo, a sample demonstration script can be found [here](https://github.com/Azure-Samples/IoTDemos/blob/master/WorkplaceHealthAndSafetyDemo/Workplace%20Safety%20-%20Demo%20Script.pdf)
 
 ## Architecture
 ![Architecture](https://github.com/Azure-Samples/IoTDemos/blob/master/WorkplaceHealthAndSafetyDemo/images/Workplace%20Safety%20Architecture.png)
