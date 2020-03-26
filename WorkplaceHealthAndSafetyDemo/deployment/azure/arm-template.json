@@ -99,7 +99,8 @@
       "name": "[concat(variables('uniquePrefix'), parameters('prefix'), 'acr')]"
     }
   },
-  "resources": [{
+  "resources": [
+    {
       "type": "Microsoft.ContainerRegistry/registries",
       "apiVersion": "2019-05-01",
       "name": "[variables('acr').name]",
@@ -154,7 +155,7 @@
       "type": "Microsoft.Sql/servers",
       "apiVersion": "2015-05-01-preview",
       "name": "[variables('sql').name]",
-      "location": "[resourceGroup().location]",
+      "location": "eastus",
       "kind": "v12.0",
       "properties": {
         "administratorLogin": "[parameters('administratorLogin')]",
@@ -166,7 +167,7 @@
       "type": "Microsoft.Sql/servers/databases",
       "apiVersion": "2017-10-01-preview",
       "name": "[concat(variables('sql').name, '/', variables('sql').db.name)]",
-      "location": "[resourceGroup().location]",
+      "location": "eastus",
       "dependsOn": [
         "[resourceId('Microsoft.Sql/servers', variables('sql').name)]"
       ],
@@ -183,85 +184,6 @@
         "zoneRedundant": false,
         "readScale": "Disabled",
         "readReplicaCount": 0
-      }
-    },
-    {
-      "type": "Microsoft.Sql/servers/advisors",
-      "apiVersion": "2014-04-01",
-      "name": "[concat(variables('sql').name, '/CreateIndex')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.SQL/servers/databases', variables('sql').name, variables('sql').db.name)]"
-      ],
-      "properties": {
-        "autoExecuteValue": "Disabled"
-      }
-    },
-    {
-      "type": "Microsoft.Sql/servers/advisors",
-      "apiVersion": "2014-04-01",
-      "name": "[concat(variables('sql').name, '/DropIndex')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.SQL/servers/databases', variables('sql').name, variables('sql').db.name)]"
-      ],
-      "properties": {
-        "autoExecuteValue": "Disabled"
-      }
-    },
-    {
-      "type": "Microsoft.Sql/servers/auditingPolicies",
-      "apiVersion": "2014-04-01",
-      "name": "[concat(variables('sql').name, '/Default')]",
-      "location": "[resourceGroup().location]",
-      "dependsOn": [
-        "[resourceId('Microsoft.SQL/servers/databases', variables('sql').name, variables('sql').db.name)]"
-      ],
-      "properties": {
-        "auditingState": "Disabled"
-      }
-    },
-    {
-      "type": "Microsoft.Sql/servers/auditingSettings",
-      "apiVersion": "2017-03-01-preview",
-      "name": "[concat(variables('sql').name, '/Default')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.SQL/servers/databases', variables('sql').name, variables('sql').db.name)]"
-      ],
-      "properties": {
-        "state": "Disabled",
-        "retentionDays": 0,
-        "auditActionsAndGroups": [],
-        "storageAccountSubscriptionId": "00000000-0000-0000-0000-000000000000",
-        "isStorageSecondaryKeyInUse": false,
-        "isAzureMonitorTargetEnabled": false
-      }
-    },
-    {
-      "type": "Microsoft.Sql/servers/encryptionProtector",
-      "apiVersion": "2015-05-01-preview",
-      "name": "[concat(variables('sql').name, '/current')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.SQL/servers/databases', variables('sql').name, variables('sql').db.name)]"
-      ],
-      "kind": "servicemanaged",
-      "properties": {
-        "serverKeyName": "ServiceManaged",
-        "serverKeyType": "ServiceManaged"
-      }
-    },
-    {
-      "type": "Microsoft.Sql/servers/extendedAuditingSettings",
-      "apiVersion": "2017-03-01-preview",
-      "name": "[concat(variables('sql').name, '/Default')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.SQL/servers/databases', variables('sql').name, variables('sql').db.name)]"
-      ],
-      "properties": {
-        "state": "Disabled",
-        "retentionDays": 0,
-        "auditActionsAndGroups": [],
-        "storageAccountSubscriptionId": "00000000-0000-0000-0000-000000000000",
-        "isStorageSecondaryKeyInUse": false,
-        "isAzureMonitorTargetEnabled": false
       }
     },
     {
@@ -286,25 +208,6 @@
       "properties": {
         "startIpAddress": "0.0.0.0",
         "endIpAddress": "255.255.255.255"
-      }
-    },
-    {
-      "type": "Microsoft.Sql/servers/securityAlertPolicies",
-      "apiVersion": "2017-03-01-preview",
-      "name": "[concat(variables('sql').name, '/Default')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.SQL/servers/databases', variables('sql').name, variables('sql').db.name)]"
-      ],
-      "properties": {
-        "state": "Disabled",
-        "disabledAlerts": [
-          ""
-        ],
-        "emailAddresses": [
-          ""
-        ],
-        "emailAccountAdmins": false,
-        "retentionDays": 0
       }
     },
     {
@@ -981,12 +884,14 @@
                             }
                           },
                           "expression": {
-                            "and": [{
-                              "equals": [
-                                "@empty(body('SQL_Query_Open_Case')?['resultsets'])",
-                                true
-                              ]
-                            }]
+                            "and": [
+                              {
+                                "equals": [
+                                  "@empty(body('SQL_Query_Open_Case')?['resultsets'])",
+                                  true
+                                ]
+                              }
+                            ]
                           },
                           "type": "If"
                         }
@@ -1044,24 +949,28 @@
                               }
                             },
                             "expression": {
-                              "and": [{
-                                "equals": [
-                                  "@empty(body('SQL_Query_Open_Case')?['resultsets'])",
-                                  true
-                                ]
-                              }]
+                              "and": [
+                                {
+                                  "equals": [
+                                    "@empty(body('SQL_Query_Open_Case')?['resultsets'])",
+                                    true
+                                  ]
+                                }
+                              ]
                             },
                             "type": "If"
                           }
                         }
                       },
                       "expression": {
-                        "and": [{
-                          "equals": [
-                            "@items('For_each')?['data']?['body']?['event_type']",
-                            "start"
-                          ]
-                        }]
+                        "and": [
+                          {
+                            "equals": [
+                              "@items('For_each')?['data']?['body']?['event_type']",
+                              "start"
+                            ]
+                          }
+                        ]
                       },
                       "type": "If"
                     },
@@ -1104,12 +1013,14 @@
                   },
                   "runAfter": {},
                   "expression": {
-                    "and": [{
-                      "equals": [
-                        "@items('For_each')?['data']?['body']?['message_type']",
-                        "alert"
-                      ]
-                    }]
+                    "and": [
+                      {
+                        "equals": [
+                          "@items('For_each')?['data']?['body']?['message_type']",
+                          "alert"
+                        ]
+                      }
+                    ]
                   },
                   "type": "If"
                 }
@@ -1142,7 +1053,7 @@
       "type": "Microsoft.TimeSeriesInsights/environments",
       "apiVersion": "2018-08-15-preview",
       "name": "[variables('timeseries').name]",
-      "location": "[resourceGroup().location]",
+      "location": "centralus",
       "sku": {
         "name": "L1",
         "capacity": 1
@@ -1153,10 +1064,12 @@
           "accountName": "[variables('storage').name]",
           "managementKey": "[listKeys(variables('storage').id,'2019-04-01').keys[0].value]"
         },
-        "timeSeriesIdProperties": [{
-          "name": "iothub-connection-device-id",
-          "type": "string"
-        }],
+        "timeSeriesIdProperties": [
+          {
+            "name": "iothub-connection-device-id",
+            "type": "string"
+          }
+        ],
         "warmStoreConfiguration": {
           "dataRetention": "P7D"
         }
@@ -1166,7 +1079,7 @@
       "type": "Microsoft.Web/serverfarms",
       "apiVersion": "2018-02-01",
       "name": "[variables('website').serverfarms.name]",
-      "location": "[resourceGroup().location]",
+      "location": "centralus",
       "dependsOn": [
         "[resourceId('Microsoft.Maps/accounts', variables('maps').name)]"
       ],
@@ -1193,7 +1106,7 @@
       "apiVersion": "2018-02-01",
       "name": "[variables('website').name]",
       "type": "Microsoft.Web/sites",
-      "location": "[resourceGroup().location]",
+      "location": "centralus",
       "dependsOn": [
         "[resourceId('Microsoft.Web/serverfarms', variables('website').serverfarms.name)]"
       ],
@@ -1201,7 +1114,8 @@
       "properties": {
         "name": "[variables('website').name]",
         "enabled": true,
-        "hostNameSslStates": [{
+        "hostNameSslStates": [
+          {
             "name": "[concat(variables('website').name, '.azurewebsites.net')]",
             "sslState": "Disabled",
             "hostType": "Standard"
@@ -1214,7 +1128,8 @@
         ],
         "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('website').serverfarms.name)]",
         "siteConfig": {
-          "appSettings": [{
+          "appSettings": [
+            {
               "name": "ApplicationInsightsAgent_EXTENSION_VERSION",
               "value": "~2"
             },
@@ -1251,30 +1166,34 @@
               "value": "[listKeys(variables('maps').id,'2018-05-01').primaryKey]"
             }
           ],
-          "metadata": [{
-            "name": "CURRENT_STACK",
-            "value": "dotnetcore"
-          }]
+          "metadata": [
+            {
+              "name": "CURRENT_STACK",
+              "value": "dotnetcore"
+            }
+          ]
         },
         "clientAffinityEnabled": true
       },
-      "resources": [{
-        "name": "MSDeploy",
-        "type": "extensions",
-        "location": "[resourceGroup().location]",
-        "apiVersion": "2015-08-01",
-        "dependsOn": [
-          "[concat('Microsoft.Web/sites/', variables('website').name)]"
-        ],
-        "tags": {
-          "displayName": "webDeploy"
-        },
-        "properties": {
-          "packageUri": "https://zarmada.blob.core.windows.net/aiontheedge-shared/AzureMapsDemo.zip?sp=r&st=2020-01-10T01:12:41Z&se=2050-01-10T09:12:41Z&spr=https&sv=2019-02-02&sr=b&sig=Fv%2B2mytoWQmlBD0cXNpgo6PzBtMjlWLuoa2ZtvMhIAM%3D",
-          "dbType": "None",
-          "connectionString": ""
+      "resources": [
+        {
+          "name": "MSDeploy",
+          "type": "extensions",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2015-08-01",
+          "dependsOn": [
+            "[concat('Microsoft.Web/sites/', variables('website').name)]"
+          ],
+          "tags": {
+            "displayName": "webDeploy"
+          },
+          "properties": {
+            "packageUri": "https://zarmada.blob.core.windows.net/aiontheedge-shared/AzureMapsDemo.zip?sp=r&st=2020-01-10T01:12:41Z&se=2050-01-10T09:12:41Z&spr=https&sv=2019-02-02&sr=b&sig=Fv%2B2mytoWQmlBD0cXNpgo6PzBtMjlWLuoa2ZtvMhIAM%3D",
+            "dbType": "None",
+            "connectionString": ""
+          }
         }
-      }]
+      ]
     }
   ],
   "outputs": {
