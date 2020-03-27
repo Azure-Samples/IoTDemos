@@ -23,7 +23,7 @@ Git will be used to copy all the files for the demo to your local computer.
 3. Copy the URL of the IoTDemos GitHub repo by click on the copy icon  
 <img src="https://github.com/Azure-Samples/IoTDemos/blob/master/WorkplaceHealthAndSafetyDemo/images/copy.png">  
 4. Open a command prompt and navigate to a folder where the files should be downloaded<br>
-5. Issue the command ` git clone https://github.com/Azure-Samples/IoTDemos.git `  
+5. Issue the command `git clone https://github.com/Azure-Samples/IoTDemos.git `  
 
 ## Azure Resource Deployment
 
