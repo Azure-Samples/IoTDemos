@@ -270,7 +270,7 @@ In this section, we will set up your Vision AI Dev Kit to be connected to the de
 1. Enter **[Azure: Sign In]** command in the command palette box to sign in Azure account and select your subscription.
 1. Install [Docker Community Edition (CE)](https://docs.docker.com/install/#supported-platforms). Don't sign in to Docker Desktop after Docker CE is installed.
 
-1. Install [Docker Extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker) to Visual Studio Code.
+1. Install [Docker Extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker) to Visual Studio Code.  This must be done from the VSCode termainal: View -> Terminal.
     - `code --install-extension ms-azuretools.vscode-docker`
 
 #### Build and deploy container image to device
