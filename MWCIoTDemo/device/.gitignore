@@ -6,7 +6,6 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # User-specific files
-*.env
 *.suo
 *.user
 *.userosscache
@@ -331,8 +330,5 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
-.env
-.env
 config/deployment.json
 config/deployment.json
-.env
