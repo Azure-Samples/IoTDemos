@@ -1,0 +1,862 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "prefix": {
+      "type": "string",
+      "defaultValue": "mwciot",
+      "metadata": {
+        "description": "Base text to be use in the resources names."
+      }
+    },
+    "administratorLogin": {
+      "type": "string",
+      "defaultValue": "theadmin",
+      "metadata": {
+        "description": "The administrator username of the SQL logical server."
+      }
+    },
+    "administratorLoginPassword": {
+      "type": "securestring",
+      "defaultValue": "M1cro$oft2020",
+      "metadata": {
+        "description": "The administrator password of the SQL logical server."
+      }
+    }
+  },
+  "variables": {
+    "uniquePrefix": "[substring(uniqueString(resourceGroup().id), 0, 6)]",
+    "cogservices": {
+      "name": "[concat(variables('uniquePrefix'), parameters('prefix'), 'cogservices')]",
+      "id": "[concat(resourceGroup().id,'/providers/','Microsoft.CognitiveServices/accounts/', concat(variables('uniquePrefix'), parameters('prefix'), 'cogservices'))]"
+    },
+    "connections": {
+      "sql": {
+        "name": "sql"
+      }
+    },
+    "sql": {
+      "name": "[concat(variables('uniquePrefix'), parameters('prefix'), 'sql')]",
+      "db": {
+        "name": "mwc",
+        "edition": "Basic",
+        "collation": "SQL_Latin1_General_CP1_CI_AS",
+        "serviceObjectiveName": "Basic"
+      },
+      "connections": {
+        "name": "sql"
+      }
+    },
+    "streamingJobs": {
+      "edgestreamanalytics": {
+        "name": "[concat(variables('uniquePrefix'), parameters('prefix'), 'EdgeStreamJob')]"
+      }
+    },
+    "storage": {
+      "name": "[concat(variables('uniquePrefix'), parameters('prefix'), 'storage')]",
+      "id": "[concat(resourceGroup().id,'/providers/','Microsoft.Storage/storageAccounts/', concat(variables('uniquePrefix'), parameters('prefix'), 'storage'))]"
+    },
+    "logicapps": {
+      "alerts": {
+        "name": "[concat(variables('uniquePrefix'), parameters('prefix'), 'alertapp')]"
+      }
+    },
+    "acr": {
+      "name": "[concat(variables('uniquePrefix'), parameters('prefix'), 'acr')]"
+    }
+  },
+  "resources": [{
+      "type": "Microsoft.ContainerRegistry/registries",
+      "apiVersion": "2019-05-01",
+      "name": "[variables('acr').name]",
+      "location": "[resourceGroup().location]",
+      "sku": {
+        "name": "Basic",
+        "tier": "Basic"
+      },
+      "properties": {
+        "adminUserEnabled": true,
+        "policies": {
+          "quarantinePolicy": {
+            "status": "disabled"
+          },
+          "trustPolicy": {
+            "type": "Notary",
+            "status": "disabled"
+          },
+          "retentionPolicy": {
+            "days": 7,
+            "status": "disabled"
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.CognitiveServices/accounts",
+      "apiVersion": "2017-04-18",
+      "name": "[variables('cogservices').name]",
+      "location": "[resourceGroup().location]",
+      "sku": {
+        "name": "S0"
+      },
+      "kind": "CognitiveServices",
+      "properties": {
+        "apiProperties": {
+          "statisticsEnabled": false
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Sql/servers",
+      "apiVersion": "2015-05-01-preview",
+      "name": "[variables('sql').name]",
+      "location": "[resourceGroup().location]",
+      "kind": "v12.0",
+      "properties": {
+        "administratorLogin": "[parameters('administratorLogin')]",
+        "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
+        "version": "12.0"
+      }
+    },
+    {
+      "type": "Microsoft.Sql/servers/databases",
+      "apiVersion": "2017-10-01-preview",
+      "name": "[concat(variables('sql').name, '/', variables('sql').db.name)]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Sql/servers', variables('sql').name)]"
+      ],
+      "sku": {
+        "name": "Basic",
+        "tier": "Basic",
+        "capacity": 5
+      },
+      "kind": "v12.0,user",
+      "properties": {
+        "collation": "SQL_Latin1_General_CP1_CI_AS",
+        "maxSizeBytes": 2147483648,
+        "catalogCollation": "SQL_Latin1_General_CP1_CI_AS",
+        "zoneRedundant": false,
+        "readScale": "Disabled",
+        "readReplicaCount": 0
+      }
+    },
+    {
+      "type": "Microsoft.Sql/servers/advisors",
+      "apiVersion": "2014-04-01",
+      "name": "[concat(variables('sql').name, '/CreateIndex')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.SQL/servers/databases', variables('sql').name, variables('sql').db.name)]"
+      ],
+      "properties": {
+        "autoExecuteValue": "Disabled"
+      }
+    },
+    {
+      "type": "Microsoft.Sql/servers/advisors",
+      "apiVersion": "2014-04-01",
+      "name": "[concat(variables('sql').name, '/DropIndex')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.SQL/servers/databases', variables('sql').name, variables('sql').db.name)]",
+        "[resourceId('Microsoft.SQL/servers/advisors', variables('sql').name, 'CreateIndex')]"
+      ],
+      "properties": {
+        "autoExecuteValue": "Disabled"
+      }
+    },
+    {
+      "type": "Microsoft.Sql/servers/auditingPolicies",
+      "apiVersion": "2014-04-01",
+      "name": "[concat(variables('sql').name, '/Default')]",
+      "location": "West US 2",
+      "dependsOn": [
+        "[resourceId('Microsoft.SQL/servers/databases', variables('sql').name, variables('sql').db.name)]"
+      ],
+      "properties": {
+        "auditingState": "Disabled"
+      }
+    },
+    {
+      "type": "Microsoft.Sql/servers/auditingSettings",
+      "apiVersion": "2017-03-01-preview",
+      "name": "[concat(variables('sql').name, '/Default')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.SQL/servers/databases', variables('sql').name, variables('sql').db.name)]"
+      ],
+      "properties": {
+        "state": "Disabled",
+        "retentionDays": 0,
+        "auditActionsAndGroups": [],
+        "storageAccountSubscriptionId": "00000000-0000-0000-0000-000000000000",
+        "isStorageSecondaryKeyInUse": false,
+        "isAzureMonitorTargetEnabled": false
+      }
+    },
+    {
+      "type": "Microsoft.Sql/servers/encryptionProtector",
+      "apiVersion": "2015-05-01-preview",
+      "name": "[concat(variables('sql').name, '/current')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.SQL/servers/databases', variables('sql').name, variables('sql').db.name)]"
+      ],
+      "kind": "servicemanaged",
+      "properties": {
+        "serverKeyName": "ServiceManaged",
+        "serverKeyType": "ServiceManaged"
+      }
+    },
+    {
+      "type": "Microsoft.Sql/servers/extendedAuditingSettings",
+      "apiVersion": "2017-03-01-preview",
+      "name": "[concat(variables('sql').name, '/Default')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.SQL/servers/databases', variables('sql').name, variables('sql').db.name)]"
+      ],
+      "properties": {
+        "state": "Disabled",
+        "retentionDays": 0,
+        "auditActionsAndGroups": [],
+        "storageAccountSubscriptionId": "00000000-0000-0000-0000-000000000000",
+        "isStorageSecondaryKeyInUse": false,
+        "isAzureMonitorTargetEnabled": false
+      }
+    },
+    {
+      "type": "Microsoft.Sql/servers/firewallRules",
+      "apiVersion": "2015-05-01-preview",
+      "name": "[concat(variables('sql').name, '/AllowAllWindowsAzureIps')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.SQL/servers/databases', variables('sql').name, variables('sql').db.name)]"
+      ],
+      "properties": {
+        "startIpAddress": "0.0.0.0",
+        "endIpAddress": "0.0.0.0"
+      }
+    },
+    {
+      "type": "Microsoft.Sql/servers/firewallRules",
+      "apiVersion": "2015-05-01-preview",
+      "name": "[concat(variables('sql').name, '/AllowAllIps')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.SQL/servers/databases', variables('sql').name, variables('sql').db.name)]"
+      ],
+      "properties": {
+        "startIpAddress": "0.0.0.0",
+        "endIpAddress": "255.255.255.255"
+      }
+    },
+    {
+      "type": "Microsoft.Sql/servers/securityAlertPolicies",
+      "apiVersion": "2017-03-01-preview",
+      "name": "[concat(variables('sql').name, '/Default')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.SQL/servers/databases', variables('sql').name, variables('sql').db.name)]"
+      ],
+      "properties": {
+        "state": "Disabled",
+        "disabledAlerts": [
+          ""
+        ],
+        "emailAddresses": [
+          ""
+        ],
+        "emailAccountAdmins": false,
+        "retentionDays": 0
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts",
+      "apiVersion": "2019-04-01",
+      "name": "[variables('storage').name]",
+      "location": "[resourceGroup().location]",
+      "sku": {
+        "name": "Standard_LRS",
+        "tier": "Standard"
+      },
+      "kind": "StorageV2",
+      "properties": {
+        "networkAcls": {
+          "bypass": "AzureServices",
+          "virtualNetworkRules": [],
+          "ipRules": [],
+          "defaultAction": "Allow"
+        },
+        "supportsHttpsTrafficOnly": true,
+        "encryption": {
+          "services": {
+            "file": {
+              "enabled": true
+            },
+            "blob": {
+              "enabled": true
+            }
+          },
+          "keySource": "Microsoft.Storage"
+        },
+        "accessTier": "Hot"
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/blobServices",
+      "apiVersion": "2019-04-01",
+      "name": "[concat(variables('storage').name, '/default')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storage').name)]"
+      ],
+      "properties": {
+        "cors": {
+          "corsRules": []
+        },
+        "deleteRetentionPolicy": {
+          "enabled": false
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+      "apiVersion": "2019-06-01",
+      "name": "[concat(variables('storage').name, '/default/forkliftimages')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('storage').name, 'default')]",
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storage').name)]"
+      ],
+      "properties": {
+        "publicAccess": "Container"
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/blobServices/containers",
+      "apiVersion": "2019-06-01",
+      "name": "[concat(variables('storage').name, '/default/mwcedgestreamjob')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts/blobServices', variables('storage').name, 'default')]",
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storage').name)]"
+      ],
+      "properties": {
+        "publicAccess": "None"
+      }
+    },
+    {
+      "type": "Microsoft.Storage/storageAccounts/fileServices",
+      "apiVersion": "2019-06-01",
+      "name": "[concat(variables('storage').name, '/default')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Storage/storageAccounts', variables('storage').name)]"
+      ],
+      "sku": {
+        "name": "Standard_RAGRS"
+      },
+      "properties": {
+        "cors": {
+          "corsRules": []
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Web/connections",
+      "apiVersion": "2016-06-01",
+      "name": "[variables('connections').sql.name]",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "displayName": "[concat(variables('sql').db.name, ' ', variables('sql').name, '.database.windows.net')]",
+        "parameterValues": {
+          "server": "[concat(variables('sql').name, '.database.windows.net')]",
+          "database": "[variables('sql').db.name]",
+          "authType": "windows",
+          "username": "[parameters('administratorLogin')]",
+          "password": "[parameters('administratorLoginPassword')]"
+        },
+        "api": {
+          "id": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/sql')]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Logic/workflows",
+      "apiVersion": "2017-07-01",
+      "name": "[variables('logicapps').alerts.name]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/connections', variables('connections').sql.name)]"
+      ],
+      "properties": {
+        "state": "Enabled",
+        "definition": {
+          "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+          "actions": {
+            "IsAlertMessage": {
+              "actions": {
+                "Is_start_event": {
+                  "actions": {
+                    "Is_new_case_required": {
+                      "actions": {
+                        "Insert_new_case": {
+                          "inputs": {
+                            "body": {
+                              "query": "INSERT INTO alerts (DeviceId, IncidentType, Status, BlobUrl, ReportedTime, LastUpdated) VALUES ('@{variables('device_id')}', 'ForkliftDetected', 'Unresolved', '@{variables('blob_url')}', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);"
+                            },
+                            "host": {
+                              "connection": {
+                                "name": "@parameters('$connections')['sql']['connectionId']"
+                              }
+                            },
+                            "method": "post",
+                            "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('default'))},@{encodeURIComponent(encodeURIComponent('default'))}/query/sql"
+                          },
+                          "runAfter": {},
+                          "type": "ApiConnection"
+                        }
+                      },
+                      "else": {
+                        "actions": {
+                          "Update_open_case": {
+                            "inputs": {
+                              "body": {
+                                "query": "UPDATE alerts SET  LastUpdated = CURRENT_TIMESTAMP, BlobUrl = '@{variables('blob_url')}' WHERE DeviceId = '@{variables('device_id')}' AND Status = 'Unresolved';"
+                              },
+                              "host": {
+                                "connection": {
+                                  "name": "@parameters('$connections')['sql']['connectionId']"
+                                }
+                              },
+                              "method": "post",
+                              "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('default'))},@{encodeURIComponent(encodeURIComponent('default'))}/query/sql"
+                            },
+                            "runAfter": {},
+                            "type": "ApiConnection"
+                          }
+                        }
+                      },
+                      "expression": {
+                        "and": [{
+                          "equals": [
+                            "@empty(body('Query_for_unresolved_device_incidents')?['resultsets'])",
+                            true
+                          ]
+                        }]
+                      },
+                      "runAfter": {},
+                      "type": "If"
+                    }
+                  },
+                  "else": {
+                    "actions": {
+                      "Is_case_found": {
+                        "actions": {
+                          "Execute_a_SQL_query_(V2)": {
+                            "inputs": {
+                              "body": {
+                                "query": "UPDATE alerts SET  LastUpdated = CURRENT_TIMESTAMP, BlobUrl='@{variables('blob_url')}',  Status = 'Resolved' WHERE DeviceId = '@{variables('device_id')}' AND Status = 'Unresolved';"
+                              },
+                              "host": {
+                                "connection": {
+                                  "name": "@parameters('$connections')['sql']['connectionId']"
+                                }
+                              },
+                              "method": "post",
+                              "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('default'))},@{encodeURIComponent(encodeURIComponent('default'))}/query/sql"
+                            },
+                            "runAfter": {},
+                            "type": "ApiConnection"
+                          }
+                        },
+                        "expression": {
+                          "and": [{
+                            "equals": [
+                              "@empty(body('Query_for_unresolved_device_incidents')?['resultsets'])",
+                              false
+                            ]
+                          }]
+                        },
+                        "runAfter": {},
+                        "type": "If"
+                      }
+                    }
+                  },
+                  "expression": {
+                    "and": [{
+                      "equals": [
+                        "@variables('event_type')",
+                        "start"
+                      ]
+                    }]
+                  },
+                  "runAfter": {
+                    "Query_for_unresolved_device_incidents": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "If"
+                },
+                "Query_for_unresolved_device_incidents": {
+                  "inputs": {
+                    "body": {
+                      "query": "SELECT IncidentID, LastUpdated FROM alerts WHERE DeviceId = '@{variables('device_id')}' AND Status = 'Unresolved';"
+                    },
+                    "host": {
+                      "connection": {
+                        "name": "@parameters('$connections')['sql']['connectionId']"
+                      }
+                    },
+                    "method": "post",
+                    "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('default'))},@{encodeURIComponent(encodeURIComponent('default'))}/query/sql"
+                  },
+                  "runAfter": {
+                    "Timeout_alerts": [
+                      "Succeeded"
+                    ]
+                  },
+                  "type": "ApiConnection"
+                },
+                "Timeout_alerts": {
+                  "inputs": {
+                    "body": {
+                      "query": "UPDATE alerts SET LastUpdated = CURRENT_TIMESTAMP,  \n    Status = 'Timeout' WHERE DeviceId = '@{variables('device_id')}' AND Status = 'Unresolved' AND DATEADD(minute, 10, LastUpdated) < CURRENT_TIMESTAMP;"
+                    },
+                    "host": {
+                      "connection": {
+                        "name": "@parameters('$connections')['sql']['connectionId']"
+                      }
+                    },
+                    "method": "post",
+                    "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('default'))},@{encodeURIComponent(encodeURIComponent('default'))}/query/sql"
+                  },
+                  "runAfter": {},
+                  "type": "ApiConnection"
+                }
+              },
+              "expression": {
+                "and": [{
+                  "equals": [
+                    "@variables('message_type')",
+                    "alert"
+                  ]
+                }]
+              },
+              "runAfter": {
+                "Set_device_id": [
+                  "Succeeded"
+                ]
+              },
+              "type": "If"
+            },
+            "Set_blob_url": {
+              "inputs": {
+                "variables": [{
+                  "name": "blob_url",
+                  "type": "string",
+                  "value": "@{triggerBody()['data'][3].value}"
+                }]
+              },
+              "runAfter": {
+                "Set_event_type": [
+                  "Succeeded"
+                ]
+              },
+              "type": "InitializeVariable"
+            },
+            "Set_device_id": {
+              "inputs": {
+                "variables": [{
+                  "name": "device_id",
+                  "type": "string",
+                  "value": "@triggerBody()['device']['id']"
+                }]
+              },
+              "runAfter": {
+                "Set_blob_url": [
+                  "Succeeded"
+                ]
+              },
+              "type": "InitializeVariable"
+            },
+            "Set_event_type": {
+              "inputs": {
+                "variables": [{
+                  "name": "event_type",
+                  "type": "string",
+                  "value": "@{triggerBody()['data'][1].value}"
+                }]
+              },
+              "runAfter": {
+                "Set_message_type": [
+                  "Succeeded"
+                ]
+              },
+              "type": "InitializeVariable"
+            },
+            "Set_message_type": {
+              "inputs": {
+                "variables": [{
+                  "name": "message_type",
+                  "type": "string",
+                  "value": "@{triggerBody()['data'][0].value}"
+                }]
+              },
+              "runAfter": {},
+              "type": "InitializeVariable"
+            }
+          },
+          "contentVersion": "1.0.0.0",
+          "outputs": {},
+          "parameters": {
+            "$connections": {
+              "defaultValue": {},
+              "type": "Object"
+            }
+          },
+          "triggers": {
+            "manual": {
+              "inputs": {
+                "schema": {
+                  "properties": {
+                    "application": {
+                      "properties": {
+                        "displayName": {
+                          "type": "string"
+                        },
+                        "host": {
+                          "type": "string"
+                        },
+                        "id": {
+                          "type": "string"
+                        },
+                        "subdomain": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "data": {
+                      "items": {
+                        "properties": {
+                          "@@id": {
+                            "type": "string"
+                          },
+                          "@@type": {
+                            "items": {
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          "displayName": {
+                            "type": "string"
+                          },
+                          "interfaceInstanceName": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "value": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "@@id",
+                          "@@type",
+                          "name",
+                          "displayName",
+                          "value",
+                          "interfaceInstanceName"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "device": {
+                      "properties": {
+                        "approved": {
+                          "type": "boolean"
+                        },
+                        "displayName": {
+                          "type": "string"
+                        },
+                        "id": {
+                          "type": "string"
+                        },
+                        "instanceOf": {
+                          "type": "string"
+                        },
+                        "provisioned": {
+                          "type": "boolean"
+                        },
+                        "simulated": {
+                          "type": "boolean"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "displayName": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "type": "string"
+                    },
+                    "rule": {
+                      "properties": {
+                        "displayName": {
+                          "type": "string"
+                        },
+                        "enabled": {
+                          "type": "boolean"
+                        },
+                        "id": {
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "timestamp": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "kind": "Http",
+              "type": "Request"
+            }
+          }
+        },
+        "parameters": {
+          "$connections": {
+            "value": {
+              "sql": {
+                "connectionId": "[resourceId('Microsoft.Web/connections', variables('connections').sql.name)]",
+                "connectionName": "sql",
+                "id": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Web/locations/', resourceGroup().location, '/managedApis/', variables('connections').sql.name)]"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.StreamAnalytics/streamingjobs",
+      "apiVersion": "2017-04-01-preview",
+      "name": "[variables('streamingJobs').edgestreamanalytics.name]",
+      "location": "West US 2",
+      "properties": {
+        "jobType": "edge",
+        "sku": {
+          "name": "Standard"
+        },
+        "eventsOutOfOrderPolicy": "Adjust",
+        "outputErrorPolicy": "Stop",
+        "eventsOutOfOrderMaxDelayInSeconds": 0,
+        "eventsLateArrivalMaxDelayInSeconds": 5,
+        "dataLocale": "en-US",
+        "compatibilityLevel": "1.1",
+        "transformation": {
+          "name": "Transformation",
+          "properties": {
+            "streamingUnits": 1,
+            "query": "WITH startbuffer AS (\n   SELECT System.Timestamp() AS timestamp, MAX(forklift) AS Forklift, COUNT(*) AS count, bloburl AS BlobUrl\n   FROM deviceinput\n   WHERE forklift > 0\n   GROUP BY TUMBLINGWINDOW(s, 10), bloburl\n),\nstartbase AS (\n   SELECT timestamp, Forklift, BlobUrl\n   FROM startbuffer\n   WHERE ISFIRST(s, 10) OVER (WHEN count > 5) = 1\n),\nendbuffer AS (\n   SELECT System.Timestamp() AS timestamp, MAX(forklift) AS Forklift, COUNT(*) AS count, bloburl AS BlobUrl\n   FROM deviceinput\n   GROUP BY TUMBLINGWINDOW(s, 10), bloburl\n),\nendbase AS (\n   SELECT timestamp, Forklift, count, BlobUrl\n   FROM endbuffer\n   WHERE Forklift = 0 AND LAG(Forklift) OVER (LIMIT DURATION(second, 60)) > 0\n)\n\nSELECT 'alert' AS message_type, 'start' AS event_type, BlobUrl AS blob_url, timestamp, Forklift AS count\nINTO alertstart\nFROM startbase\n\nSELECT 'alert' AS message_type, 'end' AS event_type, BlobUrl AS blob_url, timestamp, Forklift AS count\nINTO alertend\nFROM endbase"
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.StreamAnalytics/streamingjobs/inputs",
+      "apiVersion": "2017-04-01-preview",
+      "name": "[concat(variables('streamingJobs').edgestreamanalytics.name, '/deviceinput')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.StreamAnalytics/streamingjobs', variables('streamingJobs').edgestreamanalytics.name)]"
+      ],
+      "properties": {
+        "type": "Stream",
+        "compression": {
+          "type": "None"
+        },
+        "datasource": {
+          "type": "GatewayMessageBus",
+          "properties": {}
+        },
+        "serialization": {
+          "type": "Json",
+          "properties": {
+            "encoding": "UTF8"
+          }
+        },
+        "etag": "11fc6dee-c0cc-47de-9f8d-29b4e5c6367a"
+      }
+    },
+    {
+      "type": "Microsoft.StreamAnalytics/streamingjobs/outputs",
+      "apiVersion": "2017-04-01-preview",
+      "name": "[concat(variables('streamingJobs').edgestreamanalytics.name, '/alertend')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.StreamAnalytics/streamingjobs', variables('streamingJobs').edgestreamanalytics.name)]"
+      ],
+      "properties": {
+        "datasource": {
+          "type": "GatewayMessageBus",
+          "properties": {}
+        },
+        "serialization": {
+          "type": "Json",
+          "properties": {
+            "encoding": "UTF8",
+            "format": "LineSeparated"
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.StreamAnalytics/streamingjobs/outputs",
+      "apiVersion": "2017-04-01-preview",
+      "name": "[concat(variables('streamingJobs').edgestreamanalytics.name, '/alertstart')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.StreamAnalytics/streamingjobs', variables('streamingJobs').edgestreamanalytics.name)]"
+      ],
+      "properties": {
+        "datasource": {
+          "type": "GatewayMessageBus",
+          "properties": {}
+        },
+        "serialization": {
+          "type": "Json",
+          "properties": {
+            "encoding": "UTF8",
+            "format": "LineSeparated"
+          }
+        }
+      }
+    }
+  ],
+  "outputs": {
+    "Cognitive Services Account Key": {
+      "type": "string",
+      "value": "[listKeys(variables('cogservices').id,'2017-04-18').key1]"
+    },
+    "Cognitive Services Account Endpoint": {
+      "type": "string",
+      "value": "[reference(variables('cogservices').id,'2017-04-18').endpoint]"
+    },
+    "Cognitive Services Account Resource Id": {
+      "type": "string",
+      "value": "[variables('cogservices').id]"
+    },
+    "SQL Server": {
+      "type": "string",
+      "value": "[concat(variables('sql').name, '.database.windows.net')]"
+    },
+    "Database Name": {
+      "type": "string",
+      "value": "[variables('sql').db.name]"
+    },
+    "SQL Server Username": {
+      "type": "string",
+      "value": "[parameters('administratorLogin')]"
+    },
+    "SQL Server Password": {
+      "type": "string",
+      "value": "[parameters('administratorLoginPassword')]"
+    },
+    "Device Alerts Logic App Endpoint": {
+      "type": "string",
+      "value": "[listCallbackUrl(resourceId(resourceGroup().name,'Microsoft.Logic/workflows/triggers', variables('logicapps').alerts.name, 'manual'), '2016-06-01').value]"
+    }
+  }
+}
