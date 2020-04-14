@@ -1,0 +1,9 @@
+* text eol=lf
+*.gif -text
+*.jpg filter=lfs diff=lfs merge=lfs -text
+*.png -text
+*.dll -text
+*.exe -text
+*.nupkg -text
+customvision/TrainingImages/NoHardHat/*.jpg filter=lfs diff=lfs merge=lfs -text
+customvision/TrainingImages/HardHat/*.jpg filter=lfs diff=lfs merge=lfs -text

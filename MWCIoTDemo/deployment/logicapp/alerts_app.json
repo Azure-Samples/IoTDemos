@@ -1,0 +1,367 @@
+{
+    "definition": {
+        "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+        "actions": {
+            "IsAlertMessage": {
+                "actions": {
+                    "Is_start_event": {
+                        "actions": {
+                            "Is_new_case_required": {
+                                "actions": {
+                                    "Insert_new_case": {
+                                        "inputs": {
+                                            "body": {
+                                                "query": "INSERT INTO alerts (DeviceId, IncidentType, Status, BlobUrl, ReportedTime, LastUpdated) VALUES ('@{variables('device_id')}', 'ForkliftDetected', 'Unresolved', '@{variables('blob_url')}', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);"
+                                            },
+                                            "host": {
+                                                "connection": {
+                                                    "name": "@parameters('$connections')['sql']['connectionId']"
+                                                }
+                                            },
+                                            "method": "post",
+                                            "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('default'))},@{encodeURIComponent(encodeURIComponent('default'))}/query/sql"
+                                        },
+                                        "runAfter": {},
+                                        "type": "ApiConnection"
+                                    }
+                                },
+                                "else": {
+                                    "actions": {
+                                        "Update_open_case": {
+                                            "inputs": {
+                                                "body": {
+                                                    "query": "UPDATE alerts SET  LastUpdated = CURRENT_TIMESTAMP, BlobUrl = '@{variables('blob_url')}' WHERE DeviceId = '@{variables('device_id')}' AND Status = 'Unresolved';"
+                                                },
+                                                "host": {
+                                                    "connection": {
+                                                        "name": "@parameters('$connections')['sql']['connectionId']"
+                                                    }
+                                                },
+                                                "method": "post",
+                                                "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('default'))},@{encodeURIComponent(encodeURIComponent('default'))}/query/sql"
+                                            },
+                                            "runAfter": {},
+                                            "type": "ApiConnection"
+                                        }
+                                    }
+                                },
+                                "expression": {
+                                    "and": [
+                                        {
+                                            "equals": [
+                                                "@empty(body('Query_for_unresolved_device_incidents')?['resultsets'])",
+                                                true
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "runAfter": {},
+                                "type": "If"
+                            }
+                        },
+                        "else": {
+                            "actions": {
+                                "Is_case_found": {
+                                    "actions": {
+                                        "Execute_a_SQL_query_(V2)": {
+                                            "inputs": {
+                                                "body": {
+                                                    "query": "UPDATE alerts SET  LastUpdated = CURRENT_TIMESTAMP, BlobUrl='@{variables('blob_url')}',  Status = 'Resolved' WHERE DeviceId = '@{variables('device_id')}' AND Status = 'Unresolved';"
+                                                },
+                                                "host": {
+                                                    "connection": {
+                                                        "name": "@parameters('$connections')['sql']['connectionId']"
+                                                    }
+                                                },
+                                                "method": "post",
+                                                "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('default'))},@{encodeURIComponent(encodeURIComponent('default'))}/query/sql"
+                                            },
+                                            "runAfter": {},
+                                            "type": "ApiConnection"
+                                        }
+                                    },
+                                    "expression": {
+                                        "and": [
+                                            {
+                                                "equals": [
+                                                    "@empty(body('Query_for_unresolved_device_incidents')?['resultsets'])",
+                                                    false
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    "runAfter": {},
+                                    "type": "If"
+                                }
+                            }
+                        },
+                        "expression": {
+                            "and": [
+                                {
+                                    "equals": [
+                                        "@variables('event_type')",
+                                        "start"
+                                    ]
+                                }
+                            ]
+                        },
+                        "runAfter": {
+                            "Query_for_unresolved_device_incidents": [
+                                "Succeeded"
+                            ]
+                        },
+                        "type": "If"
+                    },
+                    "Query_for_unresolved_device_incidents": {
+                        "inputs": {
+                            "body": {
+                                "query": "SELECT IncidentID, LastUpdated FROM alerts WHERE DeviceId = '@{variables('device_id')}' AND Status = 'Unresolved';"
+                            },
+                            "host": {
+                                "connection": {
+                                    "name": "@parameters('$connections')['sql']['connectionId']"
+                                }
+                            },
+                            "method": "post",
+                            "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('default'))},@{encodeURIComponent(encodeURIComponent('default'))}/query/sql"
+                        },
+                        "runAfter": {
+                            "Timeout_alerts": [
+                                "Succeeded"
+                            ]
+                        },
+                        "type": "ApiConnection"
+                    },
+                    "Timeout_alerts": {
+                        "inputs": {
+                            "body": {
+                                "query": "UPDATE alerts SET LastUpdated = CURRENT_TIMESTAMP,  \n    Status = 'Timeout' WHERE DeviceId = '@{variables('device_id')}' AND Status = 'Unresolved' AND DATEADD(minute, 10, LastUpdated) < CURRENT_TIMESTAMP;"
+                            },
+                            "host": {
+                                "connection": {
+                                    "name": "@parameters('$connections')['sql']['connectionId']"
+                                }
+                            },
+                            "method": "post",
+                            "path": "/v2/datasets/@{encodeURIComponent(encodeURIComponent('default'))},@{encodeURIComponent(encodeURIComponent('default'))}/query/sql"
+                        },
+                        "runAfter": {},
+                        "type": "ApiConnection"
+                    }
+                },
+                "expression": {
+                    "and": [
+                        {
+                            "equals": [
+                                "@variables('message_type')",
+                                "alert"
+                            ]
+                        }
+                    ]
+                },
+                "runAfter": {
+                    "Set_device_id": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "If"
+            },
+            "Set_blob_url": {
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "blob_url",
+                            "type": "string",
+                            "value": "@{triggerBody()['data'][3].value}"
+                        }
+                    ]
+                },
+                "runAfter": {
+                    "Set_event_type": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "InitializeVariable"
+            },
+            "Set_device_id": {
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "device_id",
+                            "type": "string",
+                            "value": "@triggerBody()['device']['id']"
+                        }
+                    ]
+                },
+                "runAfter": {
+                    "Set_blob_url": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "InitializeVariable"
+            },
+            "Set_event_type": {
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "event_type",
+                            "type": "string",
+                            "value": "@{triggerBody()['data'][1].value}"
+                        }
+                    ]
+                },
+                "runAfter": {
+                    "Set_message_type": [
+                        "Succeeded"
+                    ]
+                },
+                "type": "InitializeVariable"
+            },
+            "Set_message_type": {
+                "inputs": {
+                    "variables": [
+                        {
+                            "name": "message_type",
+                            "type": "string",
+                            "value": "@{triggerBody()['data'][0].value}"
+                        }
+                    ]
+                },
+                "runAfter": {},
+                "type": "InitializeVariable"
+            }
+        },
+        "contentVersion": "1.0.0.0",
+        "outputs": {},
+        "parameters": {
+            "$connections": {
+                "defaultValue": {},
+                "type": "Object"
+            }
+        },
+        "triggers": {
+            "manual": {
+                "inputs": {
+                    "schema": {
+                        "properties": {
+                            "application": {
+                                "properties": {
+                                    "displayName": {
+                                        "type": "string"
+                                    },
+                                    "host": {
+                                        "type": "string"
+                                    },
+                                    "id": {
+                                        "type": "string"
+                                    },
+                                    "subdomain": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            "data": {
+                                "items": {
+                                    "properties": {
+                                        "@@id": {
+                                            "type": "string"
+                                        },
+                                        "@@type": {
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "type": "array"
+                                        },
+                                        "displayName": {
+                                            "type": "string"
+                                        },
+                                        "interfaceInstanceName": {
+                                            "type": "string"
+                                        },
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "value": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "@@id",
+                                        "@@type",
+                                        "name",
+                                        "displayName",
+                                        "value",
+                                        "interfaceInstanceName"
+                                    ],
+                                    "type": "object"
+                                },
+                                "type": "array"
+                            },
+                            "device": {
+                                "properties": {
+                                    "approved": {
+                                        "type": "boolean"
+                                    },
+                                    "displayName": {
+                                        "type": "string"
+                                    },
+                                    "id": {
+                                        "type": "string"
+                                    },
+                                    "instanceOf": {
+                                        "type": "string"
+                                    },
+                                    "provisioned": {
+                                        "type": "boolean"
+                                    },
+                                    "simulated": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            "displayName": {
+                                "type": "string"
+                            },
+                            "id": {
+                                "type": "string"
+                            },
+                            "rule": {
+                                "properties": {
+                                    "displayName": {
+                                        "type": "string"
+                                    },
+                                    "enabled": {
+                                        "type": "boolean"
+                                    },
+                                    "id": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            },
+                            "timestamp": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "kind": "Http",
+                "type": "Request"
+            }
+        }
+    },
+    "parameters": {
+        "$connections": {
+            "value": {
+                "sql": {
+                    "connectionId": "/subscriptions/a98dfc86-277a-4bed-93fa-b07419a9ddae/resourceGroups/mwc-iot-demo/providers/Microsoft.Web/connections/sql",
+                    "connectionName": "sql",
+                    "id": "/subscriptions/a98dfc86-277a-4bed-93fa-b07419a9ddae/providers/Microsoft.Web/locations/westus2/managedApis/sql"
+                }
+            }
+        }
+    }
+}
