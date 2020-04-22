@@ -147,6 +147,7 @@ Follow the next steps to setup the metrics stream job.
 1. Click `Storage account settings` from the left navigation.
 1. Click `Add storage account`.
 1. Select the storage account created in the ARM setup and add a new container named `edgemodules`.
+1. Under Container*, select Create new and enter the name edgemodules
 1. Click `Save`.
 1. Select `Publish` from the left navigation.
 1. Click `Publish` and wait for the operation to complete.
@@ -290,9 +291,9 @@ In this section, we will set up your Vision AI Dev Kit to be connected to the de
 
         REGISTRY_PASSWORD=`<Password>`
 
-    - Update the following in `devkit/.env` with the following value you got earlier in the `Edge Stream Analytics Job` section
+    - Update the following in `devkit/.env` with the following value you got earlier in the Step 9 of `Edge Stream Analytics Job` section
       
-        ASA_BLOB_URL=`<ASA Blob URL>`
+        ASA_BLOB_URL=`SAS URL`
 
     - Save the file.
 1. Sign in to your Azure Container Registry by entering the following command in the Visual Studio Code integrated terminal (replace <REGISTRY_USER_NAME>, <REGISTRY_PASSWORD>, and <REGISTRY_NAME> with your container registry values set in the .env file).
