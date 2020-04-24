@@ -244,11 +244,11 @@ Once your environment is created, complete the following steps to configure it f
     > NOTE: this module doesn't have any properties or telemetry so is considered invalid during publishing.
 1. Under **Module EdgeStreamJob**, click **Manage**.
 1. Using **+ Add capability**, add the following items. Each is of capability type **Telemetry**:
-    * Name: `message_type`, schema: `String`
-    * Name: `event_type`, schema: `String`
-    * Name: `timestamp`, schema: `DateTime`
-    * Name: `count`, schema: `Integer`
-    * Name: `blob_url`, schema: `String`
+    * Display Name: `message_type`, schema: `String`
+    * Display Name: `event_type`, schema: `String`
+    * Display Name: `timestamp`, schema: `DateTime`
+    * Display Name: `count`, schema: `Integer`
+    * Display Name: `blob_url`, schema: `String`
     > NOTE: all other values can be left as their default.
 1. Click **Save**.
 1. Click **Views**.
@@ -348,6 +348,7 @@ In this section we will setup the power app that will receive the alerts connect
 1. Login to the [Power Apps](https://make.powerapps.com/) site.
 1. Click the `Settings` icon on the right corner and click the `Admin center` option.
 1. In the new window click the `Environments` option in the left menu.
+1. Click + New in the upper right hand corner, make sure to select SQL Database
 1. Select the environment that you will be using and click the `Settings` option in the top menu.
 1. Click the `Product` option to show more options.
 1. Click the `Features` option from the list.
