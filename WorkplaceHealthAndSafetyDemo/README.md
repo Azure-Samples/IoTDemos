@@ -421,7 +421,7 @@ Image to tag: 119
 #### Adding additional images
 If you would like to add more training data to better suit your environment. We recommend leveraging the `Camera Tagging Module` outlined [here](https://github.com/microsoft/vision-ai-developer-kit/tree/master/samples/official/camera-tagging). 
 
-We've created a walkthrough of how to use the Camera Tagging module to create a new Vision AI model. You can find the walkthrough [here] (https://github.com/Azure-Samples/IoTDemos/blob/master/WorkplaceHealthAndSafetyDemo/Workplace%20Safety%20-%20AI%20Model%20Creation.pdf)
+We've created a walkthrough of how to use the Camera Tagging module to create a new Vision AI model. You can find the walkthrough [here](https://github.com/Azure-Samples/IoTDemos/blob/master/WorkplaceHealthAndSafetyDemo/Workplace%20Safety%20-%20AI%20Model%20Creation.pdf)
 
 #### Export project model
 
