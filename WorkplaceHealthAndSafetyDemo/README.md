@@ -251,6 +251,8 @@ Here we will setup the model defining the Types, Hierarchies and Instances.
 In this section, we will set up your Vision AI Dev Kit to be connected to the demo environment.
 
 > NOTE: We suggest before completing the following steps you update the firmware on your device using the following [instructions](https://azure.github.io/Vision-AI-DevKit-Pages/docs/Firmware/).
+> The firmware update process requires a device have at least 50% battery utilization. You can find the find the battery level using the command:  adb shell cat /sys/class/power_supply/battery/capacity
+
 
 #### Setup a new Edge device
 1. In the [Azure portal](https://portal.azure.com/) select the `Resource Group` you created earlier.
