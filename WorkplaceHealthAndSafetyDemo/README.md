@@ -202,6 +202,7 @@ Follow the next steps to setup the event source for the Time Series Insights env
     * Event source name: Set as `IoTEdgeTSEventSource`.
     * Source: Select `IoT Hub`.
     * IoT Hub name: `<name of your IoT Hub>`
+    * IoT Hub Policy name: `You can put whatever your want`
     * Timestamp property name: `timestamp`.
 1. Click the `Create` button.
 
