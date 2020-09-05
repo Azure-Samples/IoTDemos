@@ -59,7 +59,7 @@
         "modules": {
           "EdgeStreamAnalyticsJob": {
             "settings": {
-                "image": "mcr.microsoft.com/azure-stream-analytics/azureiotedge:1.0.6",
+                "image": "mcr.microsoft.com/azure-stream-analytics/azureiotedge:1.0.7",
                 "createOptions": ""
             },
             "type": "docker",
