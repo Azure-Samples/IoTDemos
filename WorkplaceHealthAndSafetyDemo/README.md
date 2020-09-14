@@ -22,11 +22,8 @@ Troubleshooting information at the [end](https://github.com/Azure-Samples/IoTDem
 Git will be used to copy all the files for the demo to your local computer.  
 
 1. Install Git from <a href="https://git-scm.com/download">here</a>  
-2. At the <a href="https://github.com/Azure-Samples/IoTDemos">root</a> of the IoTDemos repo, click on the **Clone or download** button    <img src="https://github.com/Azure-Samples/IoTDemos/blob/master/WorkplaceHealthAndSafetyDemo/images/Github%20repo.png">  
-3. Copy the URL of the IoTDemos GitHub repo by click on the copy icon  
-<img src="https://github.com/Azure-Samples/IoTDemos/blob/master/WorkplaceHealthAndSafetyDemo/images/copy.png">  
-4. Open a command prompt and navigate to a folder where the files should be downloaded<br>
-5. Issue the command `git clone https://github.com/Azure-Samples/IoTDemos.git `  
+1. Open a command prompt and navigate to a folder where the files should be downloaded<br>
+1. Issue the command `git clone https://github.com/Azure-Samples/IoTDemos.git `  
 
 ## Azure Resource Deployment
 
@@ -286,8 +283,7 @@ In this section, we will set up your Vision AI Dev Kit to be connected to the de
 1. Install 64 bit [Anaconda with Python version 3.7](https://www.anaconda.com/distribution).
 1. Install the following extensions for VS Code:
     * [Azure Machine Learning](https://marketplace.visualstudio.com/items?itemName=ms-toolsai.vscode-ai) ([Azure Account](https://marketplace.visualstudio.com/items?itemName=ms-vscode.azure-account) and the [Microsoft Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python) will be automatically installed)
-    * [Azure IoT Hub Toolkit](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-toolkit)
-    * [Azure IoT Edge](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-edge) 
+    * [Azure IoT Tools](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-tools)
 
 1. Restart VS Code.
 1. Select **[View > Command Palette…]** to open the command palette box, then enter **[Python: Select Interpreter]** command in the command palette box to select your Python interpreter.
