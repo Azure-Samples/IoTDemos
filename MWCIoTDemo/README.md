@@ -1,4 +1,8 @@
-# Forklift Detection Demo
+# Object Detection Demo
+This demo provides an end-to-end architecture to enable object detection using IoT Edge, IoT Central, and PowerApps.
+
+## Architecture
+
 
 ## Azure Resource Deployment
 
