@@ -1,0 +1,60 @@
+@import '../../../styles/mixins';
+@import '../../../styles/variables';
+
+.cart-products {
+
+  .product {
+    height: 76px;
+    display: flex;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #f8f8f8;
+
+    > div {
+      height: 100%;
+    }
+
+    .product-image {
+      width: 90px;
+      display: flex;
+      justify-content: center;
+      padding: 0 14px;
+
+      img {
+        width: 90%;
+        height: 60px;
+      }
+    }
+
+    .product-info {
+      width: 174px;
+      padding-right: 5px;
+
+      .price {
+        font-size: $small;
+        font-weight: 600;
+      }
+    }
+
+    .product-controls {
+      display: flex;
+      align-items: center;
+      padding-right: 14px;
+
+      .product-control_icon {
+        width: 12px;
+        height: 12px;
+      }
+    }
+
+    .product-detail_quantity {
+      width: 42px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #e0e0e0;
+      margin: 0 12px;
+      @include font($small, #333);
+    }
+  }
+}

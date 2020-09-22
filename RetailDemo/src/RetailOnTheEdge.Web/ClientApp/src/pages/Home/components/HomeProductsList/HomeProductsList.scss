@@ -1,0 +1,103 @@
+@import '../../../../styles/mixins';
+@import '../../../../styles/variables';
+
+.products-list {
+  height: 100%;
+  padding: 16px;
+
+  .product-wrapper {
+    width: 100%;
+    overflow: hidden;
+    margin-bottom: 19px;
+    &:last-child {
+      .product-info {
+        border-bottom: none;
+      }
+    }
+  }
+
+  .product {
+    display: flex;
+    position: relative;
+    transition: transform 200ms linear;
+    height: 80px;
+
+    > div {
+      height: 100%;
+    }
+
+    .product-image {
+      width: 90px;
+      display: flex;
+      justify-content: center;
+      padding: 0 22px;
+
+      img {
+        width: 90%;
+        height: 60px;
+      }
+    }
+
+    .product-info {
+      border-bottom: 1px solid #e1e1e1;
+      padding-bottom: 19px;
+      padding-right: 5px;
+      flex-grow: 1;
+
+      h3 {
+        @include font($medium);
+        margin-bottom: 3px;
+      }
+      p {
+        @include font($small, $default-text, 600);
+        margin-bottom: 3px;
+      }
+    }
+
+    .product-rating {
+      display: flex;
+      align-items: center;
+
+      .product-rating_stars {
+        display: flex;
+        margin-right: 10px;
+        .star {
+          display: inline-block;
+          width: 16px;
+          height: 15px;
+          margin-right: 1px;
+
+          &.highlight path {
+            fill: #f3ac14;
+          }
+        }
+      }
+
+      span {
+        @include font($small, #6e6e6e);
+      }
+    }
+
+    .product-button {
+      height: 80px;
+      width: 80px;
+      background-color: $theme-color2;
+      display: flex;
+      flex-flow: column;
+      align-items: center;
+      justify-content: center;
+      @include font($small, $light-text);
+      position: absolute;
+      top: 0;
+      right: -80px;
+
+      .product-button__icon path{
+        fill: $light-text;
+      }
+
+      span {
+        padding-top: 5px;
+      }
+    }
+  }
+}

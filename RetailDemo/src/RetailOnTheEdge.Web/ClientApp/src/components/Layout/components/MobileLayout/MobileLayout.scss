@@ -1,0 +1,11 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins.scss';
+
+.layout-mobile {
+  display: block;
+  height: 100vh;
+
+  @media (min-width: $desktop-breakpoint) {
+    display: none;
+  }
+}

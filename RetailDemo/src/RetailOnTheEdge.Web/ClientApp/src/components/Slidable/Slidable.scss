@@ -1,0 +1,10 @@
+@import '../../styles/mixins';
+@import '../../styles/variables';
+
+
+.slidable {
+  transform: translateX(1px);
+  transition: transform 200ms ease-out;
+  height: 100%;
+  min-width: 100%;
+}

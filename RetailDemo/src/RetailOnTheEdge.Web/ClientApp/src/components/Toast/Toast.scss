@@ -1,0 +1,23 @@
+@import '../../styles/mixins';
+@import '../../styles/variables';
+
+.toast {
+  cursor: pointer;
+  border-radius: 5px;
+  position: absolute;
+  top: 45px;
+  right: 50%;
+  transform: translateX(50%);
+  width: 85%;
+  height: 70px;
+  background-color: white;
+  border-top: 5px solid $theme-color2;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  box-shadow: 0 2px 2px 1px rgba(21, 21, 21, 0.2);
+
+  h4 {
+    @include font($small, $theme-color2, 600);
+  }
+}

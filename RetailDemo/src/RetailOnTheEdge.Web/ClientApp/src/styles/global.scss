@@ -1,0 +1,53 @@
+/*
+ Global Styles
+
+ This file should only be used for site wide styles. If the style is specific to a component then it
+ should be in a file next to the component
+*/
+@import './variables';
+@import './mixins';
+
+body {
+  @include font;
+}
+
+h1, h2, h3, h4 {
+  font-weight: 400;
+}
+
+h1, h2, h3, ul, p, button, table, td, tr {
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+
+  &:focus {
+    outline: none;
+    border: 1px solid black;
+  }
+}
+
+ul {
+  list-style: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+    transform: scale(0);;
+  }
+}
+
+@keyframes fade-in {
+  to {
+    opacity: 1;
+  }
+}

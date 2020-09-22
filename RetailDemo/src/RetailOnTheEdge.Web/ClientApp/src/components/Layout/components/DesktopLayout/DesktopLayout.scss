@@ -1,0 +1,32 @@
+@import '../../../../styles/variables';
+@import '../../../../styles/mixins.scss';
+
+.layout-desktop {
+  display: none;
+
+  @media (min-width: $desktop-breakpoint) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+
+  .mobile-app-wrapper {
+    width: 375px;
+    background-color: $background-color1;
+    position: relative;
+
+    img {
+      width: 100%;
+    }
+
+    .mobile-app-container {
+      position: absolute;
+      left: 24px;
+      top: 47px;
+      width: calc(100% - 48px);
+      height: calc(100% - 100px);
+      border-radius: 10px;
+    }
+  }
+}

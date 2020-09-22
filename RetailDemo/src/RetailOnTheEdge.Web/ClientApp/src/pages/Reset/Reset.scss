@@ -1,0 +1,13 @@
+.reset {
+  position: absolute;
+  left: 0;
+  top: -80px;
+  height: calc(100% + 140px);
+  width: 100%;
+  background-color: white;
+  z-index: 1000;
+
+  .toast {
+    top: 120px;
+  }
+}

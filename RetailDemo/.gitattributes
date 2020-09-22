@@ -1,0 +1,21 @@
+* text eol=lf
+*.gif -text
+*.jpg -text
+*.png -text
+*.dll -text
+*.exe filter=lfs diff=lfs merge=lfs -text
+*.nupkg -text
+customvision/TensorFlow.zip filter=lfs diff=lfs merge=lfs -text
+*.pb filter=lfs diff=lfs merge=lfs -text
+*.mp4 filter=lfs diff=lfs merge=lfs -text
+*.zip filter=lfs diff=lfs merge=lfs -text
+data-gen/ntest_data.parquet filter=lfs diff=lfs merge=lfs -text
+data-gen/train_data.parquet filter=lfs diff=lfs merge=lfs -text
+data-gen/uscities.csv filter=lfs diff=lfs merge=lfs -text
+data-gen/products.csv filter=lfs diff=lfs merge=lfs -text
+data-gen/seattle_weather.csv filter=lfs diff=lfs merge=lfs -text
+data-gen/training_dataset.csv filter=lfs diff=lfs merge=lfs -text
+ml/ntest_data.parquet filter=lfs diff=lfs merge=lfs -text
+ml/train_data.parquet filter=lfs diff=lfs merge=lfs -text
+ml/data/train_data.parquet filter=lfs diff=lfs merge=lfs -text
+ml/data/ntest_data.parquet filter=lfs diff=lfs merge=lfs -text

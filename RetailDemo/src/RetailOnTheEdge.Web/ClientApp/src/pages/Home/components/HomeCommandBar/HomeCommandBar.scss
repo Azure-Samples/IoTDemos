@@ -1,0 +1,48 @@
+@import '../../../../styles/mixins';
+@import '../../../../styles/variables';
+
+.home-command-bar {
+  height: 48px;
+  padding: 0 15px;
+  display: flex;
+  flex-shrink: 0;
+  justify-content: space-between;
+  border-bottom: 1px solid #e1e1e1;
+
+  .data-controls {
+    height: 100%;
+    display: flex;
+    align-items: center;
+
+    &:last-child {
+      justify-content: flex-end;
+      .data-control {
+        margin-right: 0;
+        margin-left: 14px;
+      }
+    }
+
+    .data-control {
+      cursor: pointer;
+      border: none;
+      background-color: transparent;
+      @include font($small, #333);
+      margin-right: 30px;
+
+      &:hover,
+      &.active {
+        .data-control_icon {
+          path {
+            fill: $theme-color1;
+          }
+        }
+      }
+
+      .data-control_icon {
+        path {
+          fill: #6e6e6e;
+        }
+      }
+    }
+  }
+}

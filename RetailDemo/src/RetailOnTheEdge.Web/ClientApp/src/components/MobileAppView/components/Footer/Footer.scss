@@ -1,0 +1,47 @@
+@import '../../../../styles/mixins';
+@import '../../../../styles/variables';
+
+.footer {
+  background-color: $background-color2;
+  border-top: 1px solid #e1e1e1;
+  flex-shrink: 0;
+  height: 60px;
+
+  .app-command-bar {
+    display: flex;
+    align-items: center;
+    height: 100%;
+
+    .app-command-bar-item {
+      width: 25%;
+      height: 100%;
+      display: flex;
+      flex-flow: column;
+      align-items: center;
+      justify-content: center;
+      font-size: $extra-small;
+      color: #6e6e6e;
+      cursor: pointer;
+
+      &:hover,
+      &.active {
+        color: $theme-color1;
+
+        .app-command-bar-icon path {
+          fill: $theme-color1;
+        }
+      }
+    }
+
+    .app-command-bar-icon {
+      display: block;
+      width: 16px;
+      height: 16px;
+      margin-bottom: 8px;
+
+      path {
+        fill: #6e6e6e;
+      }
+    }
+  }
+}

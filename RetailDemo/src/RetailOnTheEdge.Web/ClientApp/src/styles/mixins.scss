@@ -1,0 +1,21 @@
+@import './variables';
+
+@mixin font($size: $medium, $colour: $default-text, $weight: 400, $lh: false) {
+  font-family: "Source Sans Pro", Helvetica, Arial, sans-serif;
+
+  @if ($size) {
+    font-size: $size;
+  }
+
+  @if ($colour) {
+    color: $colour;
+  }
+
+  @if ($weight != 400) {
+    font-weight: $weight;
+  }
+
+  @if $lh {
+    line-height: $lh;
+  }
+}

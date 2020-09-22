@@ -1,0 +1,16 @@
+@import '../../styles/mixins';
+@import '../../styles/variables';
+
+.mobile-app-view {
+  border-radius: 10px;
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+  overflow: hidden;
+  position: relative;
+
+  @media (max-width: calc(#{$desktop-breakpoint} - 1px)) {
+    border-radius: 0;
+  }
+}

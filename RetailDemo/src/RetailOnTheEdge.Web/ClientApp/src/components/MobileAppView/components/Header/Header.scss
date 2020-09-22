@@ -1,0 +1,34 @@
+@import '../../../../styles/mixins';
+@import '../../../../styles/variables';
+
+.header {
+  width: 100%;
+  height: 80px;
+  background-image: linear-gradient(#ff416c 5%, #fe7865 62%, #fe7865);
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  padding-left: 16px;
+  box-shadow: 0 1px 3px 1px rgba(21, 21, 21, 0.3);
+  flex-shrink: 0;
+
+  .header-title {
+    @include font($large, $light-text);
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+
+  .header-subtitle {
+    position: absolute;
+    top: 24px;
+    @include font($extra-small, $light-text)
+  }
+
+  .header-logo {
+    height: 21px;
+    width: 21px;
+    margin-right: 10px;
+  }
+}
