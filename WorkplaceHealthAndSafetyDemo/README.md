@@ -1,45 +1,52 @@
 # Workplace Health and Safety Demo
 
+[![Workplace Safety Demonstration](https://img.youtube.com/vi/pL-c00M2CnI/0.jpg)](https://www.youtube.com/watch?v=pL-c00M2CnI)
+
+## Overview
+The Workplace Health and Safety Demo provides the ability to identify unsafe work conditions using AI on Edge and Location Analytics IoT architecture patterns.
+
+The AI on Edge pattern utilizes the Vision AI DevKit which utilizes the Azure IoT Edge Runtime with a custom IoT Edge python module that runs the Vision AI model and an Azure Stream Analytics (ASA) edge module.  The Vision AI model has been trained to identify a hard hat and a safety vests.  The ASA edge module logic sends only those events where a worker is identified not wearing a hard hat or a vest.  The ASA module aggregates / buffers the data so not every frame generates an alert.
+
+The Location Analytics pattern is implemented through Azure Maps geofencing capability. An Azure Web App has been developed to behave like a client that submits GPS information to Azure Maps. The Azure Web App is used to create the geofence and register a client that submits coordinates of the device that is used to register (via the web app).  Controls on the Web App can be used to simulate the client moving in and out of the Geofence.
+
+## Demo Script
+After deploying the demo, a sample demonstration script can be found [here](https://github.com/Azure-Samples/IoTDemos/blob/master/WorkplaceHealthAndSafetyDemo/Workplace%20Safety%20-%20Demo%20Script.pdf)
+
+## Architecture
+![Architecture](https://github.com/Azure-Samples/IoTDemos/blob/master/WorkplaceHealthAndSafetyDemo/images/Workplace%20Safety%20Architecture.png)
+
+## Troubleshooting
+Troubleshooting information at the [end](https://github.com/Azure-Samples/IoTDemos/blob/master/WorkplaceHealthAndSafetyDemo/README.md#troubleshooting-1) of this document.
+
+## Clone the IoT Demo GitHub Repository
+Git will be used to copy all the files for the demo to your local computer.  
+
+1. Install Git from <a href="https://git-scm.com/download">here</a>  
+1. Open a command prompt and navigate to a folder where the files should be downloaded<br>
+1. Issue the command `git clone https://github.com/Azure-Samples/IoTDemos.git `  
+
 ## Azure Resource Deployment
 
-For a quicker setup, you can use an ARM file to deploy all the required resources in the solution.
-
-### Create Resource Group
-
-1. Setup your Azure subscription if you don't have one already. You can setup an account [HERE](https://azure.microsoft.com/en-us/free/search/).
-1. Create a new `Resource Group` in the Azure Portal:
-
-    - Login to the [Azure portal](https://portal.azure.com/).
-    - Click the `Create a resource` button in the portal.
-    - Enter the text `Resource group` in the search input field and select the displayed option.
-    - Click the `Create` button in the new page.
-    - Enter the required information:
-
-      - Select the `Subscription`.
-      - Enter the `Resource group` name.
-      - Select the `Region` where to setup the Resource Group.
-
-    - Click the `Review + Create` button at the bottom of the page.
-    - Click `Create` to finish the creation of the Resource Group.
+An Azure Resource Manager (ARM) template will be used to deploy all the required resources in the solution.  Click on the link below to start the deployment.<br>
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure-Samples%2FIoTDemos%2Fmaster%2FWorkplaceHealthAndSafetyDemo%2Fdeployment%2Fazure%2Farm-template.json" target="_blank">
+<img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.png"/>
+</a>
 
 ### Deployment of resources
 
-Follow the steps to deploy the required Azure resources:
+Follow the steps to deploy the required Azure resources:<br>
+**BASICS**  
 
-1. In the [Azure portal](https://portal.azure.com/) select the `Resource Group` you created in the previous step.
-1. Click the `+ Add` button or `Create resources`.
-1. Enter the text `Template deployment` in the search input field and select the display option.
-1. Click the `Create` button.
-1. Click the `Build your own template in the editor` link.
-1. Click the `Load file` button, search and select the `arm-template.json` file inside the `deployment\azure` folder and click `Open`.
-1. Click the `Save` button at the left-bottom corner.
-1. Select the `Location` where to run the deployment.
-1. Review and update if required all the `SETTINGS`:
+   - **Subscription**: Select the Subscription.
+   - **Resource group**:  Click on 'Create new' and provide a unique name for the Resource Group
+   - **Location**: Select the Region where to deploy the resources. Keep in mind that all resources will be deployed to this region so make sure it supports all of the required services. The template has been confirmed to work in West US 2.
 
-    - **Prefix**: This value will be added to the resource names.
-    - **Administrator Login**: Username account for the SQL Server (default: theadmin).
-    - **Administrator Login Password**: Password for the administrator account of the SQL Server (default: M1cro$oft2020).
-    - **Notifications Email**: Email where to send notifications from the logic apps.
+**SETTINGS**    
+
+   - **Prefix**: This value will be added to the resource names.
+   - **Administrator Login**: Username account for the SQL Server (default: theadmin).
+   - **Administrator Login Password**: Password for the administrator account of the SQL Server (default: M1cro$oft2020).
+   - **Notifications Email**: Email where to send notifications from the logic apps.
 
 1. Read and accept the `TERMS AND CONDITIONS` by checking the box.
 1. Click the `Purchase` button and wait for the deployment to finish.
@@ -56,6 +63,33 @@ Follow the steps to deploy the required Azure resources:
 ### Post deploy configuration
 
 Some resources require some extra configuration.
+
+#### IoT Hub
+
+Here we will create cosumer groups for Time Series Insights (TSI) and Azure Stream Analytics (ASA)
+1. In the [Azure portal](https://portal.azure.com/) select the `Resource Group` you created earlier.
+1. Select the `IoT Hub` resource.
+1. Click on `Built-in endpoints` in the left menu
+1. In the blade that opens, find the `Consumer Groups' section
+1. Create new consumer group for TSI
+1. Create a new consumer group for ASA
+1. Press `Tab` to navigate off the consumer group (this saves the configuration)
+
+
+Here we will setup the event for the IoT Hub that will send the data to the Logic App to handle the alerts.
+
+1. In the [Azure portal](https://portal.azure.com/) select the `Resource Group` you created earlier.
+1. Select the `IoT Hub` resource.
+1. Click the `Events` option in the left menu.
+1. Click the `+ Event subscription` button in the top of the panel.
+1. Enter the name `iothubalerts` to the `Name` input field.
+1. Leave `Event Schema` as `Event Grid Schema` 
+1. Ensure ONLY `Device Telemetry` is selected from the `Filter to Event Types` dropdown.
+1. For the `Endpoint Type` select the `Web Hook` option.
+1. Click the `Select an endpoint` link.
+1. In the new panel update the `Subscriber Endpoint` field with the value from the deploy output `device Alerts Logic App Endpoint`.
+1. Click the `Confirm Selection` button.
+1. Click the `Create` button.
 
 #### SQL Database schema
 
@@ -124,6 +158,11 @@ Follow the next steps to setup the metrics stream job.
 
 1. In the [Azure portal](https://portal.azure.com/) select the `Resource Group` you created earlier.
 1. Select the `Stream Analytics job` resource with the name ending with `metricscloud`.
+1. Click on `Inputs` option in the left menu.
+1. Click on `edgemetricsimput` in the blade that opens
+1. Change the options at the top to `Select IoT Hub from your subscriptions`
+1. Accept the defaults and under `Consumer group` choose: ASA
+1. Click `Save` at the bottom
 1. Click the `Overview` option in the left menu.
 1. Click the `Start` button to start the job.
 1. Click the `Start` button in the right panel and wait for the job to start.
@@ -137,6 +176,7 @@ Follow the next steps to setup the metrics stream job.
 1. Click `Storage account settings` from the left navigation.
 1. Click `Add storage account`.
 1. Select the storage account created in the ARM setup and add a new container named `edgemodules`.
+1. Under Container*, select Create new and enter the name edgemodules
 1. Click `Save`.
 1. Select `Publish` from the left navigation.
 1. Click `Publish` and wait for the operation to complete.
@@ -162,23 +202,6 @@ Here we will setup an event subscription for the Azure Maps account in order to 
 1. Click the `Confirm Selection` button.
 1. Click the `Create` button.
 
-#### IoT Hub
-
-Here we will setup the event for the IoT Hub that will send the data to the Logic App to handle the alerts.
-
-1. In the [Azure portal](https://portal.azure.com/) select the `Resource Group` you created earlier.
-1. Select the `IoT Hub` resource.
-1. Click the `Events` option in the left menu.
-1. Click the `+ Event subscription` button in the top of the panel.
-1. Enter the name `iothubalerts` to the `Name` input field.
-1. Leave `Event Schema` as `Event Grid Schema` 
-1. Ensure ONLY `Device Telemetry` is selected from the `Filter to Event Types` dropdown.
-1. For the `Endpoint Type` select the `Web Hook` option.
-1. Click the `Select an endpoint` link.
-1. In the new panel update the `Subscriber Endpoint` field with the value from the deploy output `device Alerts Logic App Endpoint`.
-1. Click the `Confirm Selection` button.
-1. Click the `Create` button.
-
 #### Time Series Insights event source
 
 Follow the next steps to setup the event source for the Time Series Insights environment.
@@ -191,7 +214,10 @@ Follow the next steps to setup the event source for the Time Series Insights env
     * Event source name: Set as `IoTEdgeTSEventSource`.
     * Source: Select `IoT Hub`.
     * IoT Hub name: `<name of your IoT Hub>`
+    * IoT Hub Policy name: `Take the default`
+    * IoT Hub consumer group: `TSI` (DO NOT use $Default)
     * Timestamp property name: `timestamp`.
+    Note: If values dont appear, give it a minute for the system to populate.
 1. Click the `Create` button.
 
 #### Time Series Environment data access policies
@@ -240,6 +266,8 @@ Here we will setup the model defining the Types, Hierarchies and Instances.
 In this section, we will set up your Vision AI Dev Kit to be connected to the demo environment.
 
 > NOTE: We suggest before completing the following steps you update the firmware on your device using the following [instructions](https://azure.github.io/Vision-AI-DevKit-Pages/docs/Firmware/).
+> The firmware update process requires a device have at least 50% battery utilization. You can find the find the battery level using the command:  adb shell cat /sys/class/power_supply/battery/capacity
+
 
 #### Setup a new Edge device
 1. In the [Azure portal](https://portal.azure.com/) select the `Resource Group` you created earlier.
@@ -255,15 +283,14 @@ In this section, we will set up your Vision AI Dev Kit to be connected to the de
 1. Install 64 bit [Anaconda with Python version 3.7](https://www.anaconda.com/distribution).
 1. Install the following extensions for VS Code:
     * [Azure Machine Learning](https://marketplace.visualstudio.com/items?itemName=ms-toolsai.vscode-ai) ([Azure Account](https://marketplace.visualstudio.com/items?itemName=ms-vscode.azure-account) and the [Microsoft Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python) will be automatically installed)
-    * [Azure IoT Hub Toolkit](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-toolkit)
-    * [Azure IoT Edge](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-edge) 
+    * [Azure IoT Tools](https://marketplace.visualstudio.com/items?itemName=vsciot-vscode.azure-iot-tools)
 
 1. Restart VS Code.
 1. Select **[View > Command Palette…]** to open the command palette box, then enter **[Python: Select Interpreter]** command in the command palette box to select your Python interpreter.
 1. Enter **[Azure: Sign In]** command in the command palette box to sign in Azure account and select your subscription.
 1. Install [Docker Community Edition (CE)](https://docs.docker.com/install/#supported-platforms). Don't sign in to Docker Desktop after Docker CE is installed.
 
-1. Install [Docker Extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker) to Visual Studio Code.
+1. Install [Docker Extension](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker) to Visual Studio Code.  This must be done from the VSCode termainal: View -> Terminal.
     - `code --install-extension ms-azuretools.vscode-docker`
 
 #### Build and deploy container image to device
@@ -279,7 +306,11 @@ In this section, we will set up your Vision AI Dev Kit to be connected to the de
         REGISTRY_USER_NAME=`<Username>`
 
         REGISTRY_PASSWORD=`<Password>`
+
+    - Update the following in `devkit/.env` with the following value you got earlier in the Step 9 of `Edge Stream Analytics Job` section
       
+        ASA_BLOB_URL=`SAS URL`
+
     - Save the file.
 1. Sign in to your Azure Container Registry by entering the following command in the Visual Studio Code integrated terminal (replace <REGISTRY_USER_NAME>, <REGISTRY_PASSWORD>, and <REGISTRY_NAME> with your container registry values set in the .env file).
   
@@ -287,7 +318,6 @@ In this section, we will set up your Vision AI Dev Kit to be connected to the de
 
     > IMPORTANT: If you would llke to deploy your own model please refer to the `Custom Vision project setup` section in the `Optional Steps` section later in this document. You will need to increment the version number in tag property of `AIVisionDevKitGetStartedModule\module.json`if you wish to push another model after the initial one. 
 1. **IMPORTANT**: Ensure you have `arm32v7` selected as the architecture in the bottom navigation bar of VS Code. 
-1. Open `deployment.template.json` and replace `<Azure Blob URL>` with the value you got earlier in the `Edge Stream Analytics Job` section and save the file.
 1. Right-click on `deployment.template.json` and select the `Build and Push IoT Edge Solution` command to generate a new `deployment.json` file in the config folder, build a module image, and push the image to the specified ACR repository
     > IMPORTANT: If you have amended code in your module, you will need to increment the version number in `module.json` so the new version will get deployed to the device in the next steps.
     
@@ -405,7 +435,9 @@ Image to tag: 119
 ```
 
 #### Adding additional images
-If you would like to add more training data to better suit your environment. We recommend leveraging the `Camera Tagging Module` outlined [here](https://github.com/microsoft/vision-ai-developer-kit/tree/master/samples/official/camera-tagging).
+If you would like to add more training data to better suit your environment. We recommend leveraging the `Camera Tagging Module` outlined [here](https://github.com/microsoft/vision-ai-developer-kit/tree/master/samples/official/camera-tagging). 
+
+We've created a walkthrough of how to use the Camera Tagging module to create a new Vision AI model. You can find the walkthrough [here](https://github.com/Azure-Samples/IoTDemos/blob/master/WorkplaceHealthAndSafetyDemo/Workplace%20Safety%20-%20AI%20Model%20Creation.pdf)
 
 #### Export project model
 
@@ -459,5 +491,28 @@ To run the app we will need the valid connection string to the IoTHub.
    - Make sure to check the `Update only` box.
    - Click the `Upload` button and wait for the instances list to be loaded.
 
+### Azure Maps Solution
 
+If you would like to customize the Azure Maps solution, the source code is available under `azuremaps\src`.
 
+To deploy your updated solution to the existing resource via Visual Studio, complete the following steps:
+
+1. In the [Azure portal](https://portal.azure.com/) select the `Resource Group` you created earlier.
+1. Select the `App Service` resource.
+1. Select `Get Publish Profile` from the top navigation.
+1. Open Visual Studio.
+1. From the top menu click the `File | Open | Project/Solution`.
+1. Open `azuremaps\src\AzureMapsDemo.sln`.
+1. From the left navigation, right click on `AzureMapsDemo.Web` and click `Publish`.
+1. Click `Import Profile` from the bottom left.
+1. Select the publish profile you downloaded in the earlier step.
+1. Wait for the deployment to be completed. 
+
+# Troubleshooting
+### Error when deploying ARM Template
+We've seen issues with different subscription types: MSDN, AIRS, etc... not being able to deploy certain resources to certain regions.  We've found that deploying to East US works consistently.  If you have a deployment error, try deploying to East US.  The resources inherit their deployment region from the Resource Group location.
+
+### No data appears from the Camera / AI DevKit
+1. Reboot the camera. Instructions [Here](https://azure.github.io/Vision-AI-DevKit-Pages/docs/Reboot/)
+2. Reset the camera by deploying the latest firmware.  Instructions are located  [Here](https://azure.github.io/Vision-AI-DevKit-Pages/docs/Recover_device/)
+3. Look at the IoT Edge Logs for errors and submit an issue to this (IoT Demos) repo. Instructions  [Here](https://azure.github.io/Vision-AI-DevKit-Pages/docs/Review_logs/)

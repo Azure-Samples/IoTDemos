@@ -1,47 +1,121 @@
 {
   "put": [
     {
-      "id": "1be09af9-f089-4d6b-9f0b-48018b5f7393",
-      "name": "DefaultType",
-      "description": "Default type",
-      "variables": {
-        "EventCount": {
-          "kind": "aggregate",
-          "aggregation": {
-            "tsx": "count()"
-          }
-        }
-      }
-    },
-    {
       "id": "f4f9a3b6-dd9f-4367-a6b8-26bfd4622515",
       "name": "Camera",
       "variables": {
         "PersonSafetyVest": {
-          "kind": "numeric",
+          "kind": "categorical",
           "value": {
-            "tsx": "$event.[PersonSafetyVest].Double"
+            "tsx": "tolong($event.[PersonNoPPE].Double)"
           },
-          "aggregation": {
-            "tsx": "avg($value)"
+          "filter": {
+            "tsx": "(tolong($event.[PersonNoPPE].Double)) != null"
+          },
+          "interpolation": {
+            "kind": "step",
+            "boundary": {
+              "span": "PT5M"
+            }
+          },
+          "categories": [
+            {
+              "label": "Safety Vest Detected",
+              "values": [
+                1
+              ],
+              "annotations": {
+                "color": "rgb(31, 102, 66)"
+              }
+            },
+            {
+              "label": "No Safety Vest Detected",
+              "values": [
+                0
+              ],
+              "annotations": {
+                "color": "#FF2828"
+              }
+            }
+          ],
+          "defaultCategory": {
+            "label": "No Person Detected",
+            "annotations": {
+              "color": "rgb(239, 250, 245)"
+            }
           }
         },
         "PersonNoPPE": {
-          "kind": "numeric",
+          "kind": "categorical",
           "value": {
-            "tsx": "$event.[PersonNoPPE].Double"
+            "tsx": "tolong($event.[PersonNoPPE].Double)"
           },
-          "aggregation": {
-            "tsx": "avg($value)"
+          "filter": {
+            "tsx": "(tolong($event.[PersonNoPPE].Double)) != null"
+          },
+          "interpolation": {
+            "kind": "step",
+            "boundary": {
+              "span": "PT5M"
+            }
+          },
+          "categories": [
+            {
+              "label": "No PPE",
+              "values": [
+                1
+              ],
+              "annotations": {
+                "color": "#FF2828"
+              }
+            }
+          ],
+          "defaultCategory": {
+            "label": "No Safety Issue",
+            "annotations": {
+              "color": "#258225"
+            }
           }
         },
         "PersonHardHat": {
-          "kind": "numeric",
+          "kind": "categorical",
           "value": {
-            "tsx": "$event.[PersonHardHat].Double"
+            "tsx": "tolong($event.[PersonHardHat].Double)"
           },
-          "aggregation": {
-            "tsx": "avg($value)"
+          "filter": {
+            "tsx": "(tolong($event.[PersonHardHat].Double)) != null"
+          },
+          "interpolation": {
+            "kind": "step",
+            "boundary": {
+              "span": "PT5M"
+            }
+          },
+          "categories": [
+            {
+              "label": "Hardhat Detected",
+              "values": [
+                1
+              ],
+              "annotations": {
+                "color": "#258225"
+              }
+            },
+            {
+              "label": "No Hardhat Detected",
+              "values": [
+                0
+              ],
+              "annotations": {
+                "color": "#FF2828"
+              }
+            }
+          ],
+          "defaultCategory": {
+            "label": "No person detected",
+            "annotations": {
+              "color": "rgb(239, 250, 245)"
+            }
           }
         }
       }

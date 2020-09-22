@@ -1,0 +1,118 @@
+{
+  "modulesContent": {
+    "$edgeAgent": {
+      "properties.desired": {
+        "schemaVersion": "1.0",
+        "runtime": {
+          "type": "docker",
+          "settings": {
+            "minDockerVersion": "v1.25",
+            "loggingOptions": "",
+            "registryCredentials": {
+              "registryName": {
+                "username": "$CONTAINER_REGISTRY_USERNAME",
+                "password": "$CONTAINER_REGISTRY_PASSWORD",
+                "address": "$CONTAINER_REGISTRY_ADDRESS"
+              }
+            }
+          }
+        },
+        "systemModules": {
+          "edgeAgent": {
+            "type": "docker",
+            "settings": {
+              "image": "mcr.microsoft.com/azureiotedge-agent:1.0",
+              "createOptions": ""
+            }
+          },
+          "edgeHub": {
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "mcr.microsoft.com/azureiotedge-hub:1.0",
+              "createOptions": ""
+            }
+          }
+        },
+        "modules": {
+          "EdgeStreamJob": {
+            "settings": {
+                "image": "mcr.microsoft.com/azure-stream-analytics/azureiotedge:1.0.6",
+                "createOptions": ""
+            },
+            "type": "docker",
+            "version": "1.0",
+            "env": {
+                "PlanId": {
+                    "value": "stream-analytics-on-iot-edge"
+                }
+            },
+            "status": "running",
+            "restartPolicy": "always"
+          },
+          "CameraCapture": {
+            "version": "1.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "env": {
+              "IMAGE_PROCESSING_ENDPOINT": { "value": "http://ImageClassifierService:80/image"},
+              "VERBOSE": { "value": "True"},
+              "RESIZE_WIDTH": { "value": "1024"},
+              "RESIZE_HEIGHT": { "value": "576"},
+              "SHOW_VIDEO": { "value": "True"}
+            },
+            "settings": {
+              "image": "${MODULES.CameraCapture.test-amd64}",
+              "createOptions": {
+                "HostConfig": {
+                  "PortBindings": {
+                    "5012/tcp": [ { "HostPort":"5012"}]
+                  }
+                }
+              }
+            }
+          },
+          "ImageClassifierService": {
+            "version": "1.0",
+            "type": "docker",
+            "status": "running",
+            "restartPolicy": "always",
+            "settings": {
+              "image": "${MODULES.ImageClassifierService.amd64}",
+              "createOptions": ""
+            }
+          }
+        }
+      }
+    },
+    "$edgeHub": {
+      "properties.desired": {
+        "schemaVersion": "1.0",
+        "routes": {
+          "CameraCaptureToEdgeJob": "FROM /messages/modules/CameraCapture/outputs/output1 INTO BrokeredEndpoint(\"/modules/EdgeStreamJob/inputs/deviceinput\")",
+          "EdgeStreamAnaltyticsJobToUpstream": "FROM /messages/modules/EdgeStreamJob/* INTO $upstream"
+        },
+        "storeAndForwardConfiguration": {
+          "timeToLiveSecs": 7200
+        }
+      }
+    },
+    "CameraCapture": {
+      "properties.desired": {
+        "VideoPath": "",
+        "StorageAccountName" : "",
+        "StorageAccountKey" : ""
+      }
+    },
+    "EdgeStreamJob": {
+      "properties.desired": {
+          "ASAJobInfo": "",
+          "ASAJobResourceId": "/subscriptions/a98dfc86-277a-4bed-93fa-b07419a9ddae/resourceGroups/ai-on-the-edge/providers/Microsoft.StreamAnalytics/streamingjobs/EdgeStreamAnalyticsJob",
+          "ASAJobEtag": "42244656-f3db-4d16-83cd-8233477918aa",
+          "PublishTimestamp": "2/3/2020 11:12:38 PM"
+      }
+    }
+  }
+}
