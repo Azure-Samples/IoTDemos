@@ -1,0 +1,238 @@
+{
+  "@context": "http://azureiot.com/v1/contexts/IoTModel.json",
+  "@id": "urn:mxchip:mxchip_iot_devkit:1",
+  "@type": "CapabilityModel",
+  "displayName": "MXChip IoT DevKit",
+  "implements": [
+    {
+      "name": "deviceinfo",
+      "schema": {
+        "@id": "urn:azureiot:DeviceManagement:DeviceInformation:1",
+        "@type": "Interface",
+        "displayName": "Device Information",
+        "contents": [
+          {
+            "@type": "Property",
+            "name": "manufacturer",
+            "displayName": "Manufacturer",
+            "schema": "string",
+            "description": "Company name of the device manufacturer. This could be the same as the name of the original equipment manufacturer (OEM). Ex. Contoso."
+          },
+          {
+            "@type": "Property",
+            "name": "model",
+            "displayName": "Device model",
+            "schema": "string",
+            "description": "Device model name or ID. Ex. Surface Book 2."
+          },
+          {
+            "@type": "Property",
+            "name": "swVersion",
+            "displayName": "Software version",
+            "schema": "string",
+            "description": "Version of the software on your device. This could be the version of your firmware. Ex. 1.3.45"
+          },
+          {
+            "@type": "Property",
+            "name": "osName",
+            "displayName": "Operating system name",
+            "schema": "string",
+            "description": "Name of the operating system on the device. Ex. Windows 10 IoT Core."
+          },
+          {
+            "@type": "Property",
+            "name": "processorArchitecture",
+            "displayName": "Processor architecture",
+            "schema": "string",
+            "description": "Architecture of the processor on the device. Ex. x64 or ARM."
+          },
+          {
+            "@type": "Property",
+            "name": "processorManufacturer",
+            "displayName": "Processor manufacturer",
+            "schema": "string",
+            "description": "Name of the manufacturer of the processor on the device. Ex. Intel."
+          },
+          {
+            "@type": "Property",
+            "name": "totalStorage",
+            "displayName": "Total storage",
+            "schema": "long",
+            "displayUnit": "kilobytes",
+            "description": "Total available storage on the device in kilobytes. Ex. 2048000 kilobytes."
+          },
+          {
+            "@type": "Property",
+            "name": "totalMemory",
+            "displayName": "Total memory",
+            "schema": "long",
+            "displayUnit": "kilobytes",
+            "description": "Total available memory on the device in kilobytes. Ex. 256000 kilobytes."
+          }
+        ],
+        "@context": "http://azureiot.com/v1/contexts/IoTModel.json"
+      }
+    },
+    {
+      "name": "sensors",
+      "schema": {
+        "@id": "urn:mxchip:built_in_sensors:1",
+        "@type": "Interface",
+        "displayName": "mxchip_sensor",
+        "contents": [
+          {
+            "@type": "Telemetry",
+            "name": "humidity",
+            "displayName": "Humidity",
+            "comment": "The humidity measurement data from the built-in HTS221 sensor.",
+            "schema": "double"
+          },
+          {
+            "@type": "Telemetry",
+            "name": "temperature",
+            "displayName": "Temperature",
+            "comment": "The temperature measurement data from the built-in HTS221 sensor.",
+            "schema": "double"
+          },
+          {
+            "@type": "Telemetry",
+            "name": "pressure",
+            "displayName": "Pressure",
+            "comment": "The pressure measurement data from the built-in LPS22HB sensor.",
+            "schema": "double"
+          }
+        ],
+        "@context": "http://azureiot.com/v1/contexts/IoTModel.json"
+      }
+    },
+    {
+      "name": "leds",
+      "schema": {
+        "@id": "urn:mxchip:built_in_leds:1",
+        "@type": "Interface",
+        "displayName": "mxchip_leds",
+        "contents": [
+          {
+            "@type": "Command",
+            "description": "This command will begin blinking the built-in RGBLED for given time interval.",
+            "name": "blink",
+            "commandType": "synchronous",
+            "request": {
+              "name": "interval",
+              "schema": "long"
+            },
+            "response": {
+              "name": "blinkResponse",
+              "schema": {
+                "@type": "Object",
+                "fields": [
+                  {
+                    "name": "description",
+                    "schema": "string"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "@type": "Command",
+            "name": "turnOnLed",
+            "comment": "This Commands will turn-on the built-in LED light on the device.",
+            "commandType": "synchronous"
+          },
+          {
+            "@type": "Command",
+            "name": "turnOffLed",
+            "comment": "This Commands will turn-off the built-in LED light on the device.",
+            "commandType": "synchronous"
+          }
+        ],
+        "@context": "http://azureiot.com/v1/contexts/IoTModel.json"
+      }
+    },
+    {
+      "name": "screen",
+      "schema": {
+        "@id": "urn:mxchip:screen:1",
+        "@type": "Interface",
+        "displayName": "mxchip_screen",
+        "contents": [
+          {
+            "@type": "Command",
+            "description": "This command will echo the text string from cloud and show it on the onboard OLED screen.",
+            "name": "echo",
+            "displayName": "Echo",
+            "commandType": "synchronous",
+            "request": {
+              "name": "text",
+              "schema": "string"
+            },
+            "response": {
+              "name": "echoResponse",
+              "schema": {
+                "@type": "Object",
+                "fields": [
+                  {
+                    "name": "echo",
+                    "schema": "string"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "@type": "Command",
+            "description": "This command will show countdown number in the onboard OLED screen, and reboot the device once it's 0.",
+            "name": "countdown",
+            "displayName": "Countdown",
+            "commandType": "synchronous",
+            "request": {
+              "name": "number",
+              "schema": "integer"
+            }
+          }
+        ],
+        "@context": "http://azureiot.com/v1/contexts/IoTModel.json"
+      }
+    },
+    {
+      "name": "settings",
+      "schema": {
+        "@id": "urn:mxchip:settings:1",
+        "@type": "Interface",
+        "displayName": "mxchip_settings",
+        "contents": [
+          {
+            "@type": "Property",
+            "name": "fanSpeed",
+            "displayName": "Fan Speed",
+            "writable": true,
+            "schema": "double"
+          },
+          {
+            "@type": "Property",
+            "name": "voltage",
+            "displayName": "Voltage",
+            "writable": true,
+            "schema": "double"
+          },
+          {
+            "@type": "Property",
+            "name": "current",
+            "displayName": "Current",
+            "writable": true,
+            "schema": "double"
+          },
+          {
+            "@type": "Property",
+            "name": "irSwitch",
+            "displayName": "IR",
+            "writable": true,
+            "schema": "boolean"
+          }
+        ],
+        "@context": "http://azureiot.com/v1/contexts/IoTModel.json"
+      }
+    }
+  ]
+}
