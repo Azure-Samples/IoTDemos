@@ -2,7 +2,7 @@
 
 ## Architecture
 
- <center> <img src="./images/arch.png"/> </center>
+ <center> <img src="./images/architecture.png"/> </center>
 
 ## Requirements
 - Demo targets Windows 64-bit Operating System.
