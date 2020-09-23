@@ -1,4 +1,23 @@
-# Retail On The Edge
+# Retail Demo - Instore Analytics
+
+
+[![Instore Analytics Demonstration](https://img.youtube.com/vi/pL-c00M2CnI/0.jpg)](Coming Soon!!)
+
+## Overview
+The Retail Demo - Instore Analytics provides the ability to identify product inventory conditions using AI on Edge & Machine Learning.  It also implments alerting of shelf inventory and customer arrival (for item pickup) via Microsoft teams..
+
+The AI on Edge pattern utilizes Azure IoT Edge Runtime with a custom Vision AI model and Azure Stream Aanalytics to deliver product detection and count. The Vision AI model has been trained to identify unlabeled cans to avoid trademark / branding issues :-).  The ASA module aggregates / buffers the data so not every frame generates an message.
+
+Messages are sent to IoT Central where business rules have been configured to alert when inventory levels are low. 
+
+Store employees use a Power App to simulate an Inventory System and place orders.
+
+The demo also includes a Machine Learning scenario whereby inventory levels and trends can be analyzed to do better inventory forecasting and allow managers to make more accurate inventory decisions. 
+
+A Location Analytics pattern is implemented through Azure Maps geofencing and indoor mapping. The demo walks you through simulating a customer arriving at the store which triggers the geofence alert.  An indoor map of a retail location is also provided that can help with customer wayfinding.
+
+## Demo Script
+After deploying the demo, a sample demonstration script can be found [here](https://github.com/Azure-Samples/IoTDemos/blob/master/RetailDemo/Retail%20Demo%20Script.pdf)
 
 ## Architecture
 
