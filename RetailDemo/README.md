@@ -283,6 +283,7 @@ In this section we will setup the Inventory Power App.
 1. Click the **Configure** button next to the **SQL Server Connection** resource.
 1. Select the connection created earlier and click the **Save** button.
 1. Select the **Configure** button next to the **Flow** resource.
+![Cconfigure](./images/powerappconfig.png)
 1. Select the flow created earlier and click the **Save** button.
 1. Click the **Import** button and wait for the app to be imported.
 1. Click the **Apps** option in the menu.
