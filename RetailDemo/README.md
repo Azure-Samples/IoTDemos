@@ -1,6 +1,6 @@
 # Retail Demo - Instore Analytics
 
-Video Coming Soon
+[![Retail Demo Demonstration](https://img.youtube.com/vi/pL-c00M2CnI/0.jpg)](https://github.com/Azure-Samples/IoTDemos/blob/master/RetailDemo/images/Retail%20Demo%20compressed.mp4)
 
 ## Overview
 The Retail Demo - Instore Analytics provides the ability to identify product inventory conditions using AI on Edge & Machine Learning.  It also implments alerting of shelf inventory and customer arrival (for item pickup) via Microsoft teams..
