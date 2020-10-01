@@ -88,6 +88,7 @@ Here we will setup the event for the IoT Hub that will send the data to the Logi
 1. For the `Endpoint Type` select the `Web Hook` option.
 1. Click the `Select an endpoint` link.
 1. In the new panel update the `Subscriber Endpoint` field with the value from the deploy output `device Alerts Logic App Endpoint`.
+1. For 'System Topic', you can put in anything between 3-128 Characters long.
 1. Click the `Confirm Selection` button.
 1. Click the `Create` button.
 
