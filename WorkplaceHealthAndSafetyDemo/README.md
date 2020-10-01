@@ -515,5 +515,5 @@ We've seen issues with different subscription types: MSDN, AIRS, etc... not bein
 
 ### No data appears from the Camera / AI DevKit
 1. Reboot the camera. Instructions [Here](https://azure.github.io/Vision-AI-DevKit-Pages/docs/Reboot/)
-2. Reset the camera by deploying the latest firmware.  Instructions are located  [Here](https://azure.github.io/Vision-AI-DevKit-Pages/docs/Recover_device/)
+2. Reset the camera by deploying the latest firmware.  Instructions are located  [Here](https://azure.github.io/Vision-AI-DevKit-Pages/docs/Firmware/)
 3. Look at the IoT Edge Logs for errors and submit an issue to this (IoT Demos) repo. Instructions  [Here](https://azure.github.io/Vision-AI-DevKit-Pages/docs/Review_logs/)
