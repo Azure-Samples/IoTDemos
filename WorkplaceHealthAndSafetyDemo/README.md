@@ -280,6 +280,7 @@ In this section, we will set up your Vision AI Dev Kit to be connected to the de
 1. Once the device has been created, select the device and copy the `Primary Connection String` for later in this setup.
 
 #### Setup Visual Studio Code Development Environment
+> Important: If the Visual Studio Code steps below don't work on your PC, consider using an Azure VM. The steps to setup the VM are outside the scope of this but are well documented [here](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/tutorial-manage-vm)
 1. Install [Visual Studio Code](https://code.visualstudio.com/Download) (VS Code).
 1. Install 64 bit [Anaconda with Python version 3.7](https://www.anaconda.com/distribution).
 1. Install the following extensions for VS Code:
