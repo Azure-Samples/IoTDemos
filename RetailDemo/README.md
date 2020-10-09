@@ -1,5 +1,5 @@
 # Retail Demo - Instore Analytics
-
+Video overview and demonstration:
 [![Retail Demo Demonstration](https://github.com/Azure-Samples/IoTDemos/blob/master/RetailDemo/images/retail-demo.png)](https://github.com/Azure-Samples/IoTDemos/blob/master/RetailDemo/images/Retail%20Demo%20compressed.mp4)
 
 ## Overview
