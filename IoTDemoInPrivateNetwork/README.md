@@ -9,6 +9,7 @@ The default configuration of Azure services allows public IP access to those ser
 TO DO:
 - Check: hide Azure subscription name and ID, and change/obfuscate all public IP addresses in the images included below
 - Explain the reason we use IoT Routing to an Event Hub. Need John input
+- Explain Managed Identities use? Need John input
 - Rewrite the DNS section. Need David input
 - Edit text between images to improve flow
 ```
