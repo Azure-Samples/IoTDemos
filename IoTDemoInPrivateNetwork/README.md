@@ -182,10 +182,10 @@ To do this, a DNS conditional forwarder is needed locally, to resolve requests f
 The following diagram shows the elements in the sample Azure environment. 
 
 <img src="images/DNS-Azure.jpg" width="450"/><p>
-<img src="images/DNS-Azure-VMNetworking.jpg" width="450"/><p>
-<img src="images/DNS-Azure-DNSManager.jpg" width="450"/><p>
-<img src="images/DNS-Azure-DNSManagerCF1.jpg" width="450"/><p>
-<img src="images/DNS-Azure-DNSManagerCF2" width="450"/><p>
+<img src="images/DNS-Azure-VMNetworking.jpg" width="800"/><p>
+<img src="images/DNS-Azure-DNSManager.jpg" width="800"/><p>
+<img src="images/DNS-Azure-DNSManagerCF1.jpg" width="800"/><p>
+<img src="images/DNS-Azure-DNSManagerCF2.jpg" width="800"/><p>
 
 
 
