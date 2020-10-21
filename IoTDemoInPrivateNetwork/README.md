@@ -5,11 +5,13 @@ The default configuration of Azure services allows public IP access to those ser
 
  Note: *This document does not include mouse-click-by-mouse-click instructions on how to deploy the various services. Rather it assumes a basic knowledge of Azure, and includes only what components need to be configured, and examples of the configuration.*
 
-<span style="color:#FF0000">[TO DO:]</span>
-- <span style="color:#FF0000">[Check: hide Azure subscription name and ID, and change/obfuscate all public IP addresses in the images included below.]</span>
-- <span style="color:#FF0000">[Explain the reason we use IoT Routing to an Event Hub. Need John input.]</span>
-- <span style="color:#FF0000">[Rewrite the DNS section. Need David input.]</span>
-- <span style="color:#FF0000">[Edit text between images to improve flow.]</span>
+```
+TO DO:
+- Check: hide Azure subscription name and ID, and change/obfuscate all public IP addresses in the images included below
+- Explain the reason we use IoT Routing to an Event Hub. Need John input
+- Rewrite the DNS section. Need David input
+- Edit text between images to improve flow
+```
 
  ## <span style="color:#0080FF">Contributors</span>
  - Spyros Sakellariadis, Program Manager, Industry Innovation, Enterprise Commercial Business
@@ -125,7 +127,11 @@ Select **+ Private endpoint** to create the private endpoint. The result should 
 
 Note you cannot enumerate IoT Devices or use Device Explorer to see telemetry incoming to IoT Hub because public IP addresses are blocked.
 
-<span style="color:#FF0000">[John - please elaborate/rephrase this section]</span> In order to secure all access to the IoT Hub, it is best to route all messages from the IoT Hub to an independent Event Hub. First, create an Event Hub. From the Azure portal, select **Create a Resource** > **Event Hub**. When deployment is complete, configuration should be similar to this: 
+```
+TO DO:
+John - please elaborate/rephrase this section
+```
+In order to secure all access to the IoT Hub, it is best to route all messages from the IoT Hub to an independent Event Hub. First, create an Event Hub. From the Azure portal, select **Create a Resource** > **Event Hub**. When deployment is complete, configuration should be similar to this: 
 
 ### <span style="color:#0080FF">Overview</span>
 <img src="images/EventHubNamespace.jpg" width="800"/><p>
@@ -144,7 +150,10 @@ Note you cannot enumerate IoT Devices or use Device Explorer to see telemetry in
 
 ### <span style="color:#0080FF">Event Hub Access Control</span>
 
-<span style="color:#FF0000">[Need explanation]</span>
+```
+TO DO:
+Needs explanation
+```
 
 <img src="images/EventHubsInstanceSharedAccessPolicies.jpg" width="1000"/><p>
 
@@ -185,6 +194,11 @@ DNS servers are needed to resolve URLs for services in Azure. When those service
 However, since we are preventing access to any public IP address and using only private endpoints, applications would have to resolve to the private IP address. For example, it should resolve to 10.2.0.x instead of 42.x.x.x.
 
 To do this, a DNS conditional forwarder is needed locally, to resolve requests from on-premises devices to Azure services, and in Azure, to resolve requests from one Azure service to another. 
+
+```
+TO DO:
+Needs rewriting. David - can you take a crack at this?
+```
 
 ### <span style="color:#0080FF">Azure</span>
 The following diagram shows the elements in the sample Azure environment. 

@@ -1,0 +1,501 @@
+{
+  "gwy": "iotworx",
+  "name": "Drive_Operation_Minutes",
+  "value": 0,
+  "timestamp": "2020-10-20T13:48:55.242Z",
+  "status": true
+}
+{
+  "gwy": "iotworx",
+  "name": "Motor_Speed",
+  "value": 15,
+  "timestamp": "2020-10-20T13:48:55.246Z",
+  "status": true
+}
+{
+  "gwy": "iotworx",
+  "name": "Frequency_Output",
+  "value": 0,
+  "timestamp": "2020-10-20T13:48:55.246Z",
+  "status": true
+}
+{
+  "gwy": "iotworx",
+  "name": "Power_Output",
+  "value": 0,
+  "timestamp": "2020-10-20T13:48:55.246Z",
+  "status": true
+}
+
+
+{"gwy": "iotworx","name": "Output_Voltage","value": 0,"timestamp": "2020-10-20T13:48:55.247Z","status": true}
+{"gwy": "iotworx","name": "DC_Bus_Voltage","value": 320.5,"timestamp": "2020-10-20T13:48:55.247Z","status": true}
+{"gwy": "iotworx","name": "Capacitance_Temperature","value": 47.1,"timestamp": "2020-10-20T13:48:55.247Z","status": true}
+{"gwy": "iotworx","name": "Drive_Run_or_Halt","value": 2,"timestamp": "2020-10-20T13:48:55.248Z","status": true}
+
+
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Frequency_Command_CMD",
+  "value": 0,
+  "timestamp": "2020-10-20T13:48:55.248Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Output_Current",
+  "value": 0,
+  "timestamp": "2020-10-20T13:48:55.248Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Acceleration_Time",
+  "value": 10,
+  "timestamp": "2020-10-20T13:48:55.249Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Deceleration_Time",
+  "value": 10,
+  "timestamp": "2020-10-20T13:48:55.249Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Frequency_Command_Status",
+  "value": 0,
+  "timestamp": "2020-10-20T13:48:55.249Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Accumulated_Operation_Minutes",
+  "value": 242,
+  "timestamp": "2020-10-20T13:48:55.250Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Hand_or_Auto_Mode",
+  "value": 3,
+  "timestamp": "2020-10-20T13:48:55.250Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Auto_Operation_Source",
+  "value": 6,
+  "timestamp": "2020-10-20T13:48:55.250Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Auto_Frequency_Source",
+  "value": 9,
+  "timestamp": "2020-10-20T13:48:55.251Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Accumulated_Megawatt_Hours",
+  "value": 0,
+  "timestamp": "2020-10-20T13:48:55.251Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Accumulated_Kilowatt_Hours",
+  "value": 11,
+  "timestamp": "2020-10-20T13:48:55.251Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Accumulated_Watt_Hours",
+  "value": 89.3,
+  "timestamp": "2020-10-20T13:48:55.251Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Power_Consumed",
+  "value": 11.0893,
+  "timestamp": "2020-10-20T13:48:55.252Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Power_Demand",
+  "value": 7.006492e-43,
+  "timestamp": "2020-10-20T13:48:55.252Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Drive_Operation_Minutes",
+  "value": 0,
+  "timestamp": "2020-10-20T13:49:10.464Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Motor_Speed",
+  "value": 15,
+  "timestamp": "2020-10-20T13:49:10.464Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Frequency_Output",
+  "value": 0,
+  "timestamp": "2020-10-20T13:49:10.464Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Power_Output",
+  "value": 0,
+  "timestamp": "2020-10-20T13:49:10.465Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Output_Voltage",
+  "value": 0,
+  "timestamp": "2020-10-20T13:49:10.465Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "DC_Bus_Voltage",
+  "value": 320.5,
+  "timestamp": "2020-10-20T13:49:10.465Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Capacitance_Temperature",
+  "value": 47.1,
+  "timestamp": "2020-10-20T13:49:10.465Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Drive_Run_or_Halt",
+  "value": 2,
+  "timestamp": "2020-10-20T13:49:10.465Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Frequency_Command_CMD",
+  "value": 0,
+  "timestamp": "2020-10-20T13:49:10.466Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Output_Current",
+  "value": 0,
+  "timestamp": "2020-10-20T13:49:10.466Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Acceleration_Time",
+  "value": 10,
+  "timestamp": "2020-10-20T13:49:10.466Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Deceleration_Time",
+  "value": 10,
+  "timestamp": "2020-10-20T13:49:10.469Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Frequency_Command_Status",
+  "value": 0,
+  "timestamp": "2020-10-20T13:49:10.470Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Accumulated_Operation_Minutes",
+  "value": 242,
+  "timestamp": "2020-10-20T13:49:10.470Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Hand_or_Auto_Mode",
+  "value": 3,
+  "timestamp": "2020-10-20T13:49:10.470Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Auto_Operation_Source",
+  "value": 6,
+  "timestamp": "2020-10-20T13:49:10.470Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Auto_Frequency_Source",
+  "value": 9,
+  "timestamp": "2020-10-20T13:49:10.471Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Accumulated_Megawatt_Hours",
+  "value": 0,
+  "timestamp": "2020-10-20T13:49:10.471Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Accumulated_Kilowatt_Hours",
+  "value": 11,
+  "timestamp": "2020-10-20T13:49:10.471Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Accumulated_Watt_Hours",
+  "value": 89.3,
+  "timestamp": "2020-10-20T13:49:10.471Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Power_Consumed",
+  "value": 11.0893,
+  "timestamp": "2020-10-20T13:49:10.471Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Power_Demand",
+  "value": 7.006492e-43,
+  "timestamp": "2020-10-20T13:49:10.472Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Drive_Operation_Minutes",
+  "value": 0,
+  "timestamp": "2020-10-20T13:49:25.713Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Motor_Speed",
+  "value": 15,
+  "timestamp": "2020-10-20T13:49:25.713Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Frequency_Output",
+  "value": 0,
+  "timestamp": "2020-10-20T13:49:25.714Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Power_Output",
+  "value": 0,
+  "timestamp": "2020-10-20T13:49:25.714Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Output_Voltage",
+  "value": 0,
+  "timestamp": "2020-10-20T13:49:25.714Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "DC_Bus_Voltage",
+  "value": 320.5,
+  "timestamp": "2020-10-20T13:49:25.716Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Capacitance_Temperature",
+  "value": 47.1,
+  "timestamp": "2020-10-20T13:49:25.716Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Drive_Run_or_Halt",
+  "value": 2,
+  "timestamp": "2020-10-20T13:49:25.717Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Frequency_Command_CMD",
+  "value": 0,
+  "timestamp": "2020-10-20T13:49:25.717Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Output_Current",
+  "value": 0,
+  "timestamp": "2020-10-20T13:49:25.717Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Acceleration_Time",
+  "value": 10,
+  "timestamp": "2020-10-20T13:49:25.717Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Deceleration_Time",
+  "value": 10,
+  "timestamp": "2020-10-20T13:49:25.717Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Frequency_Command_Status",
+  "value": 0,
+  "timestamp": "2020-10-20T13:49:25.717Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Accumulated_Operation_Minutes",
+  "value": 242,
+  "timestamp": "2020-10-20T13:49:25.717Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Hand_or_Auto_Mode",
+  "value": 3,
+  "timestamp": "2020-10-20T13:49:25.718Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Auto_Operation_Source",
+  "value": 6,
+  "timestamp": "2020-10-20T13:49:25.718Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Auto_Frequency_Source",
+  "value": 9,
+  "timestamp": "2020-10-20T13:49:25.718Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Accumulated_Megawatt_Hours",
+  "value": 0,
+  "timestamp": "2020-10-20T13:49:25.718Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Accumulated_Kilowatt_Hours",
+  "value": 11,
+  "timestamp": "2020-10-20T13:49:25.718Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Accumulated_Watt_Hours",
+  "value": 89.3,
+  "timestamp": "2020-10-20T13:49:25.718Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Power_Consumed",
+  "value": 11.0893,
+  "timestamp": "2020-10-20T13:49:25.718Z",
+  "status": true
+}
+Azure Event Hub Explorer > Message Received:
+{
+  "gwy": "iotworx",
+  "name": "Power_Demand",
+  "value": 7.006492e-43,
+  "timestamp": "2020-10-20T13:49:25.718Z",
+  "status": true
+}
+Azure Event Hub Explorer > Stop monitoring event hub
