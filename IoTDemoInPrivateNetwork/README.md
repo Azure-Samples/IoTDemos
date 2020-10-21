@@ -10,7 +10,6 @@ The default configuration of Azure services allows public IP access to those ser
 - <span style="color:#FF0000">[Explain the reason we use IoT Routing to an Event Hub. Need John input.]</span>
 - <span style="color:#FF0000">[Rewrite the DNS section. Need David input.]</span>
 - <span style="color:#FF0000">[Edit text between images to improve flow.]</span>
-- ![#f03c15](https://placehold.it/15/f03c15/000000?text=+) `[Edit text between images to improve flow.]`
 
  ## <span style="color:#0080FF">Contributors</span>
  - Spyros Sakellariadis, Program Manager, Industry Innovation, Enterprise Commercial Business
