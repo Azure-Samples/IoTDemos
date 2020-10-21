@@ -37,6 +37,15 @@ As shown in the diagram above, a 3rd party gateway is installed on a computer wh
 - [Using IoTWorX as a Gateway](https://iconics.com/Documents/WhitePapers/Using-IoTWorX-as-a-Gateway), and 
 - [Installing IoTWorX on IoT Edge](https://iconics.com/Documents/Whitepapers/Installing-IoTWorX-on-IoT-Edge)
 
+The output from the gateway should be in a standard JSON format. In the sample shown, data from the gateway looks like this:
+
+```
+{"gwy": "iotworx","name": "Output_Voltage","value": 0,"timestamp": "2020-10-20T13:48:55.247Z","status": true}
+{"gwy": "iotworx","name": "DC_Bus_Voltage","value": 320.5,"timestamp": "2020-10-20T13:48:55.247Z","status": true}
+{"gwy": "iotworx","name": "Capacitance_Temperature","value": 47.1,"timestamp": "2020-10-20T13:48:55.247Z","status": true}
+{"gwy": "iotworx","name": "Drive_Run_or_Halt","value": 2,"timestamp": "2020-10-20T13:48:55.248Z","status": true}
+```
+
 In addition, a hardware firewall is installed in the local environment, which serves as the local endpoint of the site-to-site VPN to Azure. Configuration of 
 the firewall depends upon the make and model of the firewall, of which there are many. Some sample configurations can be found here:
 
@@ -165,6 +174,8 @@ Configuration of the virtual machine in the end-to-end sample is shown below. Fr
 To verify that data arriving at the Event Hub is visible within the virtual machine, you can use Visual Studio code with the Event Hub explorer tool installed. After launching Visual Studio code and selecting the Event Hub above, right click and select Start Monitoring. You should see the data that was sent by the on-premises gateway to the Azure IoT Hub and forwarded on to the Event Hub:
 
 <img src="images/EventHubTelemetryReceived.jpg" width="800"/><p>
+
+This should be the same as the data coming out of the local gateway, shown in the Local Gateway Configuration section above.
 
 ## <span style="color:#0080FF">Deploying DNS servers</span>
 DNS servers are needed to resolve URLs for services in Azure. When those services are initially deployed, they are accessed using a URL that resolves to their public IP address. For example
