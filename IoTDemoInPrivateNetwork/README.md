@@ -10,6 +10,7 @@ The default configuration of Azure services allows public IP access to those ser
 - <span style="color:#FF0000">[Explain the reason we use IoT Routing to an Event Hub. Need John input.]</span>
 - <span style="color:#FF0000">[Rewrite the DNS section. Need David input.]</span>
 - <span style="color:#FF0000">[Edit text between images to improve flow.]</span>
+- ![#f03c15](https://placehold.it/15/f03c15/000000?text=+) `[Edit text between images to improve flow.]`
 
  ## <span style="color:#0080FF">Contributors</span>
  - Spyros Sakellariadis, Program Manager, Industry Innovation, Enterprise Commercial Business
@@ -125,7 +126,7 @@ Note you cannot enumerate IoT Devices or use Device Explorer to see telemetry in
 
 <img src="images/EventHubNetworking.jpg" width="800"/><p>
 
-### <span style="color:#0080FF">Event Hub Privte Endpoints</span>
+### <span style="color:#0080FF">Event Hub Private Endpoints</span>
 
 <img src="images/EventHubPrivateEndpoints.jpg" width="800"/><p>
 
@@ -169,14 +170,11 @@ To verify that data arriving at the Event Hub is visible within the virtual mach
 ## <span style="color:#0080FF">Deploying DNS servers</span>
 DNS servers are needed to resolve URLs for services in Azure. When those services are initially deployed, they are accessed using a URL that resolves to their public IP address. For example
 
-mydemovm.eastus.cloudapp.azure.com may resolve to 52.168.x.x
+[http://mydemovm.eastus.cloudapp.azure.com](http://mydemovm.eastus.cloudapp.azure.com) may resolve to 42.x.x.x
 
-However, since we are preventing access to any public IP address and using only private endpoints, applications would have to resolve to the private IP address. For example
-
-mydemovm.eastus.cloudapp.azure.com may need to resolve to 10.2.0.x
+However, since we are preventing access to any public IP address and using only private endpoints, applications would have to resolve to the private IP address. For example, it should resolve to 10.2.0.x instead of 42.x.x.x.
 
 To do this, a DNS conditional forwarder is needed locally, to resolve requests from on-premises devices to Azure services, and in Azure, to resolve requests from one Azure service to another. 
-
 
 ### <span style="color:#0080FF">Azure</span>
 The following diagram shows the elements in the sample Azure environment. 
