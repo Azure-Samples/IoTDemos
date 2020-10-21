@@ -3,7 +3,7 @@ Video overview and demonstration:
 [![Retail Demo Demonstration](https://github.com/Azure-Samples/IoTDemos/blob/master/RetailDemo/images/retail-demo.png)](https://github.com/Azure-Samples/IoTDemos/blob/master/RetailDemo/images/Retail%20Demo%20compressed.mp4)
 
 ## Overview
-The Retail Demo - Instore Analytics provides the ability to identify product inventory conditions using AI on Edge & Machine Learning.  It also implements alerting of shelf inventory and customer arrival (for item pickup) via Microsoft teams..
+The Retail Demo - Instore Analytics provides the ability to identify product inventory conditions using AI on Edge & Machine Learning.  It also implements alerting of shelf inventory and customer arrival (for item pickup) via Microsoft teams.
 
 The AI on Edge pattern utilizes Azure IoT Edge Runtime with a custom Vision AI model and Azure Stream Analytics to deliver product detection and count. The Vision AI model has been trained to identify unlabeled cans to avoid trademark / branding issues :-).  The ASA module aggregates / buffers the data so not every frame generates a message.
 
