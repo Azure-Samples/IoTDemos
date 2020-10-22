@@ -229,7 +229,7 @@ In the DNS Manager at 192.168.1.8 two conditional forwarding records were added 
 
 <img src="images/DNS-Local-DNSManagerCF1.jpg" width="800"/><p>
 
-When the local gateway connects to `HostName=IoTHubForVPNTesting.azure-devices.net;DeviceId=iotworx;SharedAccessKey=******`, the DNS server forwards the request to resolve the domain `azure-devices.net` to `10.2.0.6`, the DNS server we created in Azure. In turn, the Azure DNS server he request to resolve the name to `168.63.129.16`, which in turn resolves this as `10.2.0,4`, the private IP address of the IoT Hub.
+When the local gateway connects to `HostName=IoTHubForVPNTesting.azure-devices.net;DeviceId=iotworx;SharedAccessKey=******`, the DNS server forwards the request to resolve the domain `azure-devices.net` to `10.2.0.6`, the DNS server we created in Azure. In turn, the Azure DNS server forwards the request to resolve the name to `168.63.129.16`, which in turn resolves this as `10.2.0,4`, the private IP address of the IoT Hub.
 
 
 
