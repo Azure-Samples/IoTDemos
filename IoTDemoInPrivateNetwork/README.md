@@ -40,7 +40,7 @@ As shown in the diagram above, a 3rd party gateway is installed on a computer wh
 - [Using IoTWorX as a Gateway](https://iconics.com/Documents/WhitePapers/Using-IoTWorX-as-a-Gateway), and 
 - [Installing IoTWorX on IoT Edge](https://iconics.com/Documents/Whitepapers/Installing-IoTWorX-on-IoT-Edge)
 
-The output from the gateway should be in a standard JSON format. In the sample shown, data from the gateway looks like this:
+The output from the gateway should be in a standard JSON format. In the sample shown, data from the gateway looks like this:<a name="DeviceTelemetry"></a>
 
 ```
 {"gwy": "iotworx","name": "Output_Voltage","value": 0,"timestamp": "2020-10-20T13:48:55.247Z","status": true}
@@ -75,7 +75,7 @@ A 'How-to Guide' for creating a site-to-site VPN is published on the Microsoft w
 Configuration of these elements in the end-to-end sample is shown below. 
 
 
-### <span style="color:#0080FF">Virtual network</span>
+### <span style="color:#0080FF">Virtual network in Azure</span>
 From the Azure portal, start the process of creating a virtual network by selecting **Create a Resource** > **Virtual network**. During setup, accept the proposed private IP address range, for example 10.2.0.0/16. When deployment is complete, select the resource. The result should look similar to the following, with the exception of the DNS server, which will be added later:
 
 <img src="images/Virtual_Network.jpg" width="800"/><p>
@@ -102,7 +102,14 @@ Finally, in the end-to-end sample we created a second vnet in another Azure regi
 <img src="images/ADLSvnetPeering.jpg" width="800"/><p>
 
 ## <span style="color:#0080FF">Deploying an IoT Hub with only private IP access</span><a name="IoTHub"></a>
-The following diagram shows the elements in the end-to-end sample Azure environment. 
+```
+TO DO:
+John - please review and edit as necessary. Two items in particular:
+1. Why is it necessary to create the Event Hub and forward everything there?
+2. I didn't fully understand the business about the Managed Identities, so can you insert some text here? I can capture any images necessary.
+```
+
+The on-premises gateway will push telemetry data to the Azure IoT Hub, and all Azure services and applications will use that IoT Hub as the source of data from the on-premises devices. The following elements need to be created in Azure for the sample configuration:
 
 <img src="images/IoTHub.jpg" width="450"/><p>
 A 'How-to Guide' for configuring IoT Hub in a vnet is published on the Microsoft website here: [IoT Hub support for virtual networks with Private Link and Managed Identity](https://docs.microsoft.com/en-us/azure/iot-hub/virtual-network-support)
@@ -121,17 +128,12 @@ Next, create private IP endpoints for this hub. Select the Private endpoint conn
 
 <img src="images/IoTHubPrivateEndpoints.jpg" width="800"/><p>
 
-
 Select **+ Private endpoint** to create the private endpoint. The result should look similar to this:
 
 <img src="images/IoTHubPrivateEndpoint.jpg" width="800"/><p>
 
 Note you cannot enumerate IoT Devices or use Device Explorer to see telemetry incoming to IoT Hub because public IP addresses are blocked.
 
-```
-TO DO:
-John - please elaborate/rephrase this section
-```
 In order to secure all access to the IoT Hub, it is best to route all messages from the IoT Hub to an independent Event Hub. 
 
 ## <span style="color:#0080FF">Event Hub</span><a name="EventHub"></a>
@@ -141,38 +143,37 @@ First, create an Event Hub. From the Azure portal, select **Create a Resource** 
 <img src="images/EventHubNamespace.jpg" width="800"/><p>
 
 ### <span style="color:#0080FF">Event Hub Networking</span>
+Disable public access by choosing "Allow access from selected networks", and be sure to add your client (e.g. laptop) IP address in the firewall section, or you will not be able to access the Event Hub to manage it.
 
 <img src="images/EventHubNetworking.jpg" width="800"/><p>
 
 ### <span style="color:#0080FF">Event Hub Private Endpoints</span>
+Create a private endpoint for the Event Hub by clicking **+ Private endpoint**:
 
 <img src="images/EventHubPrivateEndpoints.jpg" width="800"/><p>
 
 ### <span style="color:#0080FF">Event Hub Access Control</span>
+Next, provide access to the Event Hub by the IoTHub by assigning the hub the Azure Event Hubs Data Sender role:
 
 <img src="images/EventHubAccessControl.jpg" width="800"/><p>
 
-### <span style="color:#0080FF">Event Hub Access Control</span>
-
-```
-TO DO:
-Needs explanation
-```
+and then selecting Shared access policies and clicking **+ Add** to create a policy for the routing from IoT Hub. Make sure to select both Listen and Send rights:
 
 <img src="images/EventHubsInstanceSharedAccessPolicies.jpg" width="1000"/><p>
 
 
 ### <span style="color:#0080FF">Message routing</span>
-Having created an Event Hub with only private endpoints, now forward all telemetry coming in to the IoT Hub to that Event Hub, using the IoT Hub Message Routing Feature:
+Having created an Event Hub with only private endpoints, go back to the IoT Hub configuration screens and forward all telemetry coming in to the IoT Hub to that Event Hub, using the IoT Hub Message routing feature:
 
 <img src="images/IoTHubMessageRouting.jpg" width="800"/><p>
 
-### <span style="color:#0080FF">Message routing detail</span>
-Routing details in the sample are set so as to forward everything to the Event Hub, with a consequence that no data can be retrieved from the IoT Hub itself by any application. To do this, set the routing details as follows:
+Routing details in the sample are set so as to forward everything to the Event Hub by setting **Routing query** to **true**, with a consequence that no data can be retrieved from the IoT Hub itself by any application. 
 
 <img src="images/IoTHubMessageRoutingDetail.jpg" width="800"/><p>
 
 ## <span style="color:#0080FF">Azure virtual machine</span><a name="AzureVM"></a>
+
+The sample contains an Azure virtual machine simply as an example of setting up something in Azure that is accessible only through private addresses and as a way to show how to access other services that have only private addresses.
 
 Guidance for creating an Azure virtual machine is published on the Microsoft website here: [Quickstart: Create a Windows virtual machine in the Azure portal](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/quick-create-portal).
 
@@ -180,15 +181,18 @@ Configuration of the virtual machine in the end-to-end sample is shown below. Fr
 
 
 <img src="images/VMOverview.jpg" width="800"/><p>
+
+Disable public IP address access and configure the network interfaces:
+
 <img src="images/VMIPConfig1.jpg" width="800"/><p>
 <img src="images/VMIPconfigurations.jpg" width="800"/><p>
 <img src="images/VMNetworking.jpg" width="800"/><p>
 
-To verify that data arriving at the Event Hub is visible within the virtual machine, you can use Visual Studio code with the Event Hub explorer tool installed. After launching Visual Studio code and selecting the Event Hub above, right click and select Start Monitoring. You should see the data that was sent by the on-premises gateway to the Azure IoT Hub and forwarded on to the Event Hub:
+To verify that data arriving at the Event Hub is visible within the virtual machine, you can use Visual Studio code with the [Azure Event Hub Explorer](https://marketplace.visualstudio.com/items?itemName=Summer.azure-event-hub-explorer) installed. After launching Visual Studio code and selecting the Event Hub above, right click and select Start Monitoring. You should see the data that was sent by the on-premises gateway to the Azure IoT Hub and forwarded on to the Event Hub:
 
 <img src="images/EventHubTelemetryReceived.jpg" width="800"/><p>
 
-This should be the same as the data coming out of the local gateway, shown in the Local Gateway Configuration section above.
+This should be the same as the data coming out of the local gateway, shown in the [local gateway configuration](#DeviceTelemetry) section above.
 
 ## <span style="color:#0080FF">Deploying DNS servers</span>
 ```
