@@ -169,7 +169,7 @@ Routing details in the sample are set so as to forward everything to the Event H
 
 <img src="images/IoTHubMessageRoutingDetail.jpg" width="800"/><p>
 
-## <span style="color:#0080FF">Azure virtual machine</span>
+## <span style="color:#0080FF">Azure virtual machine</span><a name="AzureVM"></a>
 
 Guidance for creating an Azure virtual machine is published on the Microsoft website here: [Quickstart: Create a Windows virtual machine in the Azure portal](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/quick-create-portal).
 
@@ -188,17 +188,18 @@ To verify that data arriving at the Event Hub is visible within the virtual mach
 This should be the same as the data coming out of the local gateway, shown in the Local Gateway Configuration section above.
 
 ## <span style="color:#0080FF">Deploying DNS servers</span>
-DNS servers are needed to resolve URLs for services in Azure. When those services are initially deployed, they are accessed using a URL that resolves to their public IP address. For example, [http://mydemovm.eastus.cloudapp.azure.com](http://mydemovm.eastus.cloudapp.azure.com) may resolve to 42.x.x.x. However, since we are preventing access to any public IP address and using only private endpoints, applications would have to resolve to the private IP address. For example, it should resolve to 10.2.0.x instead of 42.x.x.x.
-
-To do this, a DNS conditional forwarder is needed locally, to resolve requests from on-premises devices to Azure services, and in Azure, to resolve requests from one Azure service to another. 
-
 ```
 TO DO:
-Needs rewriting. David - can you take a crack at this?
+Needs editing. David - also, can you explain the use of the Private DNS zone records created in the portal?
 ```
 
+DNS servers are needed to resolve URLs for services in Azure. When those services are initially deployed, they are accessed using a URL that resolves to their public IP address. For example, [http://mydemovm.eastus.cloudapp.azure.com](http://mydemovm.eastus.cloudapp.azure.com) may resolve to `42.x.x.x`. However, since we are preventing access to any public IP address and using only private endpoints, applications would have to resolve to the private IP address. For example, it should resolve to `10.2.0.x` instead of `42.x.x.x`.
+
+To do this, two DNS conditional forwarders are created. Locally, to resolve requests from on-premises devices to Azure services, and in Azure, to resolve requests from one Azure service to another. 
+
+
 ### <span style="color:#0080FF">Azure</span>
-IP configuration in the Azure VM created above, showing use of Azure DNS server:
+The Azure VM created [above](#AzureVM), and shown in the showing use of Azure DNS server:
 
 ```
    IPv4 Address. . . . . . . . . . . : 10.2.0.5(Preferred)
