@@ -30,7 +30,7 @@ This sample does not include all possible services or configurations, of course,
 ## <span style="color:#0080FF">High level architecture</span>
 The IoT sample described consists of some on-premises components as well as Azure. To provde a visual reference for the items discussed, here are the high level architectures.
 
-### <span style="color:#0080FF">On-premises configuration</span>
+### <span style="color:#0080FF">On-premises configuration</span><a name="OnPremDiagram"></a>
 The following diagram shows the elements in the sample's local environment.
 
 <img src="images/On-premises_config.jpg" width="600"/><p>
@@ -57,7 +57,7 @@ the firewall depends upon the make and model of the firewall, of which there are
 
 Finally, there is a DNS server in the local environment. Configuration of this server is described later in this document.
 
-### <span style="color:#0080FF">Azure configuration</span>
+### <span style="color:#0080FF">Azure configuration</span><a name="AzureDiagram"></a>
 The following diagram shows the elements in the sample's Azure environment. 
 
 <img src="images/Azure_config.jpg" width="600"/><p>
@@ -132,7 +132,10 @@ Note you cannot enumerate IoT Devices or use Device Explorer to see telemetry in
 TO DO:
 John - please elaborate/rephrase this section
 ```
-In order to secure all access to the IoT Hub, it is best to route all messages from the IoT Hub to an independent Event Hub. First, create an Event Hub. From the Azure portal, select **Create a Resource** > **Event Hub**. When deployment is complete, configuration should be similar to this: 
+In order to secure all access to the IoT Hub, it is best to route all messages from the IoT Hub to an independent Event Hub. 
+
+## <span style="color:#0080FF">Event Hub</span><a name="EventHub"></a>
+First, create an Event Hub. From the Azure portal, select **Create a Resource** > **Event Hub**. When deployment is complete, configuration should be similar to this: 
 
 ### <span style="color:#0080FF">Overview</span>
 <img src="images/EventHubNamespace.jpg" width="800"/><p>
@@ -199,7 +202,15 @@ To do this, two DNS conditional forwarders are created. Locally, to resolve requ
 
 
 ### <span style="color:#0080FF">Azure</span>
-The Azure VM created [above](#AzureVM), and shown in the showing use of Azure DNS server:
+A second virtual machine, `DNSforVNST`, is the deployed in the virtual network and configured to have only private IP access:
+
+<img src="images/DNS-Azure.jpg" width="450"/><p>
+
+In the sample, the DNS server got an IP address of `10.2.0.6`. In that virtual machine, the DNS Service is turned on and conditional forwarding records created for the Azure private domains used by the sample's assets. These conditional forwarders pass resolution requests to the standard Azure DNS service at `168.63.129.16`:
+
+<img src="images/DNS-Azure-DNSManagerCF1.jpg" width="800"/><p>
+
+Next, the network configuration of the Azure VM created [above](#AzureVM), and shown in the [Azure configuration diagram](#AzureDiagram), is edited to use the new Azure DNS server at `10.2.0.6`:
 
 ```
    IPv4 Address. . . . . . . . . . . : 10.2.0.5(Preferred)
@@ -207,18 +218,12 @@ The Azure VM created [above](#AzureVM), and shown in the showing use of Azure DN
    Default Gateway . . . . . . . . . : 10.2.0.1
    DNS Servers . . . . . . . . . . . : 10.2.0.6
 ```
-The DNS Service is running in an Azure virtual machine created in the end-to-end sample, with an IP address of `10.2.0.6`:
 
-<img src="images/DNS-Azure.jpg" width="450"/><p>
-
-In the DNS, conditional forwarding records have been added for the Azure private domains in which the assets created in the sample, forwarding resolution requests to the standard Azure DNS service at `168.63.129.16`:
-
-<img src="images/DNS-Azure-DNSManagerCF1.jpg" width="800"/><p>
-
-When we used Visual Studio Code in the application virtual machine to connect to the Event Hub `eventhubinvpn`, the DNS server in the virtual machine forwarded the request to resolve the name to `168.63.129.16`, which in turn resolves this as `10.2.0.8`, the private IP address of the Event Hub.
+When we used Visual Studio Code in the application virtual machine to connect to the [Event Hub](#EventHub) `eventhubinvpn`, the DNS server running in `DNSforVNST` forwarded the request to resolve the name to the DNS service at `168.63.129.16`, which in turn resolved this as the address `10.2.0.8`, the private IP address of the Event Hub.
 
 ### <span style="color:#0080FF">On-premises</span>
-IP configuration on gateway computer, showing use of local DNS server
+In the on-premises network, the DNS service is configured on any computer, for example one at `192.168.1.8`. The IP configuration of the gateway computer, shown in the [On-premises configuration diagram](#OnPremDiagram), is modified to use this new DNS server:
+
 ```
    IPv4 Address. . . . . . . . . . . : 192.168.1.122
    Subnet Mask . . . . . . . . . . . : 255.255.255.0
@@ -226,11 +231,11 @@ IP configuration on gateway computer, showing use of local DNS server
    DNS Servers . . . . . . . . . . . : 192.168.1.8
 ```   
 
-In the DNS Manager at 192.168.1.8 two conditional forwarding records were added for the Azure assets behind private IP addresses:
+In the DNS running on `192.168.1.8` two conditional forwarding records are added for the Azure assets behind private IP addresses:
 
 <img src="images/DNS-Local-DNSManagerCF1.jpg" width="800"/><p>
 
-When the local gateway connects to `HostName=IoTHubForVPNTesting.azure-devices.net;DeviceId=iotworx;SharedAccessKey=******`, the DNS server forwards the request to resolve the domain `azure-devices.net` to `10.2.0.6`, the DNS server we created in Azure. In turn, the Azure DNS server forwards the request to resolve the name to `168.63.129.16`, which in turn resolves this as `10.2.0,4`, the private IP address of the IoT Hub.
+When the local gateway software connects to `HostName=IoTHubForVPNTesting.azure-devices.net;DeviceId=iotworx;SharedAccessKey=******`, the DNS serverat `192.168.1.8` forwards the request to resolve the domain `azure-devices.net` to `10.2.0.6`, the DNS server we created in Azure. In turn, the Azure DNS server forwards the request to resolve the name to `168.63.129.16`, which in turn resolves this as `10.2.0,4`, the private IP address of the IoT Hub.
 
 
 
