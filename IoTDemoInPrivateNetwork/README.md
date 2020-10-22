@@ -101,7 +101,7 @@ Finally, in the end-to-end sample we created a second vnet in another Azure regi
 
 <img src="images/ADLSvnetPeering.jpg" width="800"/><p>
 
-## <span style="color:#0080FF">Deploying an IoT Hub with only private IP access</span>
+## <span style="color:#0080FF">Deploying an IoT Hub with only private IP access</span><a name="IoTHub"></a>
 The following diagram shows the elements in the end-to-end sample Azure environment. 
 
 <img src="images/IoTHub.jpg" width="450"/><p>
@@ -235,7 +235,7 @@ Next, the IP configuration of the gateway computer, shown in the [On-premises co
    DNS Servers . . . . . . . . . . . : 192.168.1.8
 ```   
 
-When the local gateway software connects to `HostName=IoTHubForVPNTesting.azure-devices.net;DeviceId=iotworx;SharedAccessKey=******`, the DNS serverat `192.168.1.8` forwards the request to resolve the domain `azure-devices.net` to `10.2.0.6`, the DNS server we created in Azure. In turn, the Azure DNS server forwards the request to resolve the name to `168.63.129.16`, which in turn resolves this as `10.2.0,4`, the private IP address of the IoT Hub.
+When the local gateway software connects to `HostName=IoTHubForVPNTesting.azure-devices.net;DeviceId=iotworx;SharedAccessKey=******`, the DNS server at `192.168.1.8` forwards the request to resolve the domain `azure-devices.net` to `10.2.0.6`, the DNS server we created in Azure. In turn, the Azure DNS server forwards the request to resolve the name to `168.63.129.16`, which in turn resolves this as `10.2.0,4`, the private IP address of the [IoT Hub](#IoTHub), (as shown in the [Azure configuration diagram](#AzureDiagram)).
 
 
 
