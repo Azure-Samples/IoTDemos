@@ -188,11 +188,7 @@ To verify that data arriving at the Event Hub is visible within the virtual mach
 This should be the same as the data coming out of the local gateway, shown in the Local Gateway Configuration section above.
 
 ## <span style="color:#0080FF">Deploying DNS servers</span>
-DNS servers are needed to resolve URLs for services in Azure. When those services are initially deployed, they are accessed using a URL that resolves to their public IP address. For example
-
-[http://mydemovm.eastus.cloudapp.azure.com](http://mydemovm.eastus.cloudapp.azure.com) may resolve to 42.x.x.x
-
-However, since we are preventing access to any public IP address and using only private endpoints, applications would have to resolve to the private IP address. For example, it should resolve to 10.2.0.x instead of 42.x.x.x.
+DNS servers are needed to resolve URLs for services in Azure. When those services are initially deployed, they are accessed using a URL that resolves to their public IP address. For example, [http://mydemovm.eastus.cloudapp.azure.com](http://mydemovm.eastus.cloudapp.azure.com) may resolve to 42.x.x.x. However, since we are preventing access to any public IP address and using only private endpoints, applications would have to resolve to the private IP address. For example, it should resolve to 10.2.0.x instead of 42.x.x.x.
 
 To do this, a DNS conditional forwarder is needed locally, to resolve requests from on-premises devices to Azure services, and in Azure, to resolve requests from one Azure service to another. 
 
@@ -202,13 +198,41 @@ Needs rewriting. David - can you take a crack at this?
 ```
 
 ### <span style="color:#0080FF">Azure</span>
-The following diagram shows the elements in the sample Azure environment. 
+IP configuration in the Azure VM created above, showing use of Azure DNS server:
+
+```
+   IPv4 Address. . . . . . . . . . . : 10.2.0.5(Preferred)
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : 10.2.0.1
+   DNS Servers . . . . . . . . . . . : 10.2.0.6
+```
+The DNS Service is running in an Azure virtual machine created in the end-to-end sample, with an IP address of `10.2.0.6`:
 
 <img src="images/DNS-Azure.jpg" width="450"/><p>
-<img src="images/DNS-Azure-VMNetworking.jpg" width="800"/><p>
-<img src="images/DNS-Azure-DNSManager.jpg" width="800"/><p>
+
+In the DNS, conditional forwarding records have been added for the Azure private domains in which the assets created in the sample, forwarding resolution requests to the standard Azure DNS service at `168.63.129.16`:
+
 <img src="images/DNS-Azure-DNSManagerCF1.jpg" width="800"/><p>
-<img src="images/DNS-Azure-DNSManagerCF2.jpg" width="800"/><p>
+
+When we used Visual Studio Code in the application virtual machine to connect to the Event Hub `eventhubinvpn`, the DNS server in the virtual machine forwarded the request to resolve the name to `168.63.129.16`, which in turn resolves this as `10.2.0.8`, the private IP address of the Event Hub.
+
+### <span style="color:#0080FF">On-premises</span>
+IP configuration on gateway computer, showing use of local DNS server
+```
+   IPv4 Address. . . . . . . . . . . : 192.168.1.122
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : 192.168.1.1
+   DNS Servers . . . . . . . . . . . : 192.168.1.8
+```   
+
+In the DNS Manager at 192.168.1.8 two conditional forwarding records were added for the Azure assets behind private IP addresses:
+
+<img src="images/DNS-Local-DNSManagerCF1.jpg" width="800"/><p>
+
+When the local gateway connects to `HostName=IoTHubForVPNTesting.azure-devices.net;DeviceId=iotworx;SharedAccessKey=******`, the DNS server forwards the request to resolve the domain `azure-devices.net` to `10.2.0.6`, the DNS server we created in Azure. In turn, the Azure DNS server he request to resolve the name to `168.63.129.16`, which in turn resolves this as `10.2.0,4`, the private IP address of the IoT Hub.
+
+
+
 
 
 
