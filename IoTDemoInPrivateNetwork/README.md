@@ -222,7 +222,11 @@ Next, the network configuration of the Azure VM created [above](#AzureVM), and s
 When we used Visual Studio Code in the application virtual machine to connect to the [Event Hub](#EventHub) `eventhubinvpn`, the DNS server running in `DNSforVNST` forwarded the request to resolve the name to the DNS service at `168.63.129.16`, which in turn resolved this as the address `10.2.0.8`, the private IP address of the Event Hub.
 
 ### <span style="color:#0080FF">On-premises</span>
-In the on-premises network, the DNS service is configured on any computer, for example one at `192.168.1.8`. The IP configuration of the gateway computer, shown in the [On-premises configuration diagram](#OnPremDiagram), is modified to use this new DNS server:
+In the on-premises network, the DNS service is configured on any computer, for example one at `192.168.1.8`. In the DNS running on `192.168.1.8` two conditional forwarding records are added for the Azure assets behind private IP addresses:
+
+<img src="images/DNS-Local-DNSManagerCF1.jpg" width="800"/><p>
+
+Next, the IP configuration of the gateway computer, shown in the [On-premises configuration diagram](#OnPremDiagram), is modified to use this new DNS server:
 
 ```
    IPv4 Address. . . . . . . . . . . : 192.168.1.122
@@ -230,10 +234,6 @@ In the on-premises network, the DNS service is configured on any computer, for e
    Default Gateway . . . . . . . . . : 192.168.1.1
    DNS Servers . . . . . . . . . . . : 192.168.1.8
 ```   
-
-In the DNS running on `192.168.1.8` two conditional forwarding records are added for the Azure assets behind private IP addresses:
-
-<img src="images/DNS-Local-DNSManagerCF1.jpg" width="800"/><p>
 
 When the local gateway software connects to `HostName=IoTHubForVPNTesting.azure-devices.net;DeviceId=iotworx;SharedAccessKey=******`, the DNS serverat `192.168.1.8` forwards the request to resolve the domain `azure-devices.net` to `10.2.0.6`, the DNS server we created in Azure. In turn, the Azure DNS server forwards the request to resolve the name to `168.63.129.16`, which in turn resolves this as `10.2.0,4`, the private IP address of the IoT Hub.
 
