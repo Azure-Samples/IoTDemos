@@ -1,17 +1,17 @@
-# <span style="color:#0080FF">Creating an End-to-End IoT infrastructure in a Private Network</span>
-The default configuration of Azure services allows public IP access to those services. For example an on-premises device with Internet access can connect to an Azure IoT Hub using a URL that resolves to a public IP address. For some scenarios or corporations this might be inappropriate, so we need to turn off public IP access to the relevant Azure services and configure all the services and communications to be on a private network. Though the process for how to do this is documented on a service-by-service basis for the various Azure services, how to connect them together is not entirely obvious.
+# <span style="color:#0080FF">Creating an End-to-End Azure IoT infrastructure in a Private Network</span>
+The default configuration of Azure services allows public IP access to those services. For example an on-premises device with Internet access can connect to an Azure IoT Hub using a URL that resolves to a public IP address. While these Azure services can be locked down against unauthorized access and the communications between them encrypted, some organizations require an additional level of network security. Specifically, they require preventing public IP access to any services, and mandate that all the services and communications to be on a private network. Though the process for how to do this is documented on a service-by-service basis for the various Azure services, the process for how to connect them all together is not entirely obvious.
 
- The goal of this document is provide a sample of securing all the services and connections in a simple IoT scenario. 
+ The goal of this document is to provide a sample of securing all the services and connections in a simple IoT scenario. 
 
- Note: *This document does not include mouse-click-by-mouse-click instructions on how to deploy the various services. Rather it assumes a basic knowledge of Azure, and includes only what components need to be configured, and examples of the configuration.*
+ Note: *This document does not include mouse-click-by-mouse-click instructions on how to deploy the various services. Rather it assumes a working knowledge of Azure, and includes only what components need to be configured, and examples of the configuration.*
 
 ```
 TO DO:
-- Check: hide Azure subscription name and ID, and change/obfuscate all public IP addresses in the images included below
 - Explain the reason we use IoT Routing to an Event Hub. Need John input
 - Explain Managed Identities use? Need John input
 - Rewrite the DNS section. Need David input
-- Edit text between images to improve flow
+- Resolve whether the Barracuda firewall config is merged into master
+- Final editing to improve flow
 ```
 
  ## <span style="color:#0080FF">Contributors</span>
@@ -19,25 +19,25 @@ TO DO:
  - David Apolinar, Cloud Solution Architect, US Financial Services Industry
  - John Lian, Program Manager, Azure IoT Platform
 
-## <span style="color:#0080FF">Major elements shown in end-to-end solution</span>
-This sample does not include all possible services or configurations, of course, only a few in order to demonstrate the basic structures. The components that will be described include:
+## <span style="color:#0080FF">Major elements shown in end-to-end sample</span>
+This sample does not include all possible services or configurations, of course, it includes only a few services in order to demonstrate the basic structures and principles. The components that will be described include:
 
-1. **VPN** - IPsec tunnel between on-premises systems and Azure
-2. **Azure IoT Hub** and **Event Hub** - securing against public IP access
+1. **Site-to-site VPN** - an IPsec tunnel between on-premises systems and Azure
+2. **Azure IoT Hub** and **Event Hub** - disabling public IP access to these services
 3. **Azure VM** - configuring a typical Azure asset with only private IP access
 4. **DNS** - name resolution for assets with no public IP access
 
 ## <span style="color:#0080FF">High level architecture</span>
-The IoT sample described consists of some on-premises components as well as Azure. To provde a visual reference for the items discussed, here are the high level architectures.
+The IoT sample described consists of some on-premises components as well as Azure services. To provde a visual reference for the items discussed, here are the high level architectures.
 
 ### <span style="color:#0080FF">On-premises configuration</span><a name="OnPremDiagram"></a>
 The following diagram shows the elements in the sample's local environment.
 
 <img src="images/On-premises_config.jpg" width="600"/><p>
 
-As shown in the diagram above, a 3rd party gateway is installed on a computer which serves to pull telemetry from IoT devices and forwards the data to Azure IoT Hub. Guidance on how to set up such a gateway, IoTWorX from ICONICS, is available in the following locations, and there is no need to replicate it here:
+As shown in the diagram above, a 3rd party gateway is installed on a computer which serves to pull telemetry from IoT devices and forwards the data to Azure IoT Hub. Guidance on how to set up one such gateway, [ICONICS IoTWorX](https://iconics.com/Products/IoTWorX), is available in the following locations and there is no need to replicate it here:
 
-- [Using IoTWorX as a Gateway](https://iconics.com/Documents/WhitePapers/Using-IoTWorX-as-a-Gateway), and 
+- [Using IoTWorX as a Gateway](https://iconics.com/Documents/WhitePapers/Using-IoTWorX-as-a-Gateway) 
 - [Installing IoTWorX on IoT Edge](https://iconics.com/Documents/Whitepapers/Installing-IoTWorX-on-IoT-Edge)
 
 The output from the gateway should be in a standard JSON format. In the sample shown, data from the gateway looks like this:<a name="DeviceTelemetry"></a>
@@ -80,7 +80,7 @@ From the Azure portal, start the process of creating a virtual network by select
 
 <img src="images/Virtual_Network.jpg" width="800"/><p>
 ### <span style="color:#0080FF">Virtual network gateway</span>
-From the Azure portal, select **Create a Resource** > **Virtual network gateway**. Select the Virtual Network created earlier, and accept the proposed public IP address. The result should look similar to this:
+From the Azure portal, select **Create a Resource** > **Virtual network gateway**. Select the Virtual Network just created, and accept the proposed public IP address. The result should look similar to this:
 
 <img src="images/Virtual_Network_Gateway.jpg" width="800"/><p>
 
@@ -132,7 +132,7 @@ Select **+ Private endpoint** to create the private endpoint. The result should 
 
 <img src="images/IoTHubPrivateEndpoint.jpg" width="800"/><p>
 
-Note you cannot enumerate IoT Devices or use Device Explorer to see telemetry incoming to IoT Hub because public IP addresses are blocked.
+Note that you cannot enumerate IoT Devices or use Device Explorer to see telemetry incoming to IoT Hub because public IP addresses are blocked.
 
 In order to secure all access to the IoT Hub, it is best to route all messages from the IoT Hub to an independent Event Hub. 
 
@@ -177,18 +177,18 @@ The sample contains an Azure virtual machine simply as an example of setting up 
 
 Guidance for creating an Azure virtual machine is published on the Microsoft website here: [Quickstart: Create a Windows virtual machine in the Azure portal](https://docs.microsoft.com/en-us/azure/virtual-machines/windows/quick-create-portal).
 
-Configuration of the virtual machine in the end-to-end sample is shown below. From the Azure portal, select **Create a Resource** > **Windows Server 2019 Datacenter**. During setup enter selections so that it is deployed in the virtual network with only private IP access. When deployment is complete, the configuration should be similar to the following:
+Configuration of the virtual machine in the end-to-end sample is shown below. From the Azure portal, select **Create a Resource** > **Windows Server 2019 Datacenter**. During setup enter selections so that it is deployed in the virtual network with only private IP access. (For the sample we named the virtual machine `ICONICSinVNET` because in a subsequent article we will deploy the [ICONICS GENESIS64](https://iconics.com/Products/GENESIS64) software in the virtual machine to analyze the IoT data and forward telemetry to an Azure Data Lake, but that is out of scope for the current sample.)  When deployment is complete, the configuration should be similar to the following:
 
 
 <img src="images/VMOverview.jpg" width="800"/><p>
 
 Disable public IP address access and configure the network interfaces:
 
-<img src="images/VMIPConfig1.jpg" width="800"/><p>
-<img src="images/VMIPconfigurations.jpg" width="800"/><p>
 <img src="images/VMNetworking.jpg" width="800"/><p>
+<img src="images/VMIPconfigurations.jpg" width="800"/><p>
 
-To verify that data arriving at the Event Hub is visible within the virtual machine, you can use Visual Studio code with the [Azure Event Hub Explorer](https://marketplace.visualstudio.com/items?itemName=Summer.azure-event-hub-explorer) installed. After launching Visual Studio code and selecting the Event Hub above, right click and select Start Monitoring. You should see the data that was sent by the on-premises gateway to the Azure IoT Hub and forwarded on to the Event Hub:
+
+To verify that data arriving at the Event Hub is visible within the virtual machine, you can use Visual Studio code with the [Azure Event Hub Explorer](https://marketplace.visualstudio.com/items?itemName=Summer.azure-event-hub-explorer) installed. After launching Visual Studio code and selecting the Event Hub above, right click and select Start Monitoring. You should see the data that is arriving at the Event Hub:
 
 <img src="images/EventHubTelemetryReceived.jpg" width="800"/><p>
 
@@ -200,13 +200,13 @@ TO DO:
 Needs editing. David - also, can you explain the use of the Private DNS zone records created in the portal?
 ```
 
-DNS servers are needed to resolve URLs for services in Azure. When those services are initially deployed, they are accessed using a URL that resolves to their public IP address. For example, [http://mydemovm.eastus.cloudapp.azure.com](http://mydemovm.eastus.cloudapp.azure.com) may resolve to `42.x.x.x`. However, since we are preventing access to any public IP address and using only private endpoints, applications would have to resolve to the private IP address. For example, it should resolve to `10.2.0.x` instead of `42.x.x.x`.
+DNS servers are needed to resolve URLs for services in Azure. When those services are initially deployed, they are accessed using a URL that resolves to their public IP address. For example, [http://mydemovm.eastus.cloudapp.azure.com](http://mydemovm.eastus.cloudapp.azure.com) may resolve to `40.x.x.x`. However, since we are preventing access to any public IP address and using only private endpoints, applications would have to resolve to the private IP address. For example, it should resolve to `10.2.0.x` instead of `40.x.x.x`.
 
 To do this, two DNS conditional forwarders are created. Locally, to resolve requests from on-premises devices to Azure services, and in Azure, to resolve requests from one Azure service to another. 
 
 
 ### <span style="color:#0080FF">Azure</span>
-A second virtual machine, `DNSforVNST`, is the deployed in the virtual network and configured to have only private IP access:
+A virtual machine, `DNSforVNET`, is the deployed in the sample in the same manner as `ICONICSinVNET`, in the virtual network and configured to have only private IP access:
 
 <img src="images/DNS-Azure.jpg" width="450"/><p>
 
@@ -214,7 +214,7 @@ In the sample, the DNS server got an IP address of `10.2.0.6`. In that virtual m
 
 <img src="images/DNS-Azure-DNSManagerCF1.jpg" width="800"/><p>
 
-Next, the network configuration of the Azure VM created [above](#AzureVM), and shown in the [Azure configuration diagram](#AzureDiagram), is edited to use the new Azure DNS server at `10.2.0.6`:
+Next, the network configuration of the Azure VM created [above](#AzureVM) (`ICONICSinVNET`), and shown in the [Azure configuration diagram](#AzureDiagram), is edited to use the new Azure DNS server (`DNSforVNET`) at `10.2.0.6`:
 
 ```
    IPv4 Address. . . . . . . . . . . : 10.2.0.5(Preferred)
@@ -239,7 +239,7 @@ Next, the IP configuration of the gateway computer, shown in the [On-premises co
    DNS Servers . . . . . . . . . . . : 192.168.1.8
 ```   
 
-When the local gateway software connects to `HostName=IoTHubForVPNTesting.azure-devices.net;DeviceId=iotworx;SharedAccessKey=******`, the local DNS server forwards the request to resolve the domain `azure-devices.net` to `10.2.0.6`, the DNS server we created in Azure. In turn, that DNS server forwards the request to `168.63.129.16`, which in turn resolves this as `10.2.0,4`, the private IP address of the [IoT Hub](#IoTHub), (as shown in the [Azure configuration diagram](#AzureDiagram)).
+When the local gateway software connects to `HostName=IoTHubForVPNTesting.azure-devices.net;DeviceId=iotworx;SharedAccessKey=******`, the local DNS server forwards the request to resolve the name `IoTHubForVPNTesting.azure-devices.net` to `10.2.0.6`, the DNS server we created in Azure. In turn, that DNS server forwards the request to `168.63.129.16`, which in turn resolves this as `10.2.0,4`, the private IP address of the [IoT Hub](#IoTHub), (as shown in the [Azure configuration diagram](#AzureDiagram)).
 
 
 
