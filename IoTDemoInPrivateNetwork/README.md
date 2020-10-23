@@ -79,15 +79,14 @@ Configuration of these elements in the end-to-end sample is shown below.
 From the Azure portal, start the process of creating a virtual network by selecting **Create a Resource** > **Virtual network**. During setup, accept the proposed private IP address range, for example 10.2.0.0/16. When deployment is complete, select the resource. The result should look similar to the following, with the exception of the DNS server, which will be added later:
 
 <img src="images/Virtual_Network.jpg" width="800"/><p>
+
 ### <span style="color:#0080FF">Virtual network gateway</span>
 From the Azure portal, select **Create a Resource** > **Virtual network gateway**. Select the Virtual Network just created, and accept the proposed public IP address. The result should look similar to this:
 
 <img src="images/Virtual_Network_Gateway.jpg" width="800"/><p>
 
-
 ### <span style="color:#0080FF">Local network gateway</span>
 From the Azure portal, select **Create a Resource** > **Local network gateway**. This object represents the device on-premises that is the local endpoint for the IPsec tunnel. The IP address of the Local network gateway needs to be the public IP of that device, for example, the public IP address of the firewall or router on the WAN port provided by the ISP providing connectivity to the local site. (Here shown as 24.x.x.x). The Address space needs to be the address space of the local network behind that firewall or router. Configuration in the end-to-end sample is as follows:
-
 
 <img src="images/Local_Network_Gateway.jpg" width="800"/><p>
 
@@ -102,10 +101,10 @@ Finally, in the end-to-end sample we created a second vnet in another Azure regi
 <img src="images/ADLSvnetPeering.jpg" width="800"/><p>
 
 ## <span style="color:#0080FF">Deploying an IoT Hub</span><a name="IoTHub"></a>
-
 The on-premises gateway will push telemetry data to the Azure IoT Hub, and all Azure services and applications will use that IoT Hub as the source of data from the on-premises devices. The following elements need to be created in Azure for the sample configuration:
 
 <img src="images/IoTHub.jpg" width="450"/><p>
+
 A 'How-to Guide' for configuring IoT Hub in a vnet is published on the Microsoft website here: [IoT Hub support for virtual networks with Private Link and Managed Identity](https://docs.microsoft.com/en-us/azure/iot-hub/virtual-network-support)
 
 Configuration of these elements in the end-to-end sample  is shown below. From the Azure portal, select **Create a Resource** > **IoT Hub**. When deployment is complete, select the resource. The Overview should be similar to the following:
@@ -131,11 +130,11 @@ The first step is to disable public IP access to the IoT Hub, which is done in i
 <img src="images/IoTHubPublicAccess.jpg" width="800"/><p>
 
 ### <span style="color:#0080FF">Private endpoints</span>
-Next, create private IP endpoints for this hub. Select the Private endpoint connections tab:
+Next, create private IP endpoints for this hub. Select the **Private endpoint connections** tab:
 
 <img src="images/IoTHubPrivateEndpoints.jpg" width="800"/><p>
 
-Select **+ Private endpoint** to create the private endpoint. The result should look similar to this:
+Click **+ Private endpoint** to create the private endpoint. The result should look similar to this:
 
 <img src="images/IoTHubPrivateEndpoint.jpg" width="800"/><p>
 
@@ -154,7 +153,7 @@ Next, set up another Azure resource, an Event Hub, and route all messages from t
 <img src="images/EventHubNamespace.jpg" width="800"/><p>
 
 ### <span style="color:#0080FF">Event Hub Networking</span>
-Disable public access by choosing "Allow access from selected networks", and be sure to add your client (e.g. laptop) IP address in the firewall section, or you will not be able to access the Event Hub to manage it.
+Disable public access by choosing **Allow access from selected networks**, and be sure to add your client (e.g. laptop) IP address in the firewall section, or you will not be able to access the Event Hub to manage it.
 
 <img src="images/EventHubNetworking.jpg" width="800"/><p>
 
@@ -164,7 +163,7 @@ Create a private endpoint for the Event Hub by clicking **+ Private endpoint**:
 <img src="images/EventHubPrivateEndpoints.jpg" width="800"/><p>
 
 ### <span style="color:#0080FF">Event Hub Access Control</span>
-Next, select **Shared access policies** and click **+ Add** to create a policy for the routing from IoT Hub. Make sure to select both Listen and Send rights:
+Next, select **Shared access policies** and click **+ Add** to create a policy for the routing from IoT Hub. Make sure to select both **Listen** and **Send** rights:
 
 <img src="images/EventHubsInstanceSharedAccessPolicies.jpg" width="1000"/><p>
 
@@ -194,17 +193,13 @@ Disable public IP address access and configure the network interfaces:
 <img src="images/VMIPconfigurations.jpg" width="800"/><p>
 
 
-To verify that data arriving at the Event Hub is visible within the virtual machine, you can use Visual Studio code with the [Azure Event Hub Explorer](https://marketplace.visualstudio.com/items?itemName=Summer.azure-event-hub-explorer) installed. After launching Visual Studio code and selecting the Event Hub above, right click and select Start Monitoring. You should see the data that is arriving at the Event Hub:
+To verify that data arriving at the Event Hub is visible within the virtual machine, you can use Visual Studio code with the [Azure Event Hub Explorer](https://marketplace.visualstudio.com/items?itemName=Summer.azure-event-hub-explorer) installed. After launching Visual Studio code and selecting the Event Hub above, right click and select **Start Monitoring**. You should see the data that is arriving at the Event Hub:
 
 <img src="images/EventHubTelemetryReceived.jpg" width="800"/><p>
 
 This should be the same as the data coming out of the local gateway, shown in the [local gateway configuration](#DeviceTelemetry) section above.
 
 ## <span style="color:#0080FF">Deploying DNS servers</span><a name="DNS"></a>
-```
-TO DO:
-Needs editing. David - also, can you explain the use of the Private DNS zone records created in the portal?
-```
 
 DNS servers are needed to resolve URLs for services in Azure. When those services are initially deployed, they are accessed using a URL that resolves to their public IP address. For example, [http://mydemovm.eastus.cloudapp.azure.com](http://mydemovm.eastus.cloudapp.azure.com) may resolve to `40.x.x.x`. However, since we are preventing access to any public IP address and using only private endpoints, applications would have to resolve to the private IP address. For example, it should resolve to `10.2.0.x` instead of `40.x.x.x`.
 
