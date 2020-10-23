@@ -7,8 +7,8 @@ The default configuration of Azure services allows public IP access to those ser
 
 ---
 TO DO:
-- **John** Please review/edit the [IoT Hub](IoTHub) section. In my understanding, we need to route the data from IoT Hub to Event Hub to secure IoT Hub, and we need to configure a Managed Identity on the IoT Hub so that Event Hub can access it as a trusted service. Is this correct, and have I described that correctly in the IoT Hub section? If I remember correctly, the reason we cannot use ASA to access the Event Hub private endpoint currently is that we don't yet have the ability to configure a Managed Identity on the Event Hub. Is that correct? But if so, why can the virtual machine access the Event Hub?
-- **David** Please review/edit the the [DNS](DNS) section. In particular, what is the role of the private DNS zones created in the portal (as opposed to the forwarders created in the DNS server), and how were they created?
+- **John** Please review/edit the [IoT Hub](#IoTHub) section. In my understanding, we need to route the data from IoT Hub to Event Hub to secure IoT Hub, and we need to configure a Managed Identity on the IoT Hub so that Event Hub can access it as a trusted service. Is this correct, and have I described that correctly in the IoT Hub section? If I remember correctly, the reason we cannot use ASA to access the Event Hub private endpoint currently is that we don't yet have the ability to configure a Managed Identity on the Event Hub. Is that correct? But if so, why can the virtual machine access the Event Hub?
+- **David** Please review/edit the the [DNS](#DNS) section. In particular, what is the role of the private DNS zones created in the portal (as opposed to the forwarders created in the DNS server), and how were they created?
 - **Spyros** Resolve with Afiri whether the Barracuda firewall config is merged into master
 - **Spyros** Final editing to improve flow
 - **Spyros** create pull request into master, notify Teo to review, accept
