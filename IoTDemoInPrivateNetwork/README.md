@@ -7,8 +7,10 @@ The default configuration of Azure services allows public IP access to those ser
 
 ---
 TO DO:
+- **Spyros** Check the Identity pieces for IoT Hub --> Event Hub. See if I can validate with Visual Studio from laptop.
+- **Spyros** Check the Identity pieces for ICONICSVM --> Event Hub and IoT Hub. Confirm with Visual Studio in VM.
 - **John** Please review/edit the [IoT Hub](#IoTHub) section. In my understanding, we need to route the data from IoT Hub to Event Hub to secure IoT Hub, and we need to configure a Managed Identity on the IoT Hub so that Event Hub can access it as a trusted service. Is this correct, and have I described that correctly in the IoT Hub section? If I remember correctly, the reason we cannot use ASA to access the Event Hub private endpoint currently is that we don't yet have the ability to configure a Managed Identity on the Event Hub. Is that correct? But if so, why can the virtual machine access the Event Hub?
-- **David** Please review/edit the the [DNS](#DNS) section. In particular, what is the role of the private DNS zones created in the portal (as opposed to the forwarders created in the DNS server), and how were they created?
+- **David** Please review/edit the [DNS](#DNS) section. In particular, what is the role of the private DNS zones created in the portal (as opposed to the forwarders created in the DNS server), and how were they created?
 - **Spyros** Resolve with Afiri whether the Barracuda firewall config is merged into master
 - **Spyros** Final editing to improve flow
 - **Spyros** create pull request into master, notify Teo to review, accept
@@ -138,14 +140,6 @@ Click **+ Private endpoint** to create the private endpoint. The result should l
 
 <img src="images/IoTHubPrivateEndpoint.jpg" width="800"/><p>
 
-Note that you cannot enumerate IoT Devices or use Device Explorer to see telemetry incoming to IoT Hub because public IP addresses are blocked. Also, as stated in the How-to Guide referenced above, to allow other services to find your IoT hub as a trusted Microsoft service, it must have a system-assigned managed identity. To do so, navigate to **Identity** in the IoT Hub portal, and under **Status**, select **On***, then click **Save**:
-
-<img src="images/IoTHubIdentity.jpg" width="800"/><p>
-
-Under **Permissions**, click **Azure role assignments** and select **Azure Events Hub Data Sender**:
-
-<img src="images/IoTHubRoleAssignments.jpg" width="800"/><p>
-
 ## <span style="color:#0080FF">Event Hub</span><a name="EventHub"></a>
 Next, set up another Azure resource, an Event Hub, and route all messages from the IoT Hub to it. Create an Event Hub. From the Azure portal, select **Create a Resource** > **Event Hub**. When deployment is complete, configuration should be similar to this: 
 
@@ -153,7 +147,7 @@ Next, set up another Azure resource, an Event Hub, and route all messages from t
 <img src="images/EventHubNamespace.jpg" width="800"/><p>
 
 ### <span style="color:#0080FF">Event Hub Networking</span>
-Disable public access by choosing **Allow access from selected networks**, and be sure to add your client (e.g. laptop) IP address in the firewall section, or you will not be able to access the Event Hub to manage it.
+Disable public access by choosing **Allow access from selected networks**, selecting your virtual network, and checking the radio button to **Allow trusted Microsoft services to bypass this firewall**. Also add your client (e.g. laptop) IP address in the firewall section, or you will not be able to access the Event Hub to manage it.
 
 <img src="images/EventHubNetworking.jpg" width="800"/><p>
 
@@ -162,19 +156,39 @@ Create a private endpoint for the Event Hub by clicking **+ Private endpoint**:
 
 <img src="images/EventHubPrivateEndpoints.jpg" width="800"/><p>
 
-### <span style="color:#0080FF">Event Hub Access Control</span>
+### <span style="color:#0080FF">Event Hub Shared Access Policies</span>
 Next, select **Shared access policies** and click **+ Add** to create a policy for the routing from IoT Hub. Make sure to select both **Listen** and **Send** rights:
 
 <img src="images/EventHubsInstanceSharedAccessPolicies.jpg" width="1000"/><p>
 
-### <span style="color:#0080FF">Message routing</span>
-Having created an Event Hub with only private endpoints, go back to the IoT Hub configuration screens and forward all telemetry coming in to the IoT Hub to that Event Hub, using the IoT Hub Message routing feature:
+### <span style="color:#0080FF">Event Hub Access Control</span>
+
+ As stated in the How-to Guide referenced above, to allow other services to find your IoT hub as a trusted Microsoft service, it must have a system-assigned managed identity: "To allow the routing functionality to access an event hubs resource while firewall restrictions are in place, your IoT Hub needs to have a managed identity." First, on the Event Hub: 
+
+Select **Access control (IAM)** and **Add**. Select **Add a role assignment** from the drop-down menu. In the Add role assignment pane, choose **Event Hubs Data Sender** for role, **Azure AD user, group, or service principal** for Assign access to, and  your IoT Hub's resource name ('IoTHubforVPNTesting') in the next drop-down list. 
+
+<img src="images/EventHubAccessControl.jpg" width="1000"/><p>
+
+## <span style="color:#0080FF">IoT Hub Message Routing</span>
+On your IoT Hub's resource page, navigate to the Identity tab. In the **Status** section, select **On**:
+
+<img src="images/IoTHubIdentity.jpg" width="800"/><p>
+
+Under **Permissions**, click **Azure role assignments** and confirm that **Azure Events Hub Data Sender** had been added by the Event Hub configuration steps:
+
+<img src="images/IoTHubRoleAssignments.jpg" width="800"/><p>
+
+Finally, navigate to Message routing tab and forward all telemetry coming in to the IoT Hub to the Event Hub, using the IoT Hub Message routing feature:
 
 <img src="images/IoTHubMessageRouting.jpg" width="800"/><p>
 
 Routing details in the sample are set so as to forward everything to the Event Hub by setting **Routing query** to **true**, with a consequence that no data can be retrieved from the IoT Hub itself by any application. 
 
 <img src="images/IoTHubMessageRoutingDetail.jpg" width="800"/><p>
+
+Test the routing by opening Visual Studio Code on your laptop. Install the [Azure Event Hub Explorer](https://marketplace.visualstudio.com/items?itemName=Summer.azure-event-hub-explorer). Right-click in a Terminal window, select **Select an Event Hub**, and pick your subscription, resource group, and finally Event Hub name. Then right-click in the Terminal window and select **Start Monitoring Event Hub Message** to see the data being received in the Event Hub:
+
+<img src="images/EventHubTelemetryReceived.jpg" width="800"/><p>
 
 ## <span style="color:#0080FF">Azure virtual machine</span><a name="AzureVM"></a>
 
@@ -193,9 +207,9 @@ Disable public IP address access and configure the network interfaces:
 <img src="images/VMIPconfigurations.jpg" width="800"/><p>
 
 
-To verify that data arriving at the Event Hub is visible within the virtual machine, you can use Visual Studio code with the [Azure Event Hub Explorer](https://marketplace.visualstudio.com/items?itemName=Summer.azure-event-hub-explorer) installed. After launching Visual Studio code and selecting the Event Hub above, right click and select **Start Monitoring**. You should see the data that is arriving at the Event Hub:
+To verify that data arriving at the Event Hub is visible within the virtual machine, you can use Visual Studio code with the [Azure Event Hub Explorer](https://marketplace.visualstudio.com/items?itemName=Summer.azure-event-hub-explorer) installed. After launching Visual Studio code and selecting the Event Hub above, right click and select **Start Monitoring**. You should see the data that is arriving at the Event Hub from inside the VM:
 
-<img src="images/EventHubTelemetryReceived.jpg" width="800"/><p>
+<img src="images/EventHubTelemetryReceivedinVM.jpg" width="800"/><p>
 
 This should be the same as the data coming out of the local gateway, shown in the [local gateway configuration](#DeviceTelemetry) section above.
 
