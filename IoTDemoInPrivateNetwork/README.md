@@ -8,7 +8,7 @@ The default configuration of Azure services allows public IP access to those ser
 ---
 TO DO:
 - **Spyros** Check the Identity pieces for IoT Hub --> Event Hub. See if I can validate with Visual Studio from laptop.
-- **Spyros** Check the Identity pieces for ICONICSVM --> Event Hub and IoT Hub. Confirm with Visual Studio in VM.
+- **Spyros** Check the Identity pieces for ICONICSVM --> Event Hub and IoT Hub. 
 - **John** Please review/edit the [IoT Hub](#IoTHub) section. In my understanding, we need to route the data from IoT Hub to Event Hub to secure IoT Hub, and we need to configure a Managed Identity on the IoT Hub so that Event Hub can access it as a trusted service. Is this correct, and have I described that correctly in the IoT Hub section? If I remember correctly, the reason we cannot use ASA to access the Event Hub private endpoint currently is that we don't yet have the ability to configure a Managed Identity on the Event Hub. Is that correct? But if so, why can the virtual machine access the Event Hub?
 - **David** Please review/edit the [DNS](#DNS) section. In particular, what is the role of the private DNS zones created in the portal (as opposed to the forwarders created in the DNS server), and how were they created?
 - **Spyros** Resolve with Afiri whether the Barracuda firewall config is merged into master
@@ -78,7 +78,7 @@ Configuration of these elements in the end-to-end sample is shown below.
 
 
 ### <span style="color:#0080FF">Virtual network in Azure</span>
-From the Azure portal, start the process of creating a virtual network by selecting **Create a Resource** > **Virtual network**. During setup, accept the proposed private IP address range, for example 10.2.0.0/16. When deployment is complete, select the resource. The result should look similar to the following, with the exception of the DNS server, which will be added later:
+From the Azure portal, start the process of creating a virtual network by selecting **Create a Resource** > **Virtual network**. During setup, accept the proposed private IP address range, for example `10.2.0.0/16`. When deployment is complete, select the resource. The result should look similar to the following, with the exception of the DNS server, which will be added later:
 
 <img src="images/Virtual_Network.jpg" width="800"/><p>
 
@@ -88,7 +88,7 @@ From the Azure portal, select **Create a Resource** > **Virtual network gateway*
 <img src="images/Virtual_Network_Gateway.jpg" width="800"/><p>
 
 ### <span style="color:#0080FF">Local network gateway</span>
-From the Azure portal, select **Create a Resource** > **Local network gateway**. This object represents the device on-premises that is the local endpoint for the IPsec tunnel. The IP address of the Local network gateway needs to be the public IP of that device, for example, the public IP address of the firewall or router on the WAN port provided by the ISP providing connectivity to the local site. (Here shown as 24.x.x.x). The Address space needs to be the address space of the local network behind that firewall or router. Configuration in the end-to-end sample is as follows:
+From the Azure portal, select **Create a Resource** > **Local network gateway**. This object represents the device on-premises that is the local endpoint for the IPsec tunnel. The IP address of the Local network gateway needs to be the public IP of that device, for example, the public IP address of the firewall or router on the WAN port provided by the ISP providing connectivity to the local site. (Here shown as `24.x.x.x`). The Address space needs to be the address space of the local network behind that firewall or router. Configuration in the end-to-end sample is as follows:
 
 <img src="images/Local_Network_Gateway.jpg" width="800"/><p>
 
@@ -165,7 +165,7 @@ Next, select **Shared access policies** and click **+ Add** to create a policy f
 
  As stated in the How-to Guide referenced above, to allow other services to find your IoT hub as a trusted Microsoft service, it must have a system-assigned managed identity: "To allow the routing functionality to access an event hubs resource while firewall restrictions are in place, your IoT Hub needs to have a managed identity." First, on the Event Hub: 
 
-Select **Access control (IAM)** and **Add**. Select **Add a role assignment** from the drop-down menu. In the Add role assignment pane, choose **Event Hubs Data Sender** for role, **Azure AD user, group, or service principal** for Assign access to, and  your IoT Hub's resource name ('IoTHubforVPNTesting') in the next drop-down list. 
+Select **Access control (IAM)** and **Add**. Select **Add a role assignment** from the drop-down menu. In the Add role assignment pane, choose **Event Hubs Data Sender** for role, **Azure AD user, group, or service principal** for Assign access to, and  your IoT Hub's resource name (`IoTHubforVPNTesting`) in the next drop-down list. 
 
 <img src="images/EventHubAccessControl.jpg" width="1000"/><p>
 
@@ -221,7 +221,7 @@ To do this, two DNS conditional forwarders are created. Locally, to resolve requ
 
 
 ### <span style="color:#0080FF">Azure</span>
-A virtual machine, `DNSforVNET`, is the deployed in the sample in the same manner as `ICONICSinVNET`, in the virtual network and configured to have only private IP access:
+A virtual machine, `DNSforVNET`, is deployed in the sample in the same manner as `ICONICSinVNET`, in the virtual network and configured to have only private IP access:
 
 <img src="images/DNS-Azure.jpg" width="450"/><p>
 
@@ -238,7 +238,7 @@ Next, the network configuration of the Azure VM created [above](#AzureVM) (`ICON
    DNS Servers . . . . . . . . . . . : 10.2.0.6
 ```
 
-When we used Visual Studio Code in the application virtual machine to connect to the [Event Hub](#EventHub) `eventhubinvpn`, the DNS server running in `DNSforVNST` forwarded the request to resolve the name to the DNS service at `168.63.129.16`, which in turn resolved this as the address `10.2.0.8`, the private IP address of the Event Hub.
+When we used Visual Studio Code in the application virtual machine to connect to the [Event Hub](#EventHub) `eventhubinvpn`, the DNS server running in `DNSforVNET` forwarded the request to resolve the name to the DNS service at `168.63.129.16`, which in turn resolved this as the address `10.2.0.8`, the private IP address of the Event Hub.
 
 ### <span style="color:#0080FF">On-premises</span>
 In the on-premises network, the DNS service is configured on any computer, for example one at `192.168.1.8`. In the DNS running on `192.168.1.8` two conditional forwarding records are added for the Azure assets behind private IP addresses:
