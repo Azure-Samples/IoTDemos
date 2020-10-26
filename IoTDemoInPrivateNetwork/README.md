@@ -50,7 +50,7 @@ As shown in the diagram above, a 3rd party gateway is installed on a computer wh
 - [Installing IoTWorX on IoT Edge](https://iconics.com/Documents/Whitepapers/Installing-IoTWorX-on-IoT-Edge)
 
 The output from the gateway should be in a standard JSON format. In the sample shown, data from the gateway looks like this:
-[](#device-telemetry)
+<a name="device-telemetry"></a>
 
     {"gwy": "iotworx","name": "Output_Voltage","value": 0,"timestamp": "2020-10-20T13:48:55.247Z","status": true}
     {"gwy": "iotworx","name": "DC_Bus_Voltage","value": 320.5,"timestamp": "2020-10-20T13:48:55.247Z","status": true}
