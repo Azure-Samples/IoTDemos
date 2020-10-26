@@ -1,4 +1,4 @@
-# Creating an End-to-End Azure IoT infrastructure in a Private Network  
+# Creating an End-to-End Azure IoT infrastructure in a Private Network
 
 The default configuration of Azure services allows public IP access to those services. For example an on-premises device with Internet access can connect to an Azure IoT Hub using a URL that resolves to a public IP address. While these Azure services can be locked down against unauthorized access and the communications between them encrypted, some organizations require an additional level of network security. Specifically, they require preventing public IP access to any services, and mandate that all the services and communications to be on a private network. Though the process for how to do this is documented on a service-by-service basis for the various Azure services, the process for how to connect them all together is not entirely obvious.
 
