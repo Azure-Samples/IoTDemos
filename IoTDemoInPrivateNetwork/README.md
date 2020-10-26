@@ -50,6 +50,7 @@ As shown in the diagram above, a 3rd party gateway is installed on a computer wh
 - [Installing IoTWorX on IoT Edge](https://iconics.com/Documents/Whitepapers/Installing-IoTWorX-on-IoT-Edge)
 
 The output from the gateway should be in a standard JSON format. In the sample shown, data from the gateway looks like this:
+[](#device-telemetry)
 
     {"gwy": "iotworx","name": "Output_Voltage","value": 0,"timestamp": "2020-10-20T13:48:55.247Z","status": true}
     {"gwy": "iotworx","name": "DC_Bus_Voltage","value": 320.5,"timestamp": "2020-10-20T13:48:55.247Z","status": true}
@@ -212,6 +213,8 @@ Test the routing by opening Visual Studio Code on your laptop. Install the [Azur
 
 <img src="images/EventHubTelemetryReceived.jpg" width="800"/>
 
+This should be the same as the data coming out of the local gateway, shown in the [local gateway configuration](#device-telemetry) section above.
+
 ## Azure virtual machine
 
 The sample contains an Azure virtual machine simply as an example of setting up something in Azure that is accessible only through private addresses and as a way to show how to access other services that have only private addresses.
@@ -231,7 +234,7 @@ To verify that data arriving at the Event Hub is visible within the virtual mach
 
 <img src="images/EventHubTelemetryReceivedinVM.jpg" width="800"/>
 
-This should be the same as the data coming out of the local gateway, shown in the [local gateway configuration](#DeviceTelemetry) section above.
+This should be the same as the data coming out of the local gateway, shown in the [local gateway configuration](#device-telemetry) section above.
 
 ## Deploying DNS servers
 
