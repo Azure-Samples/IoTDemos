@@ -64,7 +64,7 @@ the firewall depends upon the make and model of the firewall, of which there are
 
 Finally, there is a DNS server in the local environment. Configuration of this server is described later in this document.
 
-### Azure configuration <a name="AzureDiagram"></a>
+### Azure configuration
 
 The following diagram shows the elements in the sample's Azure environment.
 
