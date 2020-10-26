@@ -42,7 +42,7 @@ The IoT sample described consists of some on-premises components as well as Azur
 
 The following diagram shows the elements in the sample's local environment.
 
-<img src="images/On-premises_config.jpg" width="600"/>
+![On-premises_config.jpg](images/On-premises_config_600px.jpg)
 
 As shown in the diagram above, a 3rd party gateway is installed on a computer which serves to pull telemetry from IoT devices and forwards the data to Azure IoT Hub. Guidance on how to set up one such gateway, [ICONICS IoTWorX](https://iconics.com/Products/IoTWorX), is available in the following locations and there is no need to replicate it here:
 
@@ -69,7 +69,7 @@ Finally, there is a DNS server in the local environment. Configuration of this s
 
 The following diagram shows the elements in the sample's Azure environment.
 
-<img src="images/Azure_config.jpg" width="600"/>
+![Azure_config.jpg](images/Azure_config_600px.jpg)
 
 Each of these elements is described in the following sections.
 
