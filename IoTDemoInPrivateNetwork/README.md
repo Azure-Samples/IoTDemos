@@ -38,7 +38,7 @@ This sample does not include all possible services or configurations, of course,
 
 The IoT sample described consists of some on-premises components as well as Azure services. To provde a visual reference for the items discussed, here are the high level architectures.
 
-### On-premises configuration <a name="OnPremDiagram"></a>
+### On-premises configuration
 
 The following diagram shows the elements in the sample's local environment.
 
@@ -49,7 +49,7 @@ As shown in the diagram above, a 3rd party gateway is installed on a computer wh
 - [Using IoTWorX as a Gateway](https://iconics.com/Documents/WhitePapers/Using-IoTWorX-as-a-Gateway)
 - [Installing IoTWorX on IoT Edge](https://iconics.com/Documents/Whitepapers/Installing-IoTWorX-on-IoT-Edge)
 
-The output from the gateway should be in a standard JSON format. In the sample shown, data from the gateway looks like this:<a name="DeviceTelemetry"></a>
+The output from the gateway should be in a standard JSON format. In the sample shown, data from the gateway looks like this:
 
     {"gwy": "iotworx","name": "Output_Voltage","value": 0,"timestamp": "2020-10-20T13:48:55.247Z","status": true}
     {"gwy": "iotworx","name": "DC_Bus_Voltage","value": 320.5,"timestamp": "2020-10-20T13:48:55.247Z","status": true}
@@ -112,7 +112,7 @@ Finally, in the end-to-end sample we created a second vnet in another Azure regi
 
 <img src="images/ADLSvnetPeering.jpg" width="800"/>
 
-## Deploying an IoT Hub <a name="IoTHub"></a>
+## Deploying an IoT Hub
 
 The on-premises gateway will push telemetry data to the Azure IoT Hub, and all Azure services and applications will use that IoT Hub as the source of data from the on-premises devices. The following elements need to be created in Azure for the sample configuration:
 
@@ -154,7 +154,7 @@ Click **+ Private endpoint** to create the private endpoint. The result should l
 
 <img src="images/IoTHubPrivateEndpoint.jpg" width="800"/>
 
-## Event Hub <a name="EventHub"></a>
+## Event Hub
 
 Next, set up another Azure resource, an Event Hub, and route all messages from the IoT Hub to it. Create an Event Hub. From the Azure portal, select **Create a Resource** > **Event Hub**. When deployment is complete, configuration should be similar to this:
 
@@ -212,7 +212,7 @@ Test the routing by opening Visual Studio Code on your laptop. Install the [Azur
 
 <img src="images/EventHubTelemetryReceived.jpg" width="800"/>
 
-## Azure virtual machine <a name="AzureVM"></a>
+## Azure virtual machine
 
 The sample contains an Azure virtual machine simply as an example of setting up something in Azure that is accessible only through private addresses and as a way to show how to access other services that have only private addresses.
 
@@ -233,7 +233,7 @@ To verify that data arriving at the Event Hub is visible within the virtual mach
 
 This should be the same as the data coming out of the local gateway, shown in the [local gateway configuration](#DeviceTelemetry) section above.
 
-## Deploying DNS servers <a name="DNS"></a>
+## Deploying DNS servers
 
 DNS servers are needed to resolve URLs for services in Azure. When those services are initially deployed, they are accessed using a URL that resolves to their public IP address. For example, [http://mydemovm.eastus.cloudapp.azure.com](http://mydemovm.eastus.cloudapp.azure.com) may resolve to `40.x.x.x`. However, since we are preventing access to any public IP address and using only private endpoints, applications would have to resolve to the private IP address. For example, it should resolve to `10.2.0.x` instead of `40.x.x.x`.
 
@@ -249,7 +249,7 @@ In the sample, the DNS server got an IP address of `10.2.0.6`. In that virtual m
 
 <img src="images/DNS-Azure-DNSManagerCF1.jpg" width="800"/>
 
-Next, the network configuration of the Azure VM created [above](#AzureVM) (`ICONICSinVNET`), and shown in the [Azure configuration diagram](#AzureDiagram), is edited to use the new Azure DNS server (`DNSforVNET`) at `10.2.0.6`:
+Next, the network configuration of the Azure VM created [above](#AzureVM) (`ICONICSinVNET`), and shown in the [Azure configuration diagram](#azure-configuration), is edited to use the new Azure DNS server (`DNSforVNET`) at `10.2.0.6`:
 
     IPv4 Address. . . . . . . . . . . : 10.2.0.5(Preferred)
     Subnet Mask . . . . . . . . . . . : 255.255.255.0
@@ -264,7 +264,7 @@ In the on-premises network, the DNS service is configured on any computer, for e
 
 <img src="images/DNS-Local-DNSManagerCF1.jpg" width="800"/>
 
-Next, the IP configuration of the gateway computer, shown in the [On-premises configuration diagram](#OnPremDiagram), is modified to use this new DNS server:
+Next, the IP configuration of the gateway computer, shown in the [On-premises configuration diagram](#on-premises-configuration), is modified to use this new DNS server:
 
     IPv4 Address. . . . . . . . . . . : 192.168.1.122
     Subnet Mask . . . . . . . . . . . : 255.255.255.0
