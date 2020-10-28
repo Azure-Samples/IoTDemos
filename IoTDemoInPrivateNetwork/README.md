@@ -10,7 +10,6 @@ The default configuration of Azure services allows public IP access to those ser
 TO DO:
 
 - **David** Please review/edit the [DNS](#DNS) section. In particular, what is the role of the private DNS zones created in the portal (as opposed to the forwarders created in the DNS server), and how were they created?
-- **Spyros** Resolve with Afiri whether the Barracuda firewall config is merged into master
 - **Spyros** Final editing to improve flow
 - **Spyros** create pull request into master, notify Teo to review, accept
 
@@ -58,7 +57,6 @@ In addition, a hardware firewall is installed in the local environment, which se
 the firewall depends upon the make and model of the firewall, of which there are many. Some sample configurations can be found here:
 
 - [Azure VPN Gateways VPN device configuration samples](https://github.com/Azure/Azure-vpn-config-samples)
-- [Creating a Site-to-Site VPN from a Barracuda firewall to Azure](https://github.com/spyrossak/Azure-vpn-config-samples/blob/master/Barracuda/barracuda.md)
 
 Finally, there is a DNS server in the local environment. Configuration of this server is described later in this document.
 
