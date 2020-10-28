@@ -235,9 +235,13 @@ This should be the same as the data coming out of the local gateway, shown in th
 
 ## Deploying DNS servers
 
-DNS servers are needed to resolve URLs for services in Azure. When those services are initially deployed, they are accessed using a URL that resolves to their public IP address. For example, [http://mydemovm.eastus.cloudapp.azure.com](http://mydemovm.eastus.cloudapp.azure.com) may resolve to `40.x.x.x`. However, since we are preventing access to any public IP address and using only private endpoints, applications would have to resolve to the private IP address. For example, it should resolve to `10.2.0.x` instead of `40.x.x.x`.
+By default, Azure PaaS services are accessible over the internet and are routable using public IPs. When private link is enabled, Azure, by default, blocks access to these private link enabled services. For example, by default, [http://mydemovm.eastus.cloudapp.azure.com](http://mydemovm.eastus.cloudapp.azure.com) may resolve to `40.x.x.x`. But with private link, since we are preventing access to any public IP address and using only private endpoints, applications would have to resolve to the private IP address created within a VNET.
 
-To do this, two DNS conditional forwarders are created. Locally, to resolve requests from on-premises devices to Azure services, and in Azure, to resolve requests from one Azure service to another.
+For example, it should resolve to `10.2.0.x` instead of `40.x.x.x`.
+
+Private DNS Zones make name resolution possible when private link is enabled for a service. For example, if a storage account has private link enabled, a Private DNS zone is created with the A record pointing to that storage account. Once the Private Zone is linked to a VNET, any resource in that VNET can successfully resolve to the private DNS address of the private link service using the local 168.63.129.16 address.
+
+However, when it comes to name resolution from on-premises. Conditional forwarders are required since Private DNS Zones do not support forwarding. As such, two DNS conditional forwarders are required. Locally, for on-premises devices to resolve requests to Azure services, and in Azure, to resolve on-premises resources. If hybrid name resolution were not required, then it would not be necessary to create these forwarders in Azure.
 
 ### Azure
 
