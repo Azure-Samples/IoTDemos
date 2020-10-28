@@ -9,7 +9,6 @@ The default configuration of Azure services allows public IP access to those ser
 ---
 TO DO:
 
-- **David** Please review/edit the [DNS](#DNS) section. In particular, what is the role of the private DNS zones created in the portal (as opposed to the forwarders created in the DNS server), and how were they created?
 - **Spyros** Final editing to improve flow
 - **Spyros** create pull request into master, notify Teo to review, accept
 
@@ -62,7 +61,7 @@ Finally, there is a DNS server in the local environment. Configuration of this s
 
 ### Azure configuration
 
-The following diagram shows the elements in the sample's Azure environment.
+The following diagram shows the Azure architecture that processes data from the on-premises deployment shown above.
 
 ![Azure_config.jpg](images/Azure_config_600px.jpg)
 
@@ -239,7 +238,7 @@ For example, it should resolve to `10.2.0.x` instead of `40.x.x.x`.
 
 Private DNS Zones make name resolution possible when private link is enabled for a service. For example, if a storage account has private link enabled, a Private DNS zone is created with the A record pointing to that storage account. Once the Private Zone is linked to a VNET, any resource in that VNET can successfully resolve to the private DNS address of the private link service using the local 168.63.129.16 address.
 
-However, when it comes to name resolution from on-premises. Conditional forwarders are required since Private DNS Zones do not support forwarding. As such, two DNS conditional forwarders are required. Locally, for on-premises devices to resolve requests to Azure services, and in Azure, to resolve on-premises resources. If hybrid name resolution were not required, then it would not be necessary to create these forwarders in Azure.
+However, when it comes to name resolution from on-premises, conditional forwarders are required since Private DNS Zones do not support forwarding. As such, two DNS conditional forwarders are required. Locally, for on-premises devices to resolve requests to Azure services, and in Azure, to resolve on-premises resources. If hybrid name resolution were not required, then it would not be necessary to create these forwarders in Azure.
 
 ### Azure
 
