@@ -225,9 +225,7 @@ This should be the same as the data coming out of the local gateway, shown in th
 
 ## Deploying DNS servers
 
-By default, Azure PaaS services are accessible over the internet and are routable using public IPs. When private link is enabled, Azure, by default, blocks access to these private link enabled services. For example, by default, [http://mydemovm.eastus.cloudapp.azure.com](http://mydemovm.eastus.cloudapp.azure.com) may resolve to `40.x.x.x`. But with private link, since we are preventing access to any public IP address and using only private endpoints, applications will need to resolve to the private endpoint IP address created within a VNET.
-
-For example, a private end-point will resolve to `10.2.0.x` instead of `40.x.x.x`.
+By default, Azure PaaS services are accessible over the internet and are routable using public IPs. When private link is enabled, Azure, by default, blocks access to these private link enabled services. For example, by default, [http://mydemovm.eastus.cloudapp.azure.com](http://mydemovm.eastus.cloudapp.azure.com) may resolve to `40.x.x.x`. But with private link, since we are preventing access to any public IP address and using only private endpoints, applications will need to resolve to the private endpoint IP address created within a VNET. For example, a private end-point will need to resolve to `10.2.0.x` instead of `40.x.x.x`.
 
 Private DNS Zones make name resolution possible when private link is enabled. For example, if a storage account has private link enabled, a Private DNS zone is created with the A record pointing to that storage account. Once the Private Zone is linked to a VNET, any resource in that VNET can successfully resolve to the private IP address of the private link service using the local Azure 168.63.129.16 address.
 
