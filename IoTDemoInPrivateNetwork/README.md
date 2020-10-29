@@ -6,14 +6,6 @@ The default configuration of Azure services allows public IP access to those ser
 
  Note: *This document does not include mouse-click-by-mouse-click instructions on how to deploy the various services. Rather it assumes a working knowledge of Azure, and includes only what components need to be configured, and examples of the configuration.*
 
----
-TO DO:
-
-- **Spyros** Final editing to improve flow
-- **Spyros** create pull request into master, notify Teo to review, accept
-
----
-
 ## Contributors
 
 - Spyros Sakellariadis, Program Manager, Industry Innovation, Enterprise Commercial Business
@@ -44,8 +36,9 @@ As shown in the diagram above, a 3rd party gateway is installed on a computer wh
 - [Using IoTWorX as a Gateway](https://iconics.com/Documents/WhitePapers/Using-IoTWorX-as-a-Gateway)
 - [Installing IoTWorX on IoT Edge](https://iconics.com/Documents/Whitepapers/Installing-IoTWorX-on-IoT-Edge)
 
+### Gateway output
+
 The output from the gateway should be in a standard JSON format. In the sample shown, data from the gateway looks like this:
-<a name="device-telemetry"></a>
 
     {"gwy": "iotworx","name": "Output_Voltage","value": 0,"timestamp": "2020-10-20T13:48:55.247Z","status": true}
     {"gwy": "iotworx","name": "DC_Bus_Voltage","value": 320.5,"timestamp": "2020-10-20T13:48:55.247Z","status": true}
@@ -207,7 +200,7 @@ Test the routing by opening Visual Studio Code on your laptop. Install the [Azur
 
 ![EventHubTelemetryReceived](images/EventHubTelemetryReceived_800px.jpg)
 
-This should be the same as the data coming out of the local gateway, shown in the [local gateway configuration](#device-telemetry) section above.
+This should be the same as the data coming out of the local gateway, shown in the [local gateway configuration](#gateway-output) section above.
 
 ## Azure virtual machine
 
@@ -228,7 +221,7 @@ To verify that data arriving at the Event Hub is visible within the virtual mach
 
 ![EventHubTelemetryReceivedinVM](images/EventHubTelemetryReceivedinVM_800px.jpg)
 
-This should be the same as the data coming out of the local gateway, shown in the [local gateway configuration](#device-telemetry) section above.
+This should be the same as the data coming out of the local gateway, shown in the [local gateway configuration](#gateway-output) section above.
 
 ## Deploying DNS servers
 
@@ -240,7 +233,7 @@ Private DNS Zones make name resolution possible when private link is enabled for
 
 However, when it comes to name resolution from on-premises, conditional forwarders are required since Private DNS Zones do not support forwarding. As such, two DNS conditional forwarders are required. Locally, for on-premises devices to resolve requests to Azure services, and in Azure, to resolve on-premises resources. If hybrid name resolution were not required, then it would not be necessary to create these forwarders in Azure.
 
-### Azure
+### DNS Server in Azure VM
 
 A virtual machine, `DNSforVNET`, is deployed in the sample in the same manner as `ICONICSinVNET`, in the virtual network and configured to have only private IP access:
 
@@ -250,16 +243,16 @@ In the sample, the DNS server got an IP address of `10.2.0.6`. In that virtual m
 
 ![DNS-Azure-DNSManagerCF1](images/DNS-Azure-DNSManagerCF1_800px.jpg)
 
-Next, the network configuration of the Azure VM created [above](#AzureVM) (`ICONICSinVNET`), and shown in the [Azure configuration diagram](#azure-configuration), is edited to use the new Azure DNS server (`DNSforVNET`) at `10.2.0.6`:
+Next, the network configuration of the Azure VM created [above](#azure-virtual-machine) (`ICONICSinVNET`), and shown in the [Azure configuration diagram](#azure-configuration), is edited to use the new Azure DNS server (`DNSforVNET`) at `10.2.0.6`:
 
     IPv4 Address. . . . . . . . . . . : 10.2.0.5(Preferred)
     Subnet Mask . . . . . . . . . . . : 255.255.255.0
     Default Gateway . . . . . . . . . : 10.2.0.1
     DNS Servers . . . . . . . . . . . : 10.2.0.6
 
-When we used Visual Studio Code in the application virtual machine to connect to the [Event Hub](#EventHub) `eventhubinvpn`, the DNS server running in `DNSforVNET` forwarded the request to resolve the name to the DNS service at `168.63.129.16`, which in turn resolved this as the address `10.2.0.8`, the private IP address of the Event Hub.
+When we used Visual Studio Code in the application virtual machine to connect to the [Event Hub](#event-hub) `eventhubinvpn`, the DNS server running in `DNSforVNET` forwarded the request to resolve the name to the DNS service at `168.63.129.16`, which in turn resolved this as the address `10.2.0.8`, the private IP address of the Event Hub.
 
-### On-premises
+### DNS Server on-premises
 
 In the on-premises network, the DNS service is configured on any computer, for example one at `192.168.1.8`. In the DNS running on `192.168.1.8` two conditional forwarding records are added for the Azure assets behind private IP addresses:
 
@@ -272,4 +265,4 @@ Next, the IP configuration of the gateway computer, shown in the [On-premises co
     Default Gateway . . . . . . . . . : 192.168.1.1
     DNS Servers . . . . . . . . . . . : 192.168.1.8
 
-When the local gateway software connects to `HostName=IoTHubForVPNTesting.azure-devices.net;DeviceId=iotworx;SharedAccessKey=******`, the local DNS server forwards the request to resolve the name `IoTHubForVPNTesting.azure-devices.net` to `10.2.0.6`, the DNS server we created in Azure. In turn, that DNS server forwards the request to `168.63.129.16`, which in turn resolves this as `10.2.0,4`, the private IP address of the [IoT Hub](#IoTHub), (as shown in the [Azure configuration diagram](#azure-configuration)).
+When the local gateway software connects to `HostName=IoTHubForVPNTesting.azure-devices.net;DeviceId=iotworx;SharedAccessKey=******`, the local DNS server forwards the request to resolve the name `IoTHubForVPNTesting.azure-devices.net` to `10.2.0.6`, the DNS server we created in Azure. In turn, that DNS server forwards the request to `168.63.129.16`, which in turn resolves this as `10.2.0,4`, the private IP address of the [IoT Hub](#deploying-an-iot-hub), (as shown in the [Azure configuration diagram](#azure-configuration)).
