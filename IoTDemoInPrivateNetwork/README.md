@@ -1,6 +1,6 @@
 # Creating an End-to-End Azure IoT infrastructure in a Private Network
 
-The default configuration of Azure services allows public IP access to those services. For example an on-premises device with Internet access can connect to an Azure IoT Hub using a URL that resolves to a public IP address. While these Azure services can be locked down against unauthorized access and the communications between them encrypted, some organizations require an additional level of network security. Specifically, they require preventing public IP access to any services, and mandate that all the services and communications to be on a private network. Though the process for how to do this is documented on a service-by-service basis for the various Azure services, the process for how to connect them all together is not entirely obvious.
+The default configuration of Azure services allows public IP access to those services. For example, an on-premises device with Internet access can connect to an Azure IoT Hub using a URL that resolves to a public IP address. While these Azure services can be locked down against unauthorized access and the communications between them is encrypted, some organizations require an additional level of network security. Specifically, they require preventing public IP access to any services, and mandate that all the services and communications to be on a private network. Though the process for how to do this is documented on a service-by-service basis for the various Azure services, the process for how to connect them all together is not entirely obvious.
 
  The goal of this document is to provide a sample of securing all the services and connections in a simple IoT scenario.
 
@@ -232,13 +232,13 @@ This should be the same as the data coming out of the local gateway, shown in th
 
 ## Deploying DNS servers
 
-By default, Azure PaaS services are accessible over the internet and are routable using public IPs. When private link is enabled, Azure, by default, blocks access to these private link enabled services. For example, by default, [http://mydemovm.eastus.cloudapp.azure.com](http://mydemovm.eastus.cloudapp.azure.com) may resolve to `40.x.x.x`. But with private link, since we are preventing access to any public IP address and using only private endpoints, applications would have to resolve to the private IP address created within a VNET.
+By default, Azure PaaS services are accessible over the internet and are routable using public IPs. When private link is enabled, Azure, by default, blocks access to these private link enabled services. For example, by default, [http://mydemovm.eastus.cloudapp.azure.com](http://mydemovm.eastus.cloudapp.azure.com) may resolve to `40.x.x.x`. But with private link, since we are preventing access to any public IP address and using only private endpoints, applications will need to resolve to the private endpoint IP address created within a VNET.
 
-For example, it should resolve to `10.2.0.x` instead of `40.x.x.x`.
+For example, a private end-point resolve to `10.2.0.x` instead of `40.x.x.x`.
 
-Private DNS Zones make name resolution possible when private link is enabled for a service. For example, if a storage account has private link enabled, a Private DNS zone is created with the A record pointing to that storage account. Once the Private Zone is linked to a VNET, any resource in that VNET can successfully resolve to the private DNS address of the private link service using the local 168.63.129.16 address.
+Private DNS Zones make name resolution possible when private link is enabled. For example, if a storage account has private link enabled, a Private DNS zone is created with the A record pointing to that storage account. Once the Private Zone is linked to a VNET, any resource in that VNET can successfully resolve to the private IP address of the private link service using the local Azure 168.63.129.16 address.
 
-However, when it comes to name resolution from on-premises, conditional forwarders are required since Private DNS Zones do not support forwarding. As such, two DNS conditional forwarders are required. Locally, for on-premises devices to resolve requests to Azure services, and in Azure, to resolve on-premises resources. If hybrid name resolution were not required, then it would not be necessary to create these forwarders in Azure.
+However, when it comes to name resolution from on-premises, conditional forwarders are required since Private DNS Zones do not support conditional forwarders. As such, two DNS conditional forwarders are required. Locally, for on-premises devices to resolve requests to Azure services, and in Azure, to resolve on-premises resources. If hybrid name resolution were not required, then it is not necessary to create these forwarders in Azure. However, almost all use-cases require hybrid connectivity and name resolution.
 
 ### Azure
 
