@@ -195,6 +195,7 @@ Here we will setup an event subscription for the Azure Maps account in order to 
 1. Click the `+ Event Subscription` button in the top of the panel.
 1. Enter `logicappalerts` to the `Name` input field.
 1. Leave `Event Schema` as `Event Grid Schema` 
+1. For 'System Topic', you can put in anything between 3-128 Characters long
 1. Uncheck the `Geofence Result` option in the `Filter to Event Types` dropdown. Ensure that only the following 2 events are selected:
     * Geofence Entered
     * Geofence Exited
