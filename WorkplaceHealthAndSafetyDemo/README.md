@@ -71,9 +71,10 @@ Here we will create cosumer groups for Time Series Insights (TSI) and Azure Stre
 1. Select the `IoT Hub` resource.
 1. Click on `Built-in endpoints` in the left menu
 1. In the blade that opens, find the `Consumer Groups' section
-1. Create new consumer group for TSI
-1. Create a new consumer group for ASA
+1. Create new consumer group called tsi (for use later by Time Series Insights)
+1. Create a new consumer group called asa (for use later by Azure Stream Analytics)
 1. Press `Tab` to navigate off the consumer group (this saves the configuration)
+![Consumer Groups)(./images/consumergroups.png)
 
 
 Here we will setup the event for the IoT Hub that will send the data to the Logic App to handle the alerts.
@@ -84,11 +85,11 @@ Here we will setup the event for the IoT Hub that will send the data to the Logi
 1. Click the `+ Event subscription` button in the top of the panel.
 1. Enter the name `iothubalerts` to the `Name` input field.
 1. Leave `Event Schema` as `Event Grid Schema` 
+1. For 'System Topic', you can put in anything between 3-128 Characters long.
 1. Ensure ONLY `Device Telemetry` is selected from the `Filter to Event Types` dropdown.
 1. For the `Endpoint Type` select the `Web Hook` option.
 1. Click the `Select an endpoint` link.
 1. In the new panel update the `Subscriber Endpoint` field with the value from the deploy output `device Alerts Logic App Endpoint`.
-1. For 'System Topic', you can put in anything between 3-128 Characters long.
 1. Click the `Confirm Selection` button.
 1. Click the `Create` button.
 
@@ -216,7 +217,7 @@ Follow the next steps to setup the event source for the Time Series Insights env
     * Source: Select `IoT Hub`.
     * IoT Hub name: `<name of your IoT Hub>`
     * IoT Hub Policy name: `Take the default`
-    * IoT Hub consumer group: `TSI` (DO NOT use $Default)
+    * IoT Hub consumer group: `tsi` (DO NOT use $Default)
     * Timestamp property name: `timestamp`.
     Note: If values dont appear, give it a minute for the system to populate.
 1. Click the `Create` button.
@@ -239,7 +240,7 @@ Here we will setup the model defining the Types, Hierarchies and Instances.
 
 1. In the [Azure portal](https://portal.azure.com/) select the `Resource Group` you created earlier.
 1. Select the `Time Series Insights environment` resource.
-1. Click the `Go to Environment` button.
+1. Click the `Go to TSI Explorer` button.
 1. From the left navigation within the environment click the `Model` button.
 1. Click the `Types` tab option.
     - Click the `Upload JSON` button.
