@@ -1,0 +1,131 @@
+.map {
+  min-width: 100%;
+  position: relative;
+  .cls-1 {
+    fill: #333;
+  }
+
+  .cls-2 {
+    fill: #fff;
+  }
+
+  .cls-11, .cls-3, .cls-6, .cls-7, .cls-8 {
+    fill: none;
+  }
+
+  .cls-3, .cls-6, .cls-7 {
+    stroke: #22b573;
+  }
+
+  .cls-11, .cls-3, .cls-6, .cls-7 {
+    stroke-linecap: round;
+    stroke-width: 2px;
+  }
+
+  .cls-10, .cls-11, .cls-3, .cls-6, .cls-7, .cls-8 {
+    stroke-miterlimit: 10;
+  }
+
+  .cls-11, .cls-3, .cls-8 {
+    stroke-dasharray: 1 4;
+  }
+
+  .cls-4, .cls-5 {
+    fill: #22b573;
+  }
+
+  .cls-10, .cls-13, .cls-5, .cls-9 {
+    opacity: 0.8;
+  }
+
+  .cls-7 {
+    stroke-dasharray: 1 4;
+  }
+
+  .cls-8 {
+    stroke: #fff;
+  }
+
+  .cls-10, .cls-12, .cls-9 {
+    fill: #ed3511;
+  }
+
+  .cls-10, .cls-11 {
+    stroke: #ed3511;
+  }
+  .hitbox-1 {
+    width: 2.3%;
+    height: 3.2%;
+    top: 41.5%;
+    left: 61.8%;
+    position: absolute;
+  }
+  .hitbox-2 {
+    width: 2.3%;
+    height: 3.2%;
+    top: 38.5%;
+    left: 4.4%;
+    position: absolute;
+  }
+  .hitbox-3 {
+    width: 2.3%;
+    height: 3.2%;
+    top: 36%;
+    left: 28.4%;
+    position: absolute;
+  }
+  .hitbox-4 {
+    width: 2.3%;
+    height: 3.2%;
+    top: 63.5%;
+    left: 20%;
+    position: absolute;
+  }
+  .hitbox-5 {
+    width: 2.3%;
+    height: 3.2%;
+    top: 69%;
+    left: 64%;
+    position: absolute;
+  }
+  .hitbox-6 {
+    width: 2.3%;
+    height: 3.2%;
+    top: 27%;
+    left: 41.2%;
+    position: absolute;
+  }
+
+  .selected-asset {
+    height: 8vh;
+    width: 8vh;
+    border-radius: 4vh;
+    background: rgba(255, 255, 255, 0.3);
+    position: absolute;
+  }
+
+  .pakistan-factory {
+    top: 40.1%;
+    left: 61%;
+  }
+  .south-america-factory {
+    top: 62.1%;
+    left: 19%;
+  }
+  .atlantic-ocean-shipment {
+    top: 34.6%;
+    left: 27.5%;
+  }
+  .indian-ocean-shipment {
+    top: 67.6%;
+    left: 63%;
+  }
+  .us-retail {
+    top: 37.1%;
+    left: 3.5%;
+  }
+  .uk-retail {
+    top: 25.6%;
+    left: 40.2%;
+  }
+}

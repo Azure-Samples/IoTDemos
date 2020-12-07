@@ -1,0 +1,18 @@
+{
+  "@id": "dtmi:demo:adtga:storeroom;1",
+  "@context": "dtmi:dtdl:context;2",
+  "@type": "Interface",
+  "displayName": "StoreRoom",
+  "contents": [
+    {
+      "@type": "Telemetry",
+      "name": "Humidity",
+      "schema": "integer"
+    },
+    {
+      "@type": "Telemetry",
+      "name": "Temperature",
+      "schema": "integer"
+    }
+  ]
+}

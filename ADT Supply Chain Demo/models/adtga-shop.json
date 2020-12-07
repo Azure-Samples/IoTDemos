@@ -1,0 +1,26 @@
+{
+  "@id": "dtmi:demo:adtga:shop;1",
+  "@context": "dtmi:dtdl:context;2",
+  "@type": "Interface",
+  "displayName": "Shop",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "StockLevel",
+      "schema": "integer",
+      "writable": true
+    },
+    {
+      "@type": "Property",
+      "name": "OpenOrders",
+      "schema": "integer",
+      "writable": true
+    },
+    {
+      "@type": "Property",
+      "name": "LastShipmentID",
+      "schema": "integer",
+      "writable": true
+    }
+  ]
+}

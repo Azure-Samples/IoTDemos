@@ -1,0 +1,19 @@
+{
+  "@id": "dtmi:demo:adtga:supplier;1",
+  "@context": "dtmi:dtdl:context;2",
+  "@type": "Interface",
+  "displayName": "Supplier",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "Location",
+      "schema": "string",
+      "writable": true
+    },
+    {
+      "@type": "Relationship",
+      "name": "deliversOrdersToShipment",
+      "target": "dtmi:demo:adtga:shipment;1"
+    }
+  ]
+}

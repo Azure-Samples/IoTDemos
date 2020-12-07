@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21.46 21.46">
+  <defs>
+    <style>
+      .clse--1 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <g id="FG">
+    <polygon class="clse--1" points="21.46 1.9 19.56 0 10.73 8.83 1.9 0 0 1.9 8.83 10.73 0 19.56 1.9 21.46 10.73 12.63 19.56 21.46 21.46 19.56 12.63 10.73 21.46 1.9"/>
+  </g>
+</svg>

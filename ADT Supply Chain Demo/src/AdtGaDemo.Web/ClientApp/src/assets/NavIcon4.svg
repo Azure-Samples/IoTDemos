@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 42 42">
+  <defs>
+    <style>
+      .nav4-1 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <g id="FG">
+    <path class="nav4-1" d="M3,39l39,0v3L0,42V0H3ZM42,18.84V36H6V14.79L13.5,11l10.2,5.11,7.8-7.78ZM13.5,14.41,9,16.64V27H19.15L31.8,20.65,39,27.84V20.11l-7.5-7.52L24.3,19.8ZM9,33H39v-.87L31.2,24.3,19.85,30H9Z"/>
+  </g>
+</svg>

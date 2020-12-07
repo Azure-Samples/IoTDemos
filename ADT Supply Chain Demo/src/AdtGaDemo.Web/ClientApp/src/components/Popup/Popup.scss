@@ -1,0 +1,132 @@
+.popup {
+  position: absolute;
+  background: #fff;
+  padding: 2vh;
+  -webkit-box-shadow: 0px 0px 7px 4px rgba(0,0,0,0.2);
+  -moz-box-shadow: 0px 0px 7px 4px rgba(0,0,0,0.2);
+  box-shadow: 0px 0px 7px 4px rgba(0,0,0,0.2);
+  z-index: 1;
+  .close-icon {
+    position: absolute;
+    top: 1vh;
+    right: 1vh;
+    height: 3vh;
+    width: 3vh;
+    cursor: pointer;
+  }
+  header {
+    display: flex;
+    margin-bottom: 1.5vh;
+    text-transform: uppercase;
+    .icon {
+      width: 5vh;
+      height: 5vh;
+      background: #22b573;
+      margin-right: 2vh;
+      svg {
+        margin: 0.9vh;
+      }
+    }
+    .title {
+      flex: 1;
+      color: #333333;
+      h3 {
+        font-size: 2.1vh;
+        font-family: SegoeUISemiBold;
+        margin: 0;
+        margin-bottom: 1.2vh;
+      }
+      span {
+        font-size: 1.6vh;
+      }
+    }
+  }
+}
+
+.popup-content {
+  > div {
+    display: flex;
+    justify-content: space-between;
+    .value-wrap {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding-top: 1.7vh;
+      .value {
+        height: 8vh;
+        width: 8vh;
+        background: #f5f5f5;
+        color: #333333;
+        font-size: 3.6vh;
+        font-family: SegoeUISemiLight;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+    .title {
+      font-family: SegoeUI;
+      font-size: 1.6vh;
+      text-align: center;
+      color: #333333;
+      margin-top: 1.5vh;
+    }
+    .twin-data {
+      flex: 1;
+      padding: 1vh;
+      > div {
+        display: flex;
+        padding: 0.5vh 0;
+        border-top: 1px solid #f5f5f5;
+        &:last-child {
+          border-bottom: 1px solid #f5f5f5;
+        }
+        .property-title {
+          color: #22b573;
+          font-family: SegoeUISemiBold;
+          font-size: 1.6vh;
+          min-width: 11vh;
+        }
+        .property-value {
+          color: #333;
+          font-family: SegoeUISemiLight;
+          font-size: 1.6vh;
+          flex: 1;
+        }
+        .property-info {
+          font-size: 1.2vh;
+          margin-left: 0.7vh;
+        }
+      }
+    }
+  }
+  .retail-data {
+    display: flex;
+    padding-bottom: 2.5vh;
+    > div {
+      text-align: center;
+      &:last-child {
+        flex: 1;
+        margin-left: 2vh;
+      }
+    }
+    .value {
+      height: 7vh;
+      background: #f5f5f5;
+      color: #333333;
+      font-size: 3.6vh;
+      font-family: SegoeUISemiLight;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0 1.5vh;
+      margin-bottom: 7px;
+    }
+    span {
+      font-size: 1.6vh;
+      color: #333;
+    }
+  }
+}
+

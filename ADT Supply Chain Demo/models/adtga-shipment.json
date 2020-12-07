@@ -1,0 +1,50 @@
+{
+  "@id": "dtmi:demo:adtga:shipment;1",
+  "@context": "dtmi:dtdl:context;2",
+  "@type": "Interface",
+  "displayName": "Shipment",
+  "contents": [
+    {
+      "@type": "Telemetry",
+      "name": "Humidity",
+      "schema": "double"
+    },
+    {
+      "@type": "Telemetry",
+      "name": "Temperature",
+      "schema": "double"
+    },
+    {
+      "@type": "Telemetry",
+      "name": "Vibration",
+      "schema": "double"
+    },
+    {
+      "@type": "Property",
+      "name": "EstimatedTimeOfArrival",
+      "schema": "dateTime",
+      "writable": true
+    },
+    {
+      "@type": "Property",
+      "name": "Location",
+      "schema": "string",
+      "writable": true
+    },
+    {
+      "@type": "Relationship",
+      "name": "deliversOrdersToWarehouse",
+      "target": "dtmi:demo:adtga:warehouse;1"
+    },
+    {
+      "@type": "Relationship",
+      "name": "deliversOrdersToShop",
+      "target": "dtmi:demo:adtga:shop;1"
+    },
+    {
+      "@type": "Relationship",
+      "name": "deliversOrdersToFactory",
+      "target": "dtmi:demo:adtga:factory;1"
+    }
+  ]
+}

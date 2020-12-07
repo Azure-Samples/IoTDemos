@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <style>
+      .wh-1 {
+        fill: #fff;
+      }
+    </style>
+  </defs>
+  <g id="FG">
+    <g>
+      <g>
+        <path class="wh-1" d="M27.37,50v3.65h-5V50h5m4-4h-13V57.69h13V46Z"/>
+        <path class="wh-1" d="M27.37,37.1v3.64h-5V37.1h5m4-4h-13V44.74h13V33.1Z"/>
+        <path class="wh-1" d="M41.72,50v3.65h-5V50h5m4-4h-13V57.69h13V46Z"/>
+      </g>
+      <path class="wh-1" d="M32,10.79,53,21.3V53.69H51v-31H13v31H11V21.3L32,10.79m0-4.48L2.83,20.92v2.73H7v34H17v-31H47v31H57v-34h4.18V20.92L32,6.31Z"/>
+    </g>
+  </g>
+</svg>

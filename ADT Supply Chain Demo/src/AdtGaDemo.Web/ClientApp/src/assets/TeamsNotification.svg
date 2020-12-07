@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 451.71 192.99">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #4b508b;
+      }
+
+      .cls-2 {
+        fill: #6363ac;
+      }
+
+      .cls-3 {
+        fill: #56599c;
+      }
+
+      .cls-4 {
+        fill: #ad90d8;
+      }
+
+      .cls-5 {
+        font-size: 26.79px;
+      }
+
+      .cls-5, .cls-6, .cls-9 {
+        fill: #fff;
+      }
+
+      .cls-5, .cls-6 {
+        font-family: SegoeUISemiBold, SegoeUI;
+        font-weight: 600;
+      }
+
+      .cls-6 {
+        font-size: 20.78px;
+      }
+
+      .cls-7 {
+        letter-spacing: -0.01em;
+      }
+
+      .cls-8 {
+        letter-spacing: -0.02em;
+      }
+
+      .cls-9 {
+        font-size: 17.58px;
+        font-family: SegoeUI, Segoe UI;
+      }
+
+      .cls-10 {
+        letter-spacing: -0.03em;
+      }
+
+      .cls-11, .cls-12 {
+        fill: none;
+        stroke: #fff;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-12 {
+        stroke-linecap: round;
+      }
+    </style>
+  </defs>
+  <g id="FG">
+    <g>
+      <rect class="cls-1" width="451.71" height="192.99"/>
+      <rect class="cls-2" width="449.91" height="132.14"/>
+      <rect class="cls-3" y="132.14" width="449.91" height="53.21"/>
+      <g>
+        <circle class="cls-4" cx="57.62" cy="53.03" r="33.92"/>
+        <text class="cls-5" transform="translate(42.89 61.58)">LK</text>
+      </g>
+      <text class="cls-6" transform="translate(113.8 38.33)">Lukas K<tspan class="cls-7" x="71.38" y="0">r</tspan><tspan x="78.89" y="0">o</tspan><tspan class="cls-8" x="91.3" y="0">v</tspan><tspan x="101.49" y="0">ak</tspan></text>
+      <text class="cls-9" transform="translate(113.8 63.48)">The store in California is reporting a<tspan x="0" y="21.09">poor quality batch of t-shirts in the</tspan><tspan x="0" y="42.18">last order. Can you look into it? </tspan></text>
+      <text class="cls-6" transform="translate(67.12 165.34)"><tspan class="cls-10">R</tspan><tspan x="12.39" y="0">eply</tspan></text>
+      <g>
+        <path class="cls-11" d="M409.51,30.55c4.2,1.24,12.08,1.24,12.08,1.24l2.34,4a1,1,0,0,0,1.71-.71V18.24a1,1,0,0,0-1-1H408.78a1,1,0,0,0-1,1v9.93A2.64,2.64,0,0,0,409.51,30.55Z"/>
+        <line class="cls-11" x1="411.97" y1="21.86" x2="421.18" y2="21.86"/>
+        <line class="cls-11" x1="411.97" y1="26.86" x2="417.13" y2="26.86"/>
+      </g>
+      <g>
+        <path class="cls-12" d="M34.88,146.32a7,7,0,0,1,0,14.09H23.7"/>
+        <polyline class="cls-12" points="29.82 167 23.22 160.41 29.82 153.81"/>
+      </g>
+    </g>
+  </g>
+</svg>

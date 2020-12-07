@@ -1,0 +1,226 @@
+/*
+ Global Styles
+
+ This file should only be used for site wide styles. If the style is specific to a component then it
+ should be in a file next to the component
+*/
+
+html,
+body {
+  font-family: SegoeUI;
+  overflow: hidden;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.arrow_box {
+  position: relative;
+  background: #ffffff;
+}
+.arrow_box_top:after {
+  bottom: 100%;
+  left: 50%;
+  border: solid transparent;
+  content: "";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+  border-color: rgba(255, 255, 255, 0);
+  border-bottom-color: #ffffff;
+  border-width: 10px;
+  margin-left: -10px;
+}
+.arrow_box_top_left:after {
+  bottom: 100%;
+  left: 10%;
+  border: solid transparent;
+  content: "";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+  border-color: rgba(255, 255, 255, 0);
+  border-bottom-color: #ffffff;
+  border-width: 10px;
+  margin-left: -10px;
+}
+.arrow_box_left_top:after {
+  top: 38px;
+  right: 100%;
+  border: solid transparent;
+  content: "";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+  border-color: rgba(255, 255, 255, 0);
+  border-right-color: #ffffff;
+  border-width: 10px;
+  margin-left: -10px;
+}
+.arrow_box_bottom:after {
+  top: 100%;
+  left: 50%;
+  border: solid transparent;
+  content: "";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+  border-color: rgba(255, 255, 255, 0);
+  border-top-color: #ffffff;
+  border-width: 10px;
+  margin-left: -10px;
+}
+.primary-button {
+  background: #22b573;
+  border: none;
+  border-radius: 0;
+  color: #fff;
+  font-family: SegoeUISemiBold;
+  font-size: 14px;
+  padding: 5px 10px;
+  display: flex;
+  align-items: center;
+  min-width: 130px;
+  user-select: none;
+  cursor: pointer;
+  svg {
+    width: 20px;
+    margin-right: 9px;
+  }
+  &:hover {
+    background: #115b3a;
+  }
+}
+.error-button {
+  background: #ed3511;
+  border: none;
+  border-radius: 0;
+  color: #fff;
+  font-family: SegoeUISemiBold;
+  font-size: 14px;
+  padding: 13px 40px;
+  display: flex;
+  align-items: center;
+  min-width: 130px;
+  user-select: none;
+  cursor: pointer;
+  svg {
+    width: 20px;
+    margin-right: 9px;
+  }
+}
+.center-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.orders {
+  background: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+  margin-left: -2vh;
+  margin-right: -2vh;
+  padding: 2vh;
+  h4 {
+    font-size: 1.6vh;
+    color: #333;
+    margin: 0;
+    margin-bottom: 0.5vh;
+  }
+}
+.order {
+  display: flex;
+  background: #fff;
+  align-items: center;
+  color: #333;
+  margin-bottom: 5px;
+  cursor: pointer;
+  &.selectable {
+    &:hover {
+      -webkit-box-shadow: 0px 0px 7px 4px rgba(0, 0, 0, 0.2);
+      -moz-box-shadow: 0px 0px 7px 4px rgba(0, 0, 0, 0.2);
+      box-shadow: 0px 0px 7px 4px rgba(0, 0, 0, 0.2);
+    }
+  }
+  .icon {
+    background: #22b573;
+    width: 3.5vh;
+    height: 3.5vh;
+    margin-right: 8px;
+    svg {
+      width: 100%;
+    }
+  }
+  h5 {
+    font-size: 1.4vh;
+    font-family: SegoeUISemiBold;
+    margin: 0;
+    min-width: 12vh;
+  }
+  .products {
+    flex: 1;
+    margin-left: 1vh;
+    display: flex;
+    align-items: center;
+    span {
+      font-size: 1.2vh;
+      margin-right: 1vh;
+    }
+    svg {
+      height: 2vh;
+      margin-right: 0.7vh;
+      max-width: 2.5vh;
+    }
+  }
+}
+.impacted {
+  .icon {
+    background: #ed3511 !important;
+  }
+  .button-full-width {
+    background: #ed3511;
+    &:hover {
+      background: #b2280d;
+    }
+  }
+}
+.selected-order {
+  display: flex;
+  background: #fff;
+  align-items: center;
+  margin-bottom: 2vh;
+  .back {
+    width: 3vh;
+  }
+  .order {
+    flex: 1;
+    margin-left: 2.5vh;
+    margin-bottom: 0;
+  }
+}
+
+.hide {
+  display: none;
+}
+
+.flex {
+  display: flex;
+}
+.space-between {
+  justify-content: space-between;
+}
+
+.v-align {
+  align-items: center;;
+}
+
+.link {
+  font-size: 1.2vh;
+  text-transform: uppercase;
+  color: #22b573;
+}

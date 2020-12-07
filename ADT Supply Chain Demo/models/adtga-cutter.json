@@ -1,0 +1,13 @@
+{
+  "@id": "dtmi:demo:adtga:cutter;1",
+  "@context": "dtmi:dtdl:context;2",
+  "@type": "Interface",
+  "displayName": "Cutter",
+  "contents": [
+    {
+      "@type": "Telemetry",
+      "name": "Speed",
+      "schema": "integer"
+    }
+  ]
+}

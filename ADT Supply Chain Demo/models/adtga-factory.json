@@ -1,0 +1,46 @@
+{
+  "@id": "dtmi:demo:adtga:factory;1",
+  "@context": "dtmi:dtdl:context;2",
+  "@type": "Interface",
+  "displayName": "Factory",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "Efficiency",
+      "schema": "double",
+      "writable": true
+    },
+    {
+      "@type": "Property",
+      "name": "Reliability",
+      "schema": "double",
+      "writable": true
+    },
+    {
+      "@type": "Property",
+      "name": "OpenOrders",
+      "schema": "integer",
+      "writable": true
+    },
+    {
+      "@type": "Relationship",
+      "name": "deliversOrdersToShipment",
+      "target": "dtmi:demo:adtga:shipment;1"
+    },
+    {
+      "@type": "Relationship",
+      "name": "containsConveyor",
+      "target": "dtmi:demo:adtga:conveyor;1"
+    },
+    {
+      "@type": "Relationship",
+      "name": "containsCutter",
+      "target": "dtmi:demo:adtga:cutter;1"
+    },
+    {
+      "@type": "Relationship",
+      "name": "containsStoreRoom",
+      "target": "dtmi:demo:adtga:storeroom;1"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "@id": "dtmi:demo:adtga:warehouse;1",
+  "@context": "dtmi:dtdl:context;2",
+  "@type": "Interface",
+  "displayName": "Warehouse",
+  "contents": [
+    {
+      "@type": "Property",
+      "name": "StockLevel",
+      "schema": "integer",
+      "writable": true
+    },
+    {
+      "@type": "Relationship",
+      "name": "deliversOrdersToShipment",
+      "target": "dtmi:demo:adtga:shipment;1"
+    }
+  ]
+}

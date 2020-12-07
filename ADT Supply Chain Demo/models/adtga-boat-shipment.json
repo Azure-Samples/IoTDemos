@@ -1,0 +1,7 @@
+{
+  "@id": "dtmi:demo:adtga:boatshipment;1",
+  "@context": "dtmi:dtdl:context;2",
+  "@type": "Interface",
+  "displayName": "Boat Shipment",
+  "extends": ["dtmi:demo:adtga:shipment;1"]
+}
