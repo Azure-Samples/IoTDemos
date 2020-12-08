@@ -1,5 +1,6 @@
 # Retail Demo - Instore Analytics
 Video overview and demonstration:
+
 [![Retail Demo](https://img.youtube.com/vi/m3Pc300x2Mw/0.jpg)](https://www.youtube.com/watch?v=m3Pc300x2Mw)
 
 ## Overview
