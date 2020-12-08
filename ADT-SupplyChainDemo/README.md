@@ -1,5 +1,5 @@
 # Azure Digital Twins - Contoso Apparel 
-
+[![Supply Chain Demo](https://img.youtube.com/vi/ScmK-bKJ4MIe/0.jpg)](https://youtu.be/ScmK-bKJ4MIe)
 ## Prerequisites
 - Azure CLI ([Download](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)).
 - Git ([Download](https://git-scm.com/download)).
