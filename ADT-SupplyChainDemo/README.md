@@ -1,6 +1,4 @@
 # Azure Digital Twins - Contoso Apparel 
-Overview and Demonstration:
-[![Supply Chain Demo](./images/supply-chain.png)](https://www.youtube.com/watch?v=ScmK-bKJ4MIe)
 
 ## Prerequisites
 - Azure CLI ([Download](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)).
@@ -27,8 +25,10 @@ We can confirm that **WEST US 2** supports all required resources.
 
 ### Contoso Apparel Standalone Web App
 
-This ARM deployment will deploy the standalone Contoso Apparel web application. The web app uses mock data to represent the Azure Digital Twins and Time Series Insights solution in the developer version below. 
-> **NOTE:** If you are only interested in deploying the standalone version. You do not need to complete any more steps. You can browse to the URL of the newly created Web App in your Resource Group. 
+This ARM deployment will deploy the standalone Contoso Apparel web application. The web app uses mock data to represent the Azure Digital Twins and Time Series Insights solution in the developer version below. **This solution is for demo purposes only and does not integrate with any other Azure services.** 
+
+Overview and Demonstration (click image for demo video):
+[![Supply Chain Demo](./images/supply-chain.png)](https://www.youtube.com/watch?v=ScmK-bKJ4MIe)
 
 Follow the steps to deploy the required Azure resources:
 
@@ -50,10 +50,38 @@ Follow the steps to deploy the required Azure resources:
 1. Click **Review + create**.
 1. Click **Create** and wait for the deployment to finish.
 
+> **NOTE:** If you are only interested in deploying the standalone version. You do not need to complete any more steps. You can browse to the URL of the newly created Web App in your Resource Group.
+
+**Demo Clickthrough Guide**
+
+The following steps will guide you through the standalone web application to explore capabilities.
+
+1. In the [Azure portal](https://portal.azure.com/) select the **Resource Group** you created.
+1. Select the **App Service** resource.
+1. **Click** the URL to browse to the deployed web app from the overview pane. 
+1. **Click** on the factory in South America and observe twin data.
+1. **Click** on the shipment in the Indian Ocean to observe twin data.
+1. **Press** space bar to simulate Microsoft Teams message.
+1. **Click** the **Signature Tee** filter to see relevant supply lines.
+1. **Click** the store in California.
+1. **Click** the bottom order number **442-12448**.
+1. **Click** the shipment in the Atlantic Ocean and observe historical twin data. 
+1. **Click** the factory in Pakistan and observe historical twin data then **View Factory**.
+1. **Click** on any sensor in the factory to observe live telemetry. *Note that the green factory line storeroom has high humidity.* 
+1. **Click** the bottom order number **442-12448** from **Latest Orders**.
+1. **Click** on the storeroom and then **Time Series Insights**.
+1. **Click** on **Change Y-Axis Type** to observe the historical high humidity of line 2.
+1. **Click** on **VIEW IMPACT** to show the impact assessment of shutting line 2 down.
+1. **Click** the store in California to analyze financial impact.
+1. **Click** the store in London to analyze financial impact.
+1. **Click** the factory in Pakistan and then **STOP LINE**.
+1. Observe alternative supply lines fulfilling orders. 
 
 ### Contoso Apparel Developer Version
 
-The developer version is the actual implementation of the standalone web application. You will be creating multiple Azure resources to simulate and analyze digital twins using the Digital Twin Explorer tool. You will also be able to explore historical data via a Time Series Insights environment.
+The developer version is a backend implementation of the standalone web application. You will be creating multiple Azure resources to simulate and analyze digital twins using the Digital Twin Explorer exploration tool (rather than a frontend business web app). You will also be able to explore historical data via a Time Series Insights environment. **This solution will allow you to get hands on with Azure Digital Twins and other Azure services.** 
+
+![Developer Version](./images/adt_explorer.png)
 
 Follow the steps to deploy the required Azure resources:
 
