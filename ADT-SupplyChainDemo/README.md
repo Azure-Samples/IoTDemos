@@ -1,5 +1,10 @@
 # Azure Digital Twins - Contoso Apparel 
 
+## Overview
+Azure Digital Twins is a platform as a service (PaaS) offering that enables the creation of knowledge graphs based on digital models of entire environments. These environments could be buildings, factories, farms, energy networks, railways, stadiums, and more—even entire cities. These digital models can be used to gain insights that drive better products, optimized operations, reduced costs, and breakthrough customer experiences. 
+
+The following demos provide a typical implementation via a standalone web app and also a developer focussed version for users to experiment with. 
+
 ## Prerequisites
 - Azure CLI ([Download](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)).
 - Git ([Download](https://git-scm.com/download)).
@@ -79,9 +84,9 @@ The following steps will guide you through the standalone web application to exp
 
 ### Contoso Apparel Developer Version
 
-The developer version is a backend implementation of the standalone web application. You will be creating multiple Azure resources to simulate and analyze digital twins using the Digital Twin Explorer exploration tool (rather than a frontend business web app). You will also be able to explore historical data via a Time Series Insights environment. **This solution will allow you to get hands on with Azure Digital Twins and other Azure services.** 
+The developer version is a backend implementation of the standalone web application. You will be creating multiple Azure resources to simulate and analyze digital twins using the Digital Twin Explorer tool (see the end of the document for usage). You will also be able to explore historical data via a Time Series Insights environment. **This solution will allow you to get hands on with Azure Digital Twins and other Azure services.** 
 
-![Developer Version](./images/adt_explorer.png)
+![arch](./images/arch.png)
 
 Follow the steps to deploy the required Azure resources:
 
@@ -339,4 +344,27 @@ Once you have ran the simulator above you will be able to analyze your data in T
     - Click **OK** to save.
 1. Click **Overview** on the left blade.
 1. Click **Go to TSI Explorer**.
+
+## Digital Twins Explorer usage
+
+The Digital Twins Explorer tool is used to create, analyze and update your digital twins as well as a range of additional features to explore your knowledge graph. The tool is in active development and is updated with new features on a regular basis. More details on the Digital Twins Explorer tool is available in the [GitHub repo](https://github.com/Azure-Samples/digital-twins-explorer).
+
+![Digital Twins Explorer](./images/adt_explorer.png)
+
+Below is an overview of the different windows within the tool.
+
+1. **Query Explorer** - Allows you to use the custom SQL-like Azure Digital Twins query language to query your twin graph. You can also save common queries for future use. For more information see [About the query language for Azure Digital Twins](https://docs.microsoft.com/en-us/azure/digital-twins/concepts-query-language).
+1. **Model View** - The model viewer allows you to upload and view custom models defined in the Digital Twin Definition Language that is based on JSON-LD. You can then create twins from your upload model schema. More info:
+    * [Elements of a model](https://docs.microsoft.com/en-us/azure/digital-twins/concepts-models#elements-of-a-model).
+    * [Properties vs Telemetry](https://docs.microsoft.com/en-us/azure/digital-twins/concepts-models#properties-vs-telemetry)
+    * [Possible Schemas](https://docs.microsoft.com/en-us/azure/digital-twins/concepts-models#possible-schemas)
+    * [Model model-inheritance](https://docs.microsoft.com/en-us/azure/digital-twins/concepts-models#model-inheritance)
+1. **Graph View** - Allows users to visually update or view relationships as well as analyze their graph. Clicking on a node shows incoming and outgoing relationships and you can also delete existing twins. Any selected twin will populate the property explorer with relevant data.
+1. **Property Explorer** - When a twin is selected, you will see current property values and also telemetry updates if you are running the simulator. You also can update the property values by performing a patch operation.
+1. **Console (enable via settings cog)** - CLI to run multiple commands. Issue the command `help` for a list of operations. 
+1. **Output (enable via settings cog)** - Shows output from API responses and any other relevant operations. 
+
+**Full documentation is available at [Azure Digital Twins Documentation](https://docs.microsoft.com/en-us/azure/digital-twins/).**
+
+
  
