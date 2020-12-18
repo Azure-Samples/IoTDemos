@@ -3,7 +3,7 @@
 ## Overview
 Azure Digital Twins is a platform as a service (PaaS) offering that enables the creation of knowledge graphs based on digital models of entire environments. These environments could be buildings, factories, farms, energy networks, railways, stadiums, and more—even entire cities. These digital models can be used to gain insights that drive better products, optimized operations, reduced costs, and breakthrough customer experiences. 
 
-The following demos provide a typical implementation via a standalone web app and also a developer focussed version for users to experiment with. 
+The following demos provide implementation guidance via a standalone demo web app and a developer focused backend sample for users to experiment with.
 
 ## Prerequisites
 - Azure CLI ([Download](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)).
@@ -86,7 +86,7 @@ The following steps will guide you through the standalone web application to exp
 
 The developer version is a backend implementation of the standalone web application. You will be creating multiple Azure resources to simulate and analyze digital twins using the Digital Twin Explorer tool (see the end of the document for usage). You will also be able to explore historical data via a Time Series Insights environment. **This solution will allow you to get hands on with Azure Digital Twins and other Azure services.** 
 
-![arch](./images/arch.png)
+> **NOTE!** Architecture and Digital Twin Explorer tool usage are at the end of this document. 
 
 Follow the steps to deploy the required Azure resources:
 
@@ -230,7 +230,7 @@ Follow the instructions in the Digital Twin Explorers README to connect to your 
 1. Select all the JSON models in the `models` folder.
 1. Select **Open** to upload.
 1. Click **Import Graph** from the graph viewer panel. 
-1. Select the ``models/FullTwins.xlsx` file.
+1. Select the `models/FullTwins.xlsx` file.
 1. Click **Open**.
 1. Click the **Save** icon in the top right of the graph viewer to import twins.
 1. Click **Upload Model Images**  above the search input in the model viewer panel.
@@ -345,26 +345,176 @@ Once you have ran the simulator above you will be able to analyze your data in T
 1. Click **Overview** on the left blade.
 1. Click **Go to TSI Explorer**.
 
+## Solution Architecture
+
+Below is the high-level Architecture of the components in the supply chain demo.
+
+![arch](./images/arch.png)
+
+**Azure IoT Hub**
+
+After you have run the simulator to generate data for you IoT devices, you can see these in Azure using the following steps:
+1. In [Azure portal](https://portal.azure.com/) navigate to the Resource Group you created earlier.
+1. **Select** the **IoT Hub** resource.
+1. **Select** the **IoT Devices** option from the left hand blade to see your devices. 
+
+**Azure Functions**
+
+The first function receives updates from IoT devices via event grid and then updates either telemetry or properties on the twin. You can see the full code in `IotHubToTwin.cs`. Here is a snippet of the update:
+
+```c#
+    private async Task UpdateDigitalTwinProperty(DigitalTwinsClient client, string deviceId, JToken body, string propertyName)
+    {
+      var propertyToken = body[propertyName];
+      if (propertyToken != null)
+      {
+        if (Constants.Telemetries.Contains(propertyName.ToUpper()))
+        {
+          var data = new Dictionary<string, double>();
+          data.Add(propertyName, propertyToken.Value<double>());
+          await client.PublishTelemetryAsync(deviceId, JsonConvert.SerializeObject(data));
+        }
+        else
+        {
+          // Update twin using device property
+          var uou = new UpdateOperationsUtility();
+          uou.AppendReplaceOp($"/{propertyName}", propertyToken.Value<double>());
+          await client.UpdateDigitalTwinAsync(deviceId, uou.Serialize());
+        }
+      }
+    }
+  }
+```
+
+The second function uses the SignalR service to broadcast the stream as telemetry does not have backing storage, therefore, we need a mechanism to display these in our web application. You can see the full code in `SignalRFunctions.cs`. Here is a snippet of the broadcast: 
+
+```c#
+[FunctionName("broadcast")]
+    public static Task SendMessage(
+        [EventGridTrigger] EventGridEvent eventGridEvent,
+        [SignalR(HubName = "dttelemetry")] IAsyncCollector<SignalRMessage> signalRMessages,
+        ILogger log)
+    {
+      if (eventGridEvent == null || !EventMappings.TryGetValue(eventGridEvent.EventType.ToLowerInvariant(), out var target))
+      {
+        log.LogInformation($"Unrecognized event type: {eventGridEvent?.EventType}, skipping");
+        return Task.CompletedTask;
+      }
+
+      var dtName = eventGridEvent.Topic.Split("/", StringSplitOptions.RemoveEmptyEntries).Last();
+      var dtId = eventGridEvent.Subject;
+      var evt = JsonConvert.DeserializeObject<JObject>(eventGridEvent.Data.ToString());
+      var data = evt["data"];
+
+      log.LogInformation($"Received event from {dtName} for {dtId} with content {data.ToString()}");
+
+      return signalRMessages.AddAsync(new SignalRMessage
+      {
+        Target = target,
+        Arguments = new[] { new { dtId, data } }
+      });
+    }
+```
+
+The third function pushes data from the Event Hub to Time Series Insight. You can see the full code in `ProcessDTUpdateToTSI.cs`. Here is a snippet of the update: 
+
+```c#
+    [FunctionName("ProcessDTUpdateToTSI")]
+    public static async Task Run(
+        [EventHubTrigger("twins-event-hub", Connection = "EventHubAppSetting-Twins")]EventData myEventHubMessage,
+        [EventHub("tsi-event-hub", Connection = "EventHubAppSetting-TSI")]IAsyncCollector<string> outputEvents,
+        ILogger log)
+    {
+      JObject message = (JObject)JsonConvert.DeserializeObject(Encoding.UTF8.GetString(myEventHubMessage.Body));
+      log.LogInformation("Reading event:" + message.ToString());
+
+      // Read values that are replaced or added
+      Dictionary<string, object> tsiUpdate = new Dictionary<string, object>();
+      foreach (var operation in message["patch"])
+      {
+        if (operation["op"].ToString() == "replace" || operation["op"].ToString() == "add")
+        {
+          string path = operation["path"].ToString().Substring(1);
+          path = path.Replace("/", ".");
+          tsiUpdate.Add(path, operation["value"]);
+        }
+      }
+      //Send an update if updates exist
+      if (tsiUpdate.Count > 0)
+      {
+        tsiUpdate.Add("$dtId", myEventHubMessage.Properties["cloudEvents:subject"]);
+        tsiUpdate.Add("timestamp", DateTime.Now);
+        await outputEvents.AddAsync(JsonConvert.SerializeObject(tsiUpdate));
+      }
+    }
+  }
+```
+
+**Logic App**
+
+The logic app in this solution is used to simulate the ETA of a shipment that may be typical from an ERP system. You can see how this works by doing the following:
+
+1. In [Azure portal](https://portal.azure.com/) navigate to the Resource Group you created earlier.
+1. **Select** the **Logic App** resource.
+1. **Select** the **Logic app designer** option from the left hand blade to see the flow.
+
+
 ## Digital Twins Explorer usage
 
-The Digital Twins Explorer tool is used to create, analyze and update your digital twins as well as a range of additional features to explore your knowledge graph. The tool is in active development and is updated with new features on a regular basis. More details on the Digital Twins Explorer tool is available in the [GitHub repo](https://github.com/Azure-Samples/digital-twins-explorer).
+The Digital Twins Explorer tool is used to create, analyze and update your digital twins as well as providing a range of additional features to explore your knowledge graph. The tool is in active development and is updated with new features on a regular basis. More details on the Digital Twins Explorer tool is available in the [GitHub repo](https://github.com/Azure-Samples/digital-twins-explorer).
 
 ![Digital Twins Explorer](./images/adt_explorer.png)
 
 Below is an overview of the different windows within the tool.
 
-1. **Query Explorer** - Allows you to use the custom SQL-like Azure Digital Twins query language to query your twin graph. You can also save common queries for future use. For more information see [About the query language for Azure Digital Twins](https://docs.microsoft.com/en-us/azure/digital-twins/concepts-query-language).
-1. **Model View** - The model viewer allows you to upload and view custom models defined in the Digital Twin Definition Language that is based on JSON-LD. You can then create twins from your upload model schema. More info:
+**Query Explorer**- Allows you to use the custom SQL-like Azure Digital Twins query language to query your twin graph. You can also save common queries for future use. For more information see [About the query language for Azure Digital Twins](https://docs.microsoft.com/en-us/azure/digital-twins/concepts-query-language) and [Query the Azure Digital Twins twin graph](https://docs.microsoft.com/en-us/azure/digital-twins/how-to-query-graph).
+
+Usage Examples:
+
+>**IMPORTANT!** Ensure you have Eager Loading turned off in settings if you just want the query results. Eager loading will also bring the child nodes.
+ 
+* Run the query `SELECT * FROM DIGITALTWINS` to view all supply chain artifacts.
+* Run the query `SELECT * FROM DIGITALTWINS WHERE IS_OF_MODEL('dtmi:demo:adtga:warehouse;1')` to see all twins of type Warehouse. 
+* Run the query `SELECT * FROM DIGITALTWINS WHERE IS_DEFINED(Location)` to get all twins that have the Location prpoerty. 
+
+
+**Model View** - The model viewer allows you to upload and view custom models defined in the Digital Twin Definition Language that is based on JSON-LD. You can then create twins from your upload model schema. More info:
     * [Elements of a model](https://docs.microsoft.com/en-us/azure/digital-twins/concepts-models#elements-of-a-model).
     * [Properties vs Telemetry](https://docs.microsoft.com/en-us/azure/digital-twins/concepts-models#properties-vs-telemetry)
     * [Possible Schemas](https://docs.microsoft.com/en-us/azure/digital-twins/concepts-models#possible-schemas)
     * [Model model-inheritance](https://docs.microsoft.com/en-us/azure/digital-twins/concepts-models#model-inheritance)
-1. **Graph View** - Allows users to visually update or view relationships as well as analyze their graph. Clicking on a node shows incoming and outgoing relationships and you can also delete existing twins. Any selected twin will populate the property explorer with relevant data.
-1. **Property Explorer** - When a twin is selected, you will see current property values and also telemetry updates if you are running the simulator. You also can update the property values by performing a patch operation.
-1. **Console (enable via settings cog)** - CLI to run multiple commands. Issue the command `help` for a list of operations. 
-1. **Output (enable via settings cog)** - Shows output from API responses and any other relevant operations. 
+
+Usage Examples:
+* Check your model list, you should see 11 models.
+* **Click** on the "Information" icon next to Factory in the model list and observe how it has relationships to multiple sensors within the factory and also to external shipments. You can also see it has multiple properties.
+* **Click** on the "Information" icon next to Cutter in the model list and see that is has "Speed" as type Telemetry. See link above to understand the difference between Properties and Telemetry.
+* **Click** on the "+" icon next to Conveyor and create a twin called `TestConveyor`. You will see it get added to the graph. We will need this in the next section.
+
+**Graph View** - Allows users to visually update or view relationships as well as analyze their graph. Clicking on a node shows incoming and outgoing relationships and you can also delete existing twins. Any selected twin will populate the property explorer with relevant data.
+
+Usage Examples:
+* **Click** on the factory called "FA4421" or any other factory. 
+* Hold the ctrl or shift key on your keyboard and then click on the `TestConveyor` twin. Both nodes should be highlighted. 
+* **Click**  **Add Relationship** from the top navigation.
+* **Click** **Save** to create the relationship.
+* You will now notice that "TestConveyor" is a now child of "FA4421".
+* You can also **click** on a node and click **Get Relationships** from the navigation bar to see incoming and outgoing relationships.
+
+**Property Explorer** - When a twin is selected, you will see current property values and also telemetry updates if you are running the simulator. You also can update the property values by performing a patch operation.
+
+Usage Example:
+* **Click** on a twin of type shop like "RT4465881".
+* In the property explorer, changes the StockLevel value to 100.
+* **Click** the **Save** icon in the navigation bar.
+* Observe the value has been patched with the replace operation.
+
+**Console (enable via settings cog)** - CLI to run multiple commands. Issue the command `help` for a list of operations. 
+
+**Output (enable via settings cog)** - Shows output from API responses and any other relevant operations. 
 
 **Full documentation is available at [Azure Digital Twins Documentation](https://docs.microsoft.com/en-us/azure/digital-twins/).**
+
+
 
 
  
