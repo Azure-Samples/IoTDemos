@@ -190,7 +190,7 @@ Here we will setup an event subscription for the Azure Maps account in order to 
 
 In this section we will use the IndoorMapSetup console app to use Creator to create an indoor map.
 
-> NOTE: The portable executable provided is targeted for Windows 64-bit environments. If the .exe file below does not run on your PC, consider creating a VM and running the exe there.  The steps to create a VM are outside the scope of this document.
+> NOTE: The portable executable provided is targeted for Windows 64-bit environments and .net 5.0. If the .exe file below does not run on your PC, consider creating a VM and running the exe there.  The steps to create a VM are outside the scope of this document.
 
 If you would like to do this manually, you can follow the tutorial here: [Create Indoor Map](https://docs.microsoft.com/en-us/azure/azure-maps/tutorial-creator-indoor-maps).
 
