@@ -188,7 +188,7 @@
             },
             {
               "name": "ADT_SERVICE_URL",
-              "value": "[concat('https://', variables('digitaltwins').name, '.api.wus2.digitaltwins.azure.net')]"
+              "value": "[concat('https://', reference(resourceId('Microsoft.DigitalTwins/digitalTwinsInstances', variables('digitaltwins').name)).hostName)]"
             },
             {
               "name": "AzureSignalRConnectionString",
