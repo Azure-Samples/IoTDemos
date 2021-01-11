@@ -18,7 +18,7 @@ The following demos provide implementation guidance via a standalone demo web ap
 Git will be used to copy all the files for the demo to your local computer.  
 
 1. Open a command prompt and navigate to a folder where the repo should be downloaded.
-1. Issue the command `git clone https://github.com/Teodelas/ADTDemo.git`.
+1. Issue the command `git clone https://github.com/Azure-Samples/IoTDemos.git`.
 1. The demo assets will now be available on your device. 
 
 ## Azure Resource Deployment
@@ -39,7 +39,7 @@ Follow the steps to deploy the required Azure resources:
 
 1. Deploy ARM template (Ctrl/Command + left click to open in a new tab):
 
-    <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fzarmada.blob.core.windows.net%2Farm-deployments-public%2Fwebsite-template-agad.json" target="_blank">
+    <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fgithub.com%2FAzure-Samples%2FIoTDemos%2Fblob%2Fmaster%2FADT-SupplyChainDemo%2Fdeployment%2Fwebsite-template-agad.json" target="_blank">
         <img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.png" alt="Deploy to Azure">
     </a>
 
@@ -92,7 +92,7 @@ Follow the steps to deploy the required Azure resources:
 
 1. Deploy ARM template (Ctrl/Command + left click to open in a new tab):
 
-    <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fzarmada.blob.core.windows.net%2Farm-deployments-public%2Fdigtwins-template-agad.json" target="_blank">
+    <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fgithub.com%2FAzure-Samples%2FIoTDemos%2Fblob%2Fmaster%2FADT-SupplyChainDemo%2Fdeployment%2Fdigtwins-template-agad.json" target="_blank">
         <img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.png" alt="Deploy to Azure">
     </a>
 
