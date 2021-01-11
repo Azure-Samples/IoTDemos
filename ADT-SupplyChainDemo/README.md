@@ -39,7 +39,7 @@ Follow the steps to deploy the required Azure resources:
 
 1. Deploy ARM template (Ctrl/Command + left click to open in a new tab):
 
-    <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fgithub.com%2FAzure-Samples%2FIoTDemos%2Fblob%2Fmaster%2FADT-SupplyChainDemo%2Fdeployment%2Fwebsite-template-agad.json" target="_blank">
+    <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure-Samples%2FIoTDemos%2Fmaster%2FADT-SupplyChainDemo%2Fdeployment%2Fwebsite-template-agad.json" target="_blank">
         <img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.png" alt="Deploy to Azure">
     </a>
 
@@ -92,7 +92,7 @@ Follow the steps to deploy the required Azure resources:
 
 1. Deploy ARM template (Ctrl/Command + left click to open in a new tab):
 
-    <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fgithub.com%2FAzure-Samples%2FIoTDemos%2Fblob%2Fmaster%2FADT-SupplyChainDemo%2Fdeployment%2Fdigtwins-template-agad.json" target="_blank">
+    <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure-Samples%2FIoTDemos%2Fmaster%2FADT-SupplyChainDemo%2Fdeployment%2Fdigtwins-template-agad.json" target="_blank">
         <img src="https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.png" alt="Deploy to Azure">
     </a>
 
