@@ -614,6 +614,7 @@ At this point in the demo, we can show that customer demand is diminishing stock
 
 1. Triggering the **Low Stock Alert**:
     * Default Behavior: An IoT Edge module property update occurs after the customer makes the order to set the video on the module to show Low Stock.
+     - Browsing the IoT Edge endpoint on port 5012 will show the current stream being analyzed in a web browser. ex: http://192.168.1.1:5012
     * RTSP Stream: You should make sure there are less than 4 cans in the cameras vision to trigger the alert.
 1. Go to **Microsoft Teams** and observe the **Low Stock Alert** from the device in the **Front Line Workers** channel.
 1. OPTIONAL: If you want to restock the shelves you can do the following (note this will also happen when you reset the demo):
