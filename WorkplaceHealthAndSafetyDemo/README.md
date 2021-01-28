@@ -1,6 +1,6 @@
 # Workplace Health and Safety Demo
 
-[![Workplace Safety Demonstration](https://img.youtube.com/vi/pL-c00M2CnI/0.jpg)](https://www.youtube.com/watch?v=pL-c00M2CnI)
+[![Workplace Safety Demonstration](https://img.youtube.com/vi/wI3hP1gPYKw/0.jpg)](https://www.youtube.com/watch?v=wI3hP1gPYKw)
 
 ## Overview
 The Workplace Health and Safety Demo provides the ability to identify unsafe work conditions using AI on Edge and Location Analytics IoT architecture patterns.
