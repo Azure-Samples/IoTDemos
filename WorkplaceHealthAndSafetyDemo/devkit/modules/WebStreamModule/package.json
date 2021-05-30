@@ -10,7 +10,7 @@
         "azure-iot-device-amqp": "^1.9.9",
         "express": "^4.16.0",
         "http-errors": "^1.6.2",
-        "ws": "^7.0.0"
+        "ws": "^7.4.6"
     },
     "devDependencies": {
         "eslint": "^5.16.0"
