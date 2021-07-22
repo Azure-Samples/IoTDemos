@@ -319,6 +319,8 @@ In this section we will simulate digital twin property updates to be observed in
 1. Open the `tools/devices-simulation/appSettings.json` file.
 1. Enter the following values:
     * **IoTHubConnectionString**: Connection string value, to obtain this you can follow these steps..
+        1. In the [Azure portal](https://portal.azure.com/) select the **Resource Group** you created earlier.
+        1. Select the **IoT Hub** resource.
         1. Click the `Shared access policies` from the options in the left menu.
         1. Click the `iothubowner` policy from the list.
         1. Copy the `Connection String--primary key` value.
