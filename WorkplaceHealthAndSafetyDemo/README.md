@@ -74,7 +74,7 @@ Here we will create cosumer groups for Time Series Insights (TSI) and Azure Stre
 1. Create new consumer group called tsi (for use later by Time Series Insights)
 1. Create a new consumer group called asa (for use later by Azure Stream Analytics)
 1. Press `Tab` to navigate off the consumer group (this saves the configuration)
-![Consumer Groups)(./images/consumergroups.png)
+![Consumer Groups](./images/consumergroups.png)
 
 
 Here we will setup the event for the IoT Hub that will send the data to the Logic App to handle the alerts.
