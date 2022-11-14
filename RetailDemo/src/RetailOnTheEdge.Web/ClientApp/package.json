@@ -9,7 +9,7 @@
     "react-dom": "^16.11.0",
     "react-inlinesvg": "^1.2.0",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "^3.4.1"
+    "react-scripts": "^5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
